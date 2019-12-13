@@ -1,0 +1,18 @@
+﻿<Window x:Class="Site_Manager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Site_Manager"
+        mc:Ignorable="d"
+        Title="Site Manager" Height="450" Width="800" WindowStyle="SingleBorderWindow" ResizeMode="CanResize" WindowState="Maximized">
+    <Menu FontWeight="Normal">
+        <MenuItem x:Name="mmenu_user" Header="User" FontWeight="Bold">
+            <MenuItem x:Name="mmenu_login" Click="Login_Logout" Header="Login"/>
+            <MenuItem x:Name="mmenu_profile" Header="Profile" Visibility="Collapsed"/>
+        </MenuItem>
+        <MenuItem Header="Management" Uid="menu_management" FontWeight="Bold" Click="Toggle_Mgt"/>
+    </Menu>
+
+</Window>
+        

@@ -1,0 +1,14 @@
+﻿<UserControl x:Class="Site_Manager.User_Login"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Site_Manager"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid x:Name="User_Logon" Opacity="0.985">
+        <TextBox x:Name="entry_User_Name" HorizontalAlignment="Left" Height="41" Margin="101,107,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="415"/>
+        <Button x:Name="btn_Login" Content="Login" HorizontalAlignment="Left" Height="48" Margin="430,372,0,0" VerticalAlignment="Top" Width="133" Click="Login_Clicked"/>
+        <Button x:Name="btn_Cancel" Content="Cancel" HorizontalAlignment="Left" Height="48" Margin="606,372,0,0" VerticalAlignment="Top" Width="133"/>
+    </Grid>
+</UserControl>
