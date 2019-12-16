@@ -8,25 +8,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Site_Manager
 {
     /// <summary>
-    /// Interaction logic for UserControl1.xaml
+    /// Interaction logic for Window1.xaml
     /// </summary>
-    public partial class User_Login : UserControl
+    public partial class dlgLogin : Window
     {
-        public User_Login()
+        public dlgLogin()
         {
             InitializeComponent();
         }
-
-        private void Login_Clicked(object sender, RoutedEventArgs e)
-        {
-            //User_Login
-        }
-
     }
+
 }

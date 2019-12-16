@@ -28,7 +28,8 @@ namespace Site_Manager
             CUser = new User_Info();
 
             InitializeComponent();
-            Get_User(CUser);
+            CUser = LoginLogout(1);
+
         }
 
         private void Toggle_Mgt(object sender, RoutedEventArgs e)
@@ -38,32 +39,61 @@ namespace Site_Manager
 
         private void Login_Logout(object sender, RoutedEventArgs e)
         {
-            if ((string)mmenu_login.Header == "Login")
+            CUser.User_ID = 1;
+            //if (window.ShowDialog() == DialogResult.Value) ;
+
+            /*if ((string)mmenu_login.Header == "Login")
             {
-                if(Get_User(CUser) > 0)  
-                    mmenu_login.Header = "Logout";
+                //if(LoginLogout(1) > 0)  
+                //    mmenu_login.Header = "Logout";
             }
             else
             {
                 CUser.User_ID = 0;
                 mmenu_login.Header = "Login";
-            }
+            }*/
         }
 
-        public int Get_User(User_Info CUser2)
+        //
+        //  Function: public int LoginLogout(int Action, string UserName)
+        //
+        //  Arguments:  int pvAction = Type of action (0 = Logout, 1 = Login with system user, 2 = Login with Name)
+        //              string pvUserName = User name if not using AD
+        //
+        //  Return Value: User_Info filled in with user data if successful login or blank if unsuccessful
+        //
+        //  Purpose: Logs a user in or out of the system.  Without being logged in, no actions can be performed
+
+        public User_Info LoginLogout(int pvAction, string pvUserName = "")
         {
+            User_Info CUser2 = new User_Info();
+            string UserName = pvUserName;
+
             // If the user name is blank then get it from the system and try to log in with AD security
             string connString = "Data Source=localhost\\SQLEXPRESS;Initial Catalog=Site_Management;Integrated Security=True";
-            string UserName = new System.Security.Principal.WindowsPrincipal(System.Security.Principal.WindowsIdentity.GetCurrent()).Identity.Name;
 
-            int duser = 0;  // See if it's a domain user
-
-            duser = UserName.IndexOf("\\");
-
-            if (duser > 0)
+            // If logging out, then just wipe out the current user and return the blank one
+            if (pvAction == 0)
             {
-                UserName = UserName.Substring(duser + 1);
+                return CUser;
             }
+
+            // If using system user, then get it and process accordingly
+            if (pvAction == 1)
+            {
+                UserName = new System.Security.Principal.WindowsPrincipal(System.Security.Principal.WindowsIdentity.GetCurrent()).Identity.Name;
+
+                int duser = 0;  // See if it's a domain user
+
+                duser = UserName.IndexOf("\\");
+
+                if (duser > 0)
+                {
+                    UserName = UserName.Substring(duser + 1);
+                }
+            }
+
+            // If using an entered user, we don't need to do anything different so just carry on
 
             string query = "SELECT User_ID, User_Name, Access_Level FROM dbo.User_Info WHERE User_Name ='" + UserName + "'";
 
@@ -81,8 +111,20 @@ namespace Site_Manager
                     }
                 }
             }
-            return 1;
+            return CUser2;
+        }
+
+        public void Update_LoginStatus(int pvUserID)
+        {
+            // Update the login/logout
+            if (pvUserID == 0)
+            {
+                mmenu_login.Header = "Login...";
+            }
+            else
+            {
+                mmenu_login.Header = "Logout";
+            }
         }
     }
-
 }
