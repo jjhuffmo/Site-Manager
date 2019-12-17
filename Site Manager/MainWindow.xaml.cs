@@ -13,25 +13,42 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.SqlClient;
+using System.ComponentModel;
 
 namespace Site_Manager
 {
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        public User_Info CUser = new User_Info() { Conn_Status = "Login..." };
 
-        public User_Info CUser;
         public MainWindow()
         {
-            CUser = new User_Info();
+            
+            //User_Info CUser = new User_Info() { Conn_Status = "Login..." };
+            //CUser.PropertyChanged += new PropertyChangedEventHandler(CUser_PropertyChanged);
 
             InitializeComponent();
-            CUser = LoginLogout(1);
+
+            this.DataContext = this;
+
+            MyClass MC = new MyClass();
+            MC.PropertyChanged += new PropertyChangedEventHandler(CUser_PropertyChanged);
+            CUser.PropertyChanged += new PropertyChangedEventHandler(CUser_PropertyChanged);
+
+            MC.ImageFullPath = "Just a test";
+            LoginLogout(CUser,1);
 
         }
 
+        private void CUser_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            MessageBox.Show(e.PropertyName);
+
+        }
         private void Toggle_Mgt(object sender, RoutedEventArgs e)
         {
 
@@ -64,9 +81,8 @@ namespace Site_Manager
         //
         //  Purpose: Logs a user in or out of the system.  Without being logged in, no actions can be performed
 
-        public User_Info LoginLogout(int pvAction, string pvUserName = "")
+        public int LoginLogout(User_Info CUser, int pvAction, string pvUserName = "")
         {
-            User_Info CUser2 = new User_Info();
             string UserName = pvUserName;
 
             // If the user name is blank then get it from the system and try to log in with AD security
@@ -75,7 +91,7 @@ namespace Site_Manager
             // If logging out, then just wipe out the current user and return the blank one
             if (pvAction == 0)
             {
-                return CUser;
+                return 1;
             }
 
             // If using system user, then get it and process accordingly
@@ -105,26 +121,14 @@ namespace Site_Manager
                 {
                     while (reader.Read())
                     {
-                        CUser2.User_ID = (int)reader[0];
-                        CUser2.User_Name = String.Format("{0}", reader[1]);
-                        CUser2.Access = (int)reader[2];
+                        CUser.User_ID = (int)reader[0];
+                        CUser.User_Name = String.Format("{0}", reader[1]);
+                        CUser.Access = (int)reader[2];
                     }
                 }
             }
-            return CUser2;
+            return 1;
         }
 
-        public void Update_LoginStatus(int pvUserID)
-        {
-            // Update the login/logout
-            if (pvUserID == 0)
-            {
-                mmenu_login.Header = "Login...";
-            }
-            else
-            {
-                mmenu_login.Header = "Logout";
-            }
-        }
     }
 }
