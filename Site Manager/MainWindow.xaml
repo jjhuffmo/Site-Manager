@@ -6,14 +6,11 @@
         xmlns:local="clr-namespace:Site_Manager"
         mc:Ignorable="d"
         Title="Site Manager" Height="450" Width="800" WindowStyle="SingleBorderWindow" ResizeMode="CanResize" WindowState="Maximized">
-    <Menu FontWeight="Normal">
+    <Menu FontWeight="Normal" x:Name="MainMenu">
         <MenuItem x:Name="mmenu_user" Header="User" FontWeight="Bold">
-            <MenuItem x:Name="mmenu_login" Click="Login_Logout" Header="{Binding CUser.Conn_Status, UpdateSourceTrigger=PropertyChanged}"/>
+            <MenuItem x:Name="mmenu_login" Click="Login_Logout"/>
             <MenuItem x:Name="mmenu_profile" Header="Profile" Visibility="Collapsed"/>
         </MenuItem>
-        <MenuItem Header="Management" Uid="menu_management" FontWeight="Bold" Click="Toggle_Mgt"/>
-        <TextBlock Height="37" Text="{Binding CUser.Conn_Status, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" Width="123"/>
-        <Label Content="{Binding CUser.Conn_Status, UpdateSourceTrigger=PropertyChanged}"/>
     </Menu>
 
 </Window>

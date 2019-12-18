@@ -17,9 +17,38 @@ namespace Site_Manager
     /// </summary>
     public partial class dlgLogin : Window
     {
+        public string Entered_User { get; set; }
+
         public dlgLogin()
         {
+
             InitializeComponent();
+            uiUserName.Focus();
+            uiUserName.TextChanged += UiUserName_TextChanged;
+        }
+
+        private void UiUserName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (uiUserName.Text == "")
+                btnLogin.IsEnabled = false;
+            else
+                btnLogin.IsEnabled = true;
+        }
+
+        private void btnLogin_Clicked(object sender, EventArgs e)
+        {
+            Entered_User = uiUserName.Text;
+            if (Entered_User != "")
+            {
+                this.DialogResult = true;
+                this.Close();
+            }
+        }
+
+        private void btnCancel_Clicked(object sender, EventArgs e)
+        {
+            this.DialogResult = false;
+            this.Close();
         }
     }
 

@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.SqlClient;
 using System.ComponentModel;
+using System.Resources;
 
 namespace Site_Manager
 {
@@ -23,52 +24,66 @@ namespace Site_Manager
     /// </summary>
     public partial class MainWindow : Window
     {
-        public User_Info CUser = new User_Info() { Conn_Status = "Login..." };
+        public User_Info CUser = new User_Info();
 
         public MainWindow()
         {
-            
-            //User_Info CUser = new User_Info() { Conn_Status = "Login..." };
-            //CUser.PropertyChanged += new PropertyChangedEventHandler(CUser_PropertyChanged);
-
             InitializeComponent();
 
             this.DataContext = this;
 
-            MyClass MC = new MyClass();
-            MC.PropertyChanged += new PropertyChangedEventHandler(CUser_PropertyChanged);
             CUser.PropertyChanged += new PropertyChangedEventHandler(CUser_PropertyChanged);
 
-            MC.ImageFullPath = "Just a test";
             LoginLogout(CUser,1);
-
         }
 
         private void CUser_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            MessageBox.Show(e.PropertyName);
 
+            switch (e.PropertyName)
+            {
+                case "User_ID":
+                    if (CUser.User_ID > 0)
+                    {
+                        mmenu_login.Header = "Logout";
+                        this.Title = AppTitle + " - " + CUser.User_Name;
+                    }
+                    else
+                    {
+                        mmenu_login.Header = "Login...";
+                        this.Title = AppTitle + " - Not Logged In";
+                    }
+                    break;
+                case "Access_Level":
+                    Update_Main_Menu(CUser.Access);
+                    break;
+                default:
+                    break;
+            }
         }
-        private void Toggle_Mgt(object sender, RoutedEventArgs e)
-        {
 
-        }
-
+        //
+        //  Function:   private void Login_Logout(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = Built in variable of calling object (menuitem)
+        //              RoutedEventArgs e = Built in variable to hold sending objects arguments
+        //
+        //  Purpose:    Display the Login dialog and try logging in if a name was entered and Login button pressed
+        //
         private void Login_Logout(object sender, RoutedEventArgs e)
         {
-            CUser.User_ID = 1;
-            //if (window.ShowDialog() == DialogResult.Value) ;
-
-            /*if ((string)mmenu_login.Header == "Login")
+            if (CUser.User_ID == 0)
             {
-                //if(LoginLogout(1) > 0)  
-                //    mmenu_login.Header = "Logout";
+                var Login = new dlgLogin();
+                if (Login.ShowDialog() == true)
+                {
+                    LoginLogout(CUser, 2, Login.Entered_User);
+                }
             }
             else
             {
-                CUser.User_ID = 0;
-                mmenu_login.Header = "Login";
-            }*/
+                LoginLogout(CUser, 0);
+            }
         }
 
         //
@@ -86,11 +101,14 @@ namespace Site_Manager
             string UserName = pvUserName;
 
             // If the user name is blank then get it from the system and try to log in with AD security
-            string connString = "Data Source=localhost\\SQLEXPRESS;Initial Catalog=Site_Management;Integrated Security=True";
+            string connString = SQLConnString;
 
             // If logging out, then just wipe out the current user and return the blank one
             if (pvAction == 0)
             {
+                CUser.User_ID = 0;
+                CUser.User_Name = "";
+                CUser.Access = 0;
                 return 1;
             }
 
@@ -111,22 +129,41 @@ namespace Site_Manager
 
             // If using an entered user, we don't need to do anything different so just carry on
 
-            string query = "SELECT User_ID, User_Name, Access_Level FROM dbo.User_Info WHERE User_Name ='" + UserName + "'";
+            // Query the User Database for the user
+            StringBuilder query = new StringBuilder("SELECT * FROM ");
+            query.Append(tblUserInfo);
+            query.Append(" WHERE User_Name ='");
+            query.Append(UserName);
+            query.Append("'");
 
             using (SqlConnection sqlCon = new SqlConnection(connString))
             {
                 sqlCon.Open();
-                SqlCommand SqlCmd = new SqlCommand(query, sqlCon);
+                SqlCommand SqlCmd = new SqlCommand(query.ToString(), sqlCon);
                 using (SqlDataReader reader = SqlCmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        CUser.User_ID = (int)reader[0];
                         CUser.User_Name = String.Format("{0}", reader[1]);
                         CUser.Access = (int)reader[2];
+                        CUser.User_ID = (int)reader[0];
                     }
                 }
             }
+            return 1;
+        }
+
+        //
+        //  Function:   public int Update_Main_Menu(int Access)
+        //
+        //  Arguments:  int Access = Access Level of current user
+        //
+        //  Return Value:   int = Status of update (0 = Failed, 1 = Success)
+        //
+        //  Purpose:    Updates
+        public int Update_Main_Menu(int Access)
+        {
+            
             return 1;
         }
 
