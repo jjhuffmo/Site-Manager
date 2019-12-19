@@ -9,9 +9,7 @@ public class User_Info : INotifyPropertyChanged
 
     protected void OnPropertyChanged(PropertyChangedEventArgs e)
     {
-        PropertyChangedEventHandler handler = PropertyChanged;
-        if (handler != null)
-            handler(this, e);
+        PropertyChanged?.Invoke(this, e);
     }
 
     protected void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = "")

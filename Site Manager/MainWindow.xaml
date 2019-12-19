@@ -11,6 +11,14 @@
             <MenuItem x:Name="mmenu_login" Click="Login_Logout"/>
             <MenuItem x:Name="mmenu_profile" Header="Profile" Visibility="Collapsed"/>
         </MenuItem>
+        <MenuItem x:Name="mmenu_user2" Header="User2" FontWeight="Bold" Visibility="Collapsed">
+            <MenuItem x:Name="mmenu_login2" Click="Login_Logout"/>
+            <MenuItem x:Name="mmenu_profile2" Header="Profile" Visibility="Collapsed"/>
+        </MenuItem>
+        <MenuItem x:Name="mmenu_user3" Header="User3" FontWeight="Bold">
+            <MenuItem x:Name="mmenu_login3" Click="Login_Logout"/>
+            <MenuItem x:Name="mmenu_profile3" Header="Profile" Visibility="Collapsed"/>
+        </MenuItem>
     </Menu>
 
 </Window>

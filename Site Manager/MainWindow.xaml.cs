@@ -14,7 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.SqlClient;
 using System.ComponentModel;
-using System.Resources;
+using static Site_Manager.Resources;
+
 
 namespace Site_Manager
 {
@@ -28,6 +29,10 @@ namespace Site_Manager
 
         public MainWindow()
         {
+            Main_Menu main_menu = new Main_Menu();
+
+            main_menu.Initialize();
+
             InitializeComponent();
 
             this.DataContext = this;
@@ -35,6 +40,9 @@ namespace Site_Manager
             CUser.PropertyChanged += new PropertyChangedEventHandler(CUser_PropertyChanged);
 
             LoginLogout(CUser,1);
+
+            //MainMenu.Items.Add(main_menu.menu);
+ 
         }
 
         private void CUser_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -117,7 +125,7 @@ namespace Site_Manager
             {
                 UserName = new System.Security.Principal.WindowsPrincipal(System.Security.Principal.WindowsIdentity.GetCurrent()).Identity.Name;
 
-                int duser = 0;  // See if it's a domain user
+                int duser;  // See if it's a domain user
 
                 duser = UserName.IndexOf("\\");
 
@@ -140,15 +148,14 @@ namespace Site_Manager
             {
                 sqlCon.Open();
                 SqlCommand SqlCmd = new SqlCommand(query.ToString(), sqlCon);
-                using (SqlDataReader reader = SqlCmd.ExecuteReader())
+                using SqlDataReader reader = SqlCmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    while (reader.Read())
-                    {
-                        CUser.User_Name = String.Format("{0}", reader[1]);
-                        CUser.Access = (int)reader[2];
-                        CUser.User_ID = (int)reader[0];
-                    }
+                    CUser.User_Name = String.Format("{0}", reader[1]);
+                    CUser.Access = (int)reader[2];
+                    CUser.User_ID = (int)reader[0];
                 }
+                sqlCon.Close();
             }
             return 1;
         }
@@ -163,8 +170,9 @@ namespace Site_Manager
         //  Purpose:    Updates
         public int Update_Main_Menu(int Access)
         {
-            
-            return 1;
+            if (Access > 0)
+                return 1;
+            else return 0;
         }
 
     }
