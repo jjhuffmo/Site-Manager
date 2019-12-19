@@ -29,10 +29,6 @@ namespace Site_Manager
 
         public MainWindow()
         {
-            Main_Menu main_menu = new Main_Menu();
-
-            main_menu.Initialize();
-
             InitializeComponent();
 
             this.DataContext = this;
@@ -40,9 +36,6 @@ namespace Site_Manager
             CUser.PropertyChanged += new PropertyChangedEventHandler(CUser_PropertyChanged);
 
             LoginLogout(CUser,1);
-
-            //MainMenu.Items.Add(main_menu.menu);
- 
         }
 
         private void CUser_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -61,9 +54,9 @@ namespace Site_Manager
                         mmenu_login.Header = "Login...";
                         this.Title = AppTitle + " - Not Logged In";
                     }
-                    break;
-                case "Access_Level":
                     Update_Main_Menu(CUser.Access);
+                    break;
+                case "Access":
                     break;
                 default:
                     break;
@@ -78,7 +71,20 @@ namespace Site_Manager
         //
         //  Purpose:    Display the Login dialog and try logging in if a name was entered and Login button pressed
         //
-        private void Login_Logout(object sender, RoutedEventArgs e)
+        public void Menu_Exit(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        //
+        //  Function:   private void Login_Logout(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = Built in variable of calling object (menuitem)
+        //              RoutedEventArgs e = Built in variable to hold sending objects arguments
+        //
+        //  Purpose:    Display the Login dialog and try logging in if a name was entered and Login button pressed
+        //
+        public void Login_Logout(object sender, RoutedEventArgs e)
         {
             if (CUser.User_ID == 0)
             {
@@ -114,9 +120,9 @@ namespace Site_Manager
             // If logging out, then just wipe out the current user and return the blank one
             if (pvAction == 0)
             {
-                CUser.User_ID = 0;
                 CUser.User_Name = "";
                 CUser.Access = 0;
+                CUser.User_ID = 0;
                 return 1;
             }
 
@@ -170,9 +176,60 @@ namespace Site_Manager
         //  Purpose:    Updates
         public int Update_Main_Menu(int Access)
         {
-            if (Access > 0)
-                return 1;
-            else return 0;
+            MenuItem item;
+            MenuItem subitem1;
+            MenuItem subitem2;
+            MenuItem subitem3;
+
+            // Parse the main menu and hide anything above the user's access level
+            // Access levels of menu items are defined in each menu items UID
+            for (int i = 0; i < MainMenu.Items.Count; i++)
+            {
+                item = (MenuItem)MainMenu.Items.GetItemAt(i);
+                if (item.Items.Count > 1)
+                {
+                    for (int j = 0; j < item.Items.Count; j++)
+                    {
+                        subitem1 = (MenuItem)item.Items.GetItemAt(j);
+                        if (subitem1.Items.Count > 1)
+                        {
+                            for (int k = 0; k < item.Items.Count; k++)
+                            {
+                                subitem2 = (MenuItem)subitem1.Items.GetItemAt(k);
+                                if (subitem2.Items.Count > 1)
+                                {
+                                    for (int l = 0; l < item.Items.Count; l++)
+                                    {
+                                        subitem3 = (MenuItem)subitem2.Items.GetItemAt(l);
+                                        Hide_Show_Menu(subitem3, Access);
+                                    }
+                                    Hide_Show_Menu(subitem2, Access);
+                                }
+                                else
+                                    Hide_Show_Menu(subitem2, Access);
+                            }
+                            Hide_Show_Menu(subitem1, Access);
+                        }
+                        else
+                            Hide_Show_Menu(subitem1, Access);
+                    }
+                    Hide_Show_Menu(item, Access);
+                }
+                else
+                    Hide_Show_Menu(item, Access);
+            }
+            return 1;
+        }
+
+        private void Hide_Show_Menu(MenuItem item, int Access)
+        {
+            if (String.IsNullOrEmpty(item.Uid) == false)
+            {
+                if (Convert.ToInt32(item.Uid) > Access)
+                    item.Visibility = Visibility.Collapsed;
+                else
+                    item.Visibility = Visibility.Visible;
+            }
         }
 
     }

@@ -7,17 +7,26 @@
         mc:Ignorable="d"
         Title="Site Manager" Height="450" Width="800" WindowStyle="SingleBorderWindow" ResizeMode="CanResize" WindowState="Maximized">
     <Menu FontWeight="Normal" x:Name="MainMenu">
-        <MenuItem x:Name="mmenu_user" Header="User" FontWeight="Bold">
-            <MenuItem x:Name="mmenu_login" Click="Login_Logout"/>
-            <MenuItem x:Name="mmenu_profile" Header="Profile" Visibility="Collapsed"/>
+        <MenuItem x:Name="mmenu_user" Header="User" FontWeight="Bold" Uid="0">
+            <MenuItem x:Name="mmenu_login" Click="Login_Logout" Uid="0"/>
+            <MenuItem x:Name="mmenu_profile" Header="Profile" Uid="1"/>
+            <MenuItem x:Name="mmenu_exit" Click="Menu_Exit" Header="Exit" Uid="0"/>
         </MenuItem>
-        <MenuItem x:Name="mmenu_user2" Header="User2" FontWeight="Bold" Visibility="Collapsed">
-            <MenuItem x:Name="mmenu_login2" Click="Login_Logout"/>
-            <MenuItem x:Name="mmenu_profile2" Header="Profile" Visibility="Collapsed"/>
+        <MenuItem x:Name="mmenu_mgmt" Header="Management" FontWeight="Bold" Uid="5000">
+            <MenuItem x:Name="mmenu_login2" Header="_Create Site" Click="Login_Logout" Uid="1000"/>
+            <MenuItem x:Name="mmenu_profile2" Header="_Delete Site" Uid="1000"/>
         </MenuItem>
-        <MenuItem x:Name="mmenu_user3" Header="User3" FontWeight="Bold">
-            <MenuItem x:Name="mmenu_login3" Click="Login_Logout"/>
-            <MenuItem x:Name="mmenu_profile3" Header="Profile" Visibility="Collapsed"/>
+        <MenuItem x:Name="mmenu_sites" Header="Sites" FontWeight="Bold" Uid="1">
+            <MenuItem x:Name="mmenu_login3" Header="View My _Sites" Uid="1"/>
+            <MenuItem x:Name="mmenu_profile3" Header="Close My Sites" Uid="1"/>
+        </MenuItem>
+        <MenuItem x:Name="mmenu_sites4" Header="Tickets" FontWeight="Bold" Uid="1">
+            <MenuItem x:Name="mmenu_login4" Header="View My Live _Tickets" Uid="1"/>
+            <MenuItem x:Name="mmenu_profile4" Header="View My Closed Tickets" Uid="1">
+                <MenuItem x:Name="mmenu_login5" Header="Last 7 Days" Uid="1"/>
+                <MenuItem x:Name="mmenu_profile5" Header="Last 30 Days" Uid="1"/>
+                <MenuItem x:Name="mmenu_profile6" Header="Last 60 Days" Uid="1"/>
+            </MenuItem>
         </MenuItem>
     </Menu>
 
