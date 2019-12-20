@@ -79,11 +79,39 @@ namespace Site_Manager {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to dbo.Site_Info.
+        /// </summary>
+        public static string tblSiteInfo {
+            get {
+                return ResourceManager.GetString("tblSiteInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to dbo.Site_Users.
+        /// </summary>
+        public static string tblSiteUsers {
+            get {
+                return ResourceManager.GetString("tblSiteUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to dbo.User_Info.
         /// </summary>
         public static string tblUserInfo {
             get {
                 return ResourceManager.GetString("tblUserInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] tbUser {
+            get {
+                object obj = ResourceManager.GetObject("tbUser", resourceCulture);
+                return ((byte[])(obj));
             }
         }
     }

@@ -125,8 +125,20 @@
     <value>Data Source=localhost\SQLEXPRESS;Initial Catalog=Site_Management;Integrated Security=True</value>
     <comment>SQL Connection String for default logging in.</comment>
   </data>
+  <data name="tblSiteInfo" xml:space="preserve">
+    <value>dbo.Site_Info</value>
+    <comment>Name of table containing site information (Customer, Address, etc.)</comment>
+  </data>
+  <data name="tblSiteUsers" xml:space="preserve">
+    <value>dbo.Site_Users</value>
+    <comment>Name of the table containing site user information</comment>
+  </data>
   <data name="tblUserInfo" xml:space="preserve">
     <value>dbo.User_Info</value>
     <comment>Name of the table containing user information</comment>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="tbUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\tbUser.ico;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

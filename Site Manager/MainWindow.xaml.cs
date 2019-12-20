@@ -25,7 +25,8 @@ namespace Site_Manager
     /// </summary>
     public partial class MainWindow : Window
     {
-        public User_Info CUser = new User_Info();
+        public User_Info current_user = new User_Info();
+        public User_Sites user_sites = new User_Sites();
 
         public MainWindow()
         {
@@ -33,9 +34,9 @@ namespace Site_Manager
 
             this.DataContext = this;
 
-            CUser.PropertyChanged += new PropertyChangedEventHandler(CUser_PropertyChanged);
+            current_user.PropertyChanged += new PropertyChangedEventHandler(CUser_PropertyChanged);
 
-            LoginLogout(CUser,1);
+            LoginLogout(current_user, 1);
         }
 
         private void CUser_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -44,17 +45,21 @@ namespace Site_Manager
             switch (e.PropertyName)
             {
                 case "User_ID":
-                    if (CUser.User_ID > 0)
+                    if (current_user.User_ID > 0)
                     {
                         mmenu_login.Header = "Logout";
-                        this.Title = AppTitle + " - " + CUser.User_Name;
+                        this.Title = AppTitle + " - " + current_user.User_Name;
+                        user_sites = Load_My_Sites(current_user);
+                        Update_Sites_List(user_sites);
+                        SiteList.Visibility = Visibility.Visible;
                     }
                     else
                     {
                         mmenu_login.Header = "Login...";
                         this.Title = AppTitle + " - Not Logged In";
+                        SiteList.Visibility = Visibility.Hidden;
                     }
-                    Update_Main_Menu(CUser.Access);
+                    Update_Main_Menu(current_user.Access);
                     break;
                 case "Access":
                     break;
@@ -86,18 +91,37 @@ namespace Site_Manager
         //
         public void Login_Logout(object sender, RoutedEventArgs e)
         {
-            if (CUser.User_ID == 0)
+            if (current_user.User_ID == 0)
             {
                 var Login = new dlgLogin();
                 if (Login.ShowDialog() == true)
                 {
-                    LoginLogout(CUser, 2, Login.Entered_User);
+                    LoginLogout(current_user, 2, Login.Entered_User);
                 }
             }
             else
             {
-                LoginLogout(CUser, 0);
+                LoginLogout(current_user, 0);
             }
+        }
+
+        //
+        //  Function:   private void Login_Logout(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = Built in variable of calling object (menuitem)
+        //              RoutedEventArgs e = Built in variable to hold sending objects arguments
+        //
+        //  Purpose:    Display the Login dialog and try logging in if a name was entered and Login button pressed
+        //
+        public void Create_Site(object sender, RoutedEventArgs e)
+        {
+            var NS = new Sites();
+
+            NS.Short_Name = "Test Name";
+
+            var newsite = new UC_Site(NS);
+
+            this.Content_Control.Content = newsite;
         }
 
         //
@@ -232,5 +256,83 @@ namespace Site_Manager
             }
         }
 
+        //
+        //  Function:   public void Load_My_Sites(User_Info user)
+        //
+        //  Arguments:  user = User Info of currently logged in user
+        //
+        //  Return:     User_Sites = Structure holding all the sites
+        //              accessible to the current user.
+        //
+        //  Purpose:    Loads the sites accessible to the current user
+        //              into a structure for parsing/using.
+        //
+        public User_Sites Load_My_Sites(User_Info user)
+        {
+            string connString = SQLConnString;
+
+            var sites = new User_Sites();
+
+            // Query the Site Users Database for the sites for this user
+            StringBuilder query = new StringBuilder("SELECT * FROM ");
+            query.Append(tblSiteUsers);
+            query.Append(" WHERE User_ID = ");
+            query.Append(user.User_ID.ToString());
+
+            // Read all the sites associated with this user
+            using (SqlConnection sqlCon = new SqlConnection(connString))
+            {
+                sqlCon.Open();
+                SqlCommand SqlCmd = new SqlCommand(query.ToString(), sqlCon);
+                using SqlDataReader reader = SqlCmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    sites.site_id.Add((long)reader[1]);
+                    sites.site_access.Add((int)reader[3]);
+                }
+            }
+
+            // Query the Site Info Database for each of the sites names
+            query = new StringBuilder("SELECT Short_Name FROM ");
+            query.Append(tblSiteInfo);
+            query.Append(" WHERE Site_ID = ");
+            foreach(int sid in sites.site_id)
+            {
+                query.Append(sid.ToString());
+                query.Append(" OR Site_ID = ");
+            }
+            query.Remove(query.Length - 14, 14);
+
+            // Read all the sites associated with this user
+            using (SqlConnection sqlCon = new SqlConnection(connString))
+            {
+                sqlCon.Open();
+                SqlCommand SqlCmd = new SqlCommand(query.ToString(), sqlCon);
+                using SqlDataReader reader = SqlCmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    sites.site_name.Add((string)reader[0]);
+                }
+                sqlCon.Close();
+            }
+            return sites;
+        }
+
+        //
+        //  Function:   public void Update_Sites_List(User_Sites sites)
+        //
+        //  Arguments:  sites = User_Sites array of accessible sites
+        //
+        //  Purpose:    Displays all of the Sites associated with this user.
+        //
+        public void Update_Sites_List(User_Sites sites)
+        {
+            SiteList.Items.Clear();
+            foreach (string sname in sites.site_name)
+            {
+                SiteList.Items.Add(sname);
+            }
+        }
     }
 }
+
