@@ -117,11 +117,11 @@ namespace Site_Manager
         {
             var NS = new Sites();
 
-            NS.Short_Name = "Test Name";
-
             var newsite = new UC_Site(NS);
 
             this.Content_Control.Content = newsite;
+
+            this.Content_Control.Visibility = Visibility.Visible;
         }
 
         //
@@ -272,6 +272,7 @@ namespace Site_Manager
             string connString = SQLConnString;
 
             var sites = new User_Sites();
+            sites.Initialize();
 
             // Query the Site Users Database for the sites for this user
             StringBuilder query = new StringBuilder("SELECT * FROM ");

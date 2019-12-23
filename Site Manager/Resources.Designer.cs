@@ -79,11 +79,29 @@ namespace Site_Manager {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (Short_Name, Full_Name, Customer_Name, Address).
+        /// </summary>
+        public static string tblSiteFields {
+            get {
+                return ResourceManager.GetString("tblSiteFields", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to dbo.Site_Info.
         /// </summary>
         public static string tblSiteInfo {
             get {
                 return ResourceManager.GetString("tblSiteInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VALUES (@short_name, @full_name, @customer_name, @address).
+        /// </summary>
+        public static string tblSiteInsert {
+            get {
+                return ResourceManager.GetString("tblSiteInsert", resourceCulture);
             }
         }
         

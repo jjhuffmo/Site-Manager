@@ -125,9 +125,15 @@
     <value>Data Source=localhost\SQLEXPRESS;Initial Catalog=Site_Management;Integrated Security=True</value>
     <comment>SQL Connection String for default logging in.</comment>
   </data>
+  <data name="tblSiteFields" xml:space="preserve">
+    <value>(Short_Name, Full_Name, Customer_Name, Address)</value>
+  </data>
   <data name="tblSiteInfo" xml:space="preserve">
     <value>dbo.Site_Info</value>
     <comment>Name of table containing site information (Customer, Address, etc.)</comment>
+  </data>
+  <data name="tblSiteInsert" xml:space="preserve">
+    <value>VALUES (@short_name, @full_name, @customer_name, @address)</value>
   </data>
   <data name="tblSiteUsers" xml:space="preserve">
     <value>dbo.Site_Users</value>
