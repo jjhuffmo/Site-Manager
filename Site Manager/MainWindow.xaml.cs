@@ -27,6 +27,7 @@ namespace Site_Manager
     {
         public User_Info current_user = new User_Info();
         public User_Sites user_sites = new User_Sites();
+        public Settings System_Settings = new Settings();
 
         public MainWindow()
         {
@@ -35,11 +36,70 @@ namespace Site_Manager
             this.DataContext = this;
 
             current_user.PropertyChanged += new PropertyChangedEventHandler(CUser_PropertyChanged);
+            SiteList.SelectionChanged += new SelectionChangedEventHandler(SiteList_Changed);
+            System_Settings.PropertyChanged += new PropertyChangedEventHandler(System_Settings_Changed);
 
             LoginLogout(current_user, 1);
         }
 
-        private void CUser_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void System_Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void View_Sites_Clicked(object sender, RoutedEventArgs e)
+        {
+            System_Settings.Show_Sites = mmenu_view_sites.IsChecked;
+        }
+        private void SiteList_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            if (SiteList.SelectedItem != null)
+            {
+                mmenu_delete_site.Visibility = Visibility.Visible;
+                mmenu_modify_site.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                mmenu_delete_site.Visibility = Visibility.Collapsed;
+                mmenu_modify_site.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        //
+        //  Function:  private void System_Settings_Changed(object sender, PropertyChangedEventArgs e)
+        //
+        //  Arguments:  object sender = Built in variable of calling object (menuitem)
+        //              RoutedEventArgs e = Built in variable to hold sending objects arguments
+        //
+        //  Purpose:    Check for the modified system settings and respond appropriately
+        //
+        private void System_Settings_Changed(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "Show_Sites":
+                    if (System_Settings.Show_Sites)
+                    {
+                        Splitter.Visibility = Visibility.Visible;
+                        Sites_Panel.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        Splitter.Visibility = Visibility.Hidden;
+                        Sites_Panel.Visibility = Visibility.Collapsed;
+                    }
+                    break;
+            }
+        }
+            //
+            //  Function:   private void CUser_PropertyChanged(object sender, PropertyChangedEventArgs e)
+            //
+            //  Arguments:  object sender = Built in variable of calling object (menuitem)
+            //              RoutedEventArgs e = Built in variable to hold sending objects arguments
+            //
+            //  Purpose:    Check for the modified user settings and respond appropriately
+            //
+            private void CUser_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
 
             switch (e.PropertyName)
@@ -60,6 +120,14 @@ namespace Site_Manager
                         SiteList.Visibility = Visibility.Hidden;
                     }
                     Update_Main_Menu(current_user.Access);
+                    break;
+                case "Modified":
+                    if (current_user.Modified)
+                    {
+                        Update_Sites_List(Load_My_Sites(current_user));
+                        SiteList.Visibility = Visibility.Visible;
+                        current_user.Modified = false;
+                    }
                     break;
                 case "Access":
                     break;
@@ -111,17 +179,85 @@ namespace Site_Manager
         //  Arguments:  object sender = Built in variable of calling object (menuitem)
         //              RoutedEventArgs e = Built in variable to hold sending objects arguments
         //
-        //  Purpose:    Display the Login dialog and try logging in if a name was entered and Login button pressed
+        //  Purpose:    Display the custom control to create a new site
         //
         public void Create_Site(object sender, RoutedEventArgs e)
         {
             var NS = new Sites();
 
-            var newsite = new UC_Site(NS);
+            var newsite = new UC_Site(NS, 0, current_user);
 
             this.Content_Control.Content = newsite;
 
             this.Content_Control.Visibility = Visibility.Visible;
+        }
+
+        //
+        //  Function:   public void Modify_Site(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = Built in variable of calling object (menuitem)
+        //              RoutedEventArgs e = Built in variable to hold sending objects arguments
+        //
+        //  Purpose:    Modifies and existing site
+        //
+        public void Modify_Site(object sender, RoutedEventArgs e)
+        {
+            // Get the site name (short name in DB)
+            if (SiteList.SelectedItem != null)
+            {
+                string Site_Name = (string)SiteList.SelectedItem;
+
+                Load_Site(Site_Name, 1);
+            }
+        }
+
+        
+        //
+        //  Function:   public void SiteList_dblClick(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = Built in variable of calling object (menuitem)
+        //              RoutedEventArgs e = Built in variable to hold sending objects arguments
+        //
+        //  Purpose:    Open the currently selected site (in SiteList) and display the information in the custom control
+        //
+        public void SiteList_dblClick(object sender, RoutedEventArgs e)
+        {
+            // Get the site name (short name in DB)
+            if (SiteList.SelectedItem != null)
+            {
+                string Site_Name = (string)SiteList.SelectedItem;
+
+                Load_Site(Site_Name, 2);
+            }
+
+        }
+
+        //
+        //  Function:   public void Load_Site(string Site_Name, int mode)
+        //
+        //  Arguments:  string Site_Name = Name of site to load
+        //              int mode = Mode of load (1 = Edit, 2 = View Only)
+        //
+        //  Purpose:    Loads a site for viewing or modifying
+        //
+        public void Load_Site(string Site_Name, int mode)
+        {
+            if (SiteList.SelectedItem != null)
+            {
+                Sites View_Site = new Sites();
+
+                // Try to the load the site.  If successful, display it otherwise don't (add not found handling later)
+                if (View_Site.Load_Site(Site_Name) == true)
+                {
+                    var editsite = new UC_Site(View_Site, mode, current_user);
+                    this.Content_Control.Content = editsite;
+                    this.Content_Control.Visibility = Visibility.Visible;
+                }
+                else
+                    this.Content_Control.Visibility = Visibility.Hidden;
+            }
+            else
+                this.Content_Control.Visibility = Visibility.Hidden;
         }
 
         //
@@ -241,6 +377,11 @@ namespace Site_Manager
                 }
                 else
                     Hide_Show_Menu(item, Access);
+            }
+            if (SiteList.SelectedItem == null)
+            {
+                mmenu_delete_site.Visibility = Visibility.Collapsed;
+                mmenu_modify_site.Visibility = Visibility.Collapsed;
             }
             return 1;
         }

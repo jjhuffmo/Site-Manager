@@ -127,6 +127,7 @@
   </data>
   <data name="tblSiteFields" xml:space="preserve">
     <value>(Short_Name, Full_Name, Customer_Name, Address)</value>
+    <comment>Site Info table fields.</comment>
   </data>
   <data name="tblSiteInfo" xml:space="preserve">
     <value>dbo.Site_Info</value>
@@ -134,6 +135,11 @@
   </data>
   <data name="tblSiteInsert" xml:space="preserve">
     <value>VALUES (@short_name, @full_name, @customer_name, @address)</value>
+    <comment>Command to Insert a new Site Record</comment>
+  </data>
+  <data name="tblSiteUpdate" xml:space="preserve">
+    <value>SET Short_Name = @short_name, Full_Name = @full_name, Customer_Name = @customer_name, Address = @address WHERE Site_ID = </value>
+    <comment>Command to Update a Site Record</comment>
   </data>
   <data name="tblSiteUsers" xml:space="preserve">
     <value>dbo.Site_Users</value>

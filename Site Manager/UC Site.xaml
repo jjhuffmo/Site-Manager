@@ -6,21 +6,21 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Site_Manager"
              mc:Ignorable="d" 
-             d:DesignHeight="335.25" d:DesignWidth="787.625">
-    <Grid>
-        <TextBox x:Name="Short_Name" HorizontalAlignment="Left" Height="20" Margin="29,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="142" Text="" TextChanged="Short_Name_Changed" />
-        <TextBlock HorizontalAlignment="Left" Margin="31,14,0,0" Text="Site Name (15 char max)" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" FontWeight="Bold"/>
-        <TextBox x:Name="Full_Name" HorizontalAlignment="Left" Height="22" Margin="29,107,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="142"/>
-        <TextBlock HorizontalAlignment="Left" Margin="70,87,0,0" Text="Full Name:" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" FontWeight="Bold"/>
-        <TextBox x:Name="Customer_Name" HorizontalAlignment="Left" Height="22" Margin="29,173,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="142"/>
-        <TextBlock HorizontalAlignment="Left" Margin="53,140,0,0" Text="Customer Name:" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" FontWeight="Bold"/>
-        <TextBox x:Name="Site_Address" HorizontalAlignment="Left" Height="146" Margin="196,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="230" AcceptsReturn="True"/>
-        <TextBlock HorizontalAlignment="Left" Margin="275,14,0,0" Text="Site Address:" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" FontWeight="Bold"/>
-        <Button x:Name="btn_Save" Content="Save" HorizontalAlignment="Left" Height="21" Margin="60,294,0,0" VerticalAlignment="Top" Width="80" Click="btn_Save_Clicked"/>
-        <Button x:Name="btn_Cancel" Content="Cancel" HorizontalAlignment="Left" Height="21" Margin="677,294,0,0" VerticalAlignment="Top" Width="80" Click="btn_Cancel_Clicked"/>
-        <TextBlock x:Name="Site_Exists" HorizontalAlignment="Left" Margin="72,58,0,0" Text="Site Exists" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" FontWeight="Bold" Foreground="#FFFD0808" Visibility="Hidden"/>
-        <TextBlock HorizontalAlignment="Left" Margin="553,14,0,0" Text="Users With Access:" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" FontWeight="Bold"/>
-        <ListBox x:Name="Users_List" Margin="457,36,34,56" Width="300" Height="243" SelectionMode="Extended"/>
+             d:DesignHeight="335.25" d:DesignWidth="657.715">
+    <Grid x:Name="Site_Grid">
+        <TextBox x:Name="Short_Name" HorizontalAlignment="Left" Height="20" Margin="260,31,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="142" Text="" TextChanged="Short_Name_Changed" />
+        <TextBlock HorizontalAlignment="Left" Margin="244,10,0,0" Text="Site Name (15 char max)" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" FontWeight="Bold"/>
+        <TextBox x:Name="Full_Name" HorizontalAlignment="Left" Height="20" Margin="15,87,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300"/>
+        <TextBlock HorizontalAlignment="Left" Margin="123,66,0,0" Text="Full Site Name:" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" FontWeight="Bold"/>
+        <TextBox x:Name="Customer_Name" HorizontalAlignment="Left" Height="22" Margin="15,135,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300"/>
+        <TextBlock HorizontalAlignment="Left" Margin="118,114,0,0" Text="Customer Name:" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" FontWeight="Bold"/>
+        <TextBox x:Name="Site_Address" HorizontalAlignment="Left" Height="96" Margin="15,183,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" AcceptsReturn="True"/>
+        <TextBlock HorizontalAlignment="Left" Margin="129,162,0,0" Text="Site Address:" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" FontWeight="Bold"/>
+        <Button x:Name="btn_Save" Content="Save" HorizontalAlignment="Left" Height="30" Margin="15,294,0,0" VerticalAlignment="Top" Width="200" Click="btn_Save_Clicked"/>
+        <Button x:Name="btn_Cancel" Content="Cancel" HorizontalAlignment="Left" Height="30" Margin="442,295,0,0" VerticalAlignment="Top" Width="200" Click="btn_Cancel_Clicked"/>
+        <TextBlock x:Name="Site_Exists" HorizontalAlignment="Left" Margin="303,51,0,0" Text="Site Exists" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" FontWeight="Bold" Foreground="#FFFD0808" Visibility="Hidden"/>
+        <TextBlock HorizontalAlignment="Left" Margin="440,67,0,0" Text="Users With Access:" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" FontWeight="Bold"/>
+        <ListBox x:Name="Users_List" Margin="342,88,16,56" Width="300" SelectionMode="Extended" Height="191.25"/>
 
     </Grid>
 </UserControl>

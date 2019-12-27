@@ -106,6 +106,15 @@ namespace Site_Manager {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SET Short_Name = @short_name, Full_Name = @full_name, Customer_Name = @customer_name, Address = @address WHERE Site_ID = .
+        /// </summary>
+        public static string tblSiteUpdate {
+            get {
+                return ResourceManager.GetString("tblSiteUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to dbo.Site_Users.
         /// </summary>
         public static string tblSiteUsers {

@@ -3,6 +3,7 @@
 public class User_Info : INotifyPropertyChanged
 {
     private int _User_ID;
+    private bool _Modified;
 
     public string User_Name = "";
     public int Access = 0;
@@ -23,6 +24,16 @@ public class User_Info : INotifyPropertyChanged
         set
         {
             _User_ID = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool Modified
+    {
+        get { return _Modified; }
+        set
+        {
+            _Modified = value;
             OnPropertyChanged();
         }
     }

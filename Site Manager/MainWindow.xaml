@@ -23,13 +23,19 @@
 
         <Grid x:Name="BodyGrid" Grid.Row="2" IsManipulationEnabled="True" ShowGridLines="False" Margin="0,-5,0,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" MinWidth="75"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="643*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="My Sites" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center"></TextBlock>
-            <ListBox x:Name="SiteList" ScrollViewer.VerticalScrollBarVisibility="Auto" FontWeight="Bold" BorderThickness="1,1,1,1" Margin="0,20,0,0" VerticalContentAlignment="Top">
-            </ListBox>
-            <GridSplitter Grid.Column="1" 
+            <Grid x:Name="Sites_Panel" Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MinWidth="75">
+                    </ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="My Sites" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center"></TextBlock>
+                <ListBox x:Name="SiteList" ScrollViewer.VerticalScrollBarVisibility="Auto" FontWeight="Bold" BorderThickness="1,1,1,1" Margin="0,20,0,0" VerticalContentAlignment="Top" MouseDoubleClick="SiteList_dblClick" >
+                </ListBox>
+            </Grid>
+            <GridSplitter x:Name="Splitter" Grid.Column="1" 
               Grid.RowSpan="1" 
               HorizontalAlignment="Left" 
               VerticalAlignment="Stretch"
@@ -42,7 +48,7 @@
               VerticalAlignment="Top"
               Background="LightGray"
               Height="1" IsEnabled="False" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
-            <ContentControl x:Name="Content_Control" Content="ContentControl" Grid.Column="1" HorizontalAlignment="Left" Margin="7,10,0,0" VerticalAlignment="Top"/>
+            <ContentControl x:Name="Content_Control" Content="ContentControl" Grid.Column="1" HorizontalAlignment="Left" Margin="7,10,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
         </Grid>
         <Menu FontWeight="Normal" x:Name="MainMenu" VerticalAlignment="Top" Height="18">
             <MenuItem x:Name="mmenu_user" Header="User" FontWeight="Bold" Uid="0">
@@ -51,12 +57,12 @@
                 <MenuItem x:Name="mmenu_exit" Click="Menu_Exit" Header="Exit" Uid="0"/>
             </MenuItem>
             <MenuItem x:Name="mmenu_mgmt" Header="Management" FontWeight="Bold" Uid="5000">
-                <MenuItem x:Name="mmenu_login2" Header="_Create Site" Click="Create_Site" Uid="1000"/>
-                <MenuItem x:Name="mmenu_profile2" Header="_Delete Site" Uid="1000"/>
+                <MenuItem x:Name="mmenu_create_site" Header="_Create Site" Click="Create_Site" Uid="1000"/>
+                <MenuItem x:Name ="mmenu_modify_site" Header="Modify Site" Click="Modify_Site" Uid="1000"/>
+                <MenuItem x:Name="mmenu_delete_site" Header="_Delete Site" Uid="1000"/>
             </MenuItem>
             <MenuItem x:Name="mmenu_sites" Header="Sites" FontWeight="Bold" Uid="1">
-                <MenuItem x:Name="mmenu_login3" Header="View My _Sites" Uid="1"/>
-                <MenuItem x:Name="mmenu_profile3" Header="Close My Sites" Uid="1"/>
+                <MenuItem x:Name="mmenu_view_sites" Header="View My _Sites" Uid="1" IsCheckable="True" IsChecked="True" Click="View_Sites_Clicked"/>
             </MenuItem>
             <MenuItem x:Name="mmenu_sites4" Header="Tickets" FontWeight="Bold" Uid="1">
                 <MenuItem x:Name="mmenu_login4" Header="View My Live _Tickets" Uid="1"/>

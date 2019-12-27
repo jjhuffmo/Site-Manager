@@ -45,8 +45,18 @@ namespace Site_Manager
             User_ID = new List<int>();
             Access = new List<int>();
         }
-        public void Get_List()
+
+        //
+        //  Function:   public void Get_List(int mode, long site_id)
+        //
+        //  Arguments:  int mode = Mode of list to get (0 = All Users, 1 = Only Users For This Site)
+        //              long site_id = Site ID to get the list for (if mode is 1)
+        //
+        //  Purpose:    Display the Login dialog and try logging in if a name was entered and Login button pressed
+        //
+        public void Get_List(int mode, long site_id=0)
         {
+            List<int> site_users = new List<int>();
 
             Initialize();
 
@@ -55,21 +65,70 @@ namespace Site_Manager
 
             // Query the User Database for the user
             StringBuilder query = new StringBuilder("SELECT * FROM ");
-            query.Append(tblUserInfo);
-
-            using (SqlConnection sqlCon = new SqlConnection(connString))
+            switch (mode)
             {
-                sqlCon.Open();
-                SqlCommand SqlCmd = new SqlCommand(query.ToString(), sqlCon);
-                using SqlDataReader reader = SqlCmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    User_Name.Add(String.Format("{0}", reader[1]));
-                    Access.Add((int)reader[2]);
-                    User_ID.Add((int)reader[0]);
-                }
-                sqlCon.Close();
+                // All Users
+                case 0:
+                    query.Append(tblUserInfo);
+                    using (SqlConnection sqlCon = new SqlConnection(connString))
+                    {
+                        sqlCon.Open();
+                        SqlCommand SqlCmd = new SqlCommand(query.ToString(), sqlCon);
+                        using SqlDataReader reader = SqlCmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            User_Name.Add(String.Format("{0}", reader[1]));
+                            Access.Add((int)reader[2]);
+                            User_ID.Add((int)reader[0]);
+                        }
+                        sqlCon.Close();
+                    }
+                    break;
+
+                // Site_ID users
+                case 1:
+                    query.Append(tblSiteUsers);
+                    query.Append(" WHERE Site_ID = ");
+                    query.Append(site_id.ToString());
+                    // Get list of User_ID's
+                    using (SqlConnection sqlCon = new SqlConnection(connString))
+                    {
+                        sqlCon.Open();
+                        SqlCommand SqlCmd = new SqlCommand(query.ToString(), sqlCon);
+                        using SqlDataReader reader = SqlCmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            site_users.Add((int)reader[2]);
+                        }
+                        sqlCon.Close();
+                    }
+
+                    // Convert that list to actual names for display
+                    foreach (int id in site_users)
+                    {
+                        query.Clear();
+                        query.Append("SELECT * FROM ");
+                        query.Append(tblUserInfo);
+                        query.Append(" WHERE User_ID = ");
+                        query.Append(id.ToString());
+                        using (SqlConnection sqlCon = new SqlConnection(connString))
+                        {
+                            sqlCon.Open();
+                            SqlCommand SqlCmd = new SqlCommand(query.ToString(), sqlCon);
+                            using SqlDataReader reader = SqlCmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                User_Name.Add(String.Format("{0}", reader[1]));
+                                Access.Add((int)reader[2]);
+                                User_ID.Add((int)reader[0]);
+                            }
+                            sqlCon.Close();
+                        }
+                    }
+                    break;
             }
+
+
         }
     }
 }
