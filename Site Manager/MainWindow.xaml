@@ -21,7 +21,7 @@
             </ToolBar>
         </ToolBarPanel>
 
-        <Grid x:Name="BodyGrid" Grid.Row="2" IsManipulationEnabled="True" ShowGridLines="False" Margin="0,-5,0,0">
+        <Grid x:Name="BodyGrid" Grid.Row="3" IsManipulationEnabled="True" ShowGridLines="False" Margin="0,-5,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="643*"/>
@@ -48,12 +48,16 @@
               VerticalAlignment="Top"
               Background="LightGray"
               Height="1" IsEnabled="False" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
-            <ContentControl x:Name="Content_Control" Content="ContentControl" Grid.Column="1" HorizontalAlignment="Left" Margin="7,10,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
+            <TabControl x:Name="Sites_Tabs" Grid.Column="1">
+            </TabControl>
         </Grid>
         <Menu FontWeight="Normal" x:Name="MainMenu" VerticalAlignment="Top" Height="18">
             <MenuItem x:Name="mmenu_user" Header="User" FontWeight="Bold" Uid="0">
                 <MenuItem x:Name="mmenu_login" Click="Login_Logout" Uid="0"/>
                 <MenuItem x:Name="mmenu_profile" Header="Profile" Uid="1"/>
+                <MenuItem Header="Interface Options" Uid="1">
+                        <MenuItem x:Name="mmenu_view_sites" Header="View My _Sites" Uid="1" IsCheckable="True" IsChecked="True" Click="View_Sites_Clicked"/>
+                </MenuItem>
                 <MenuItem x:Name="mmenu_exit" Click="Menu_Exit" Header="Exit" Uid="0"/>
             </MenuItem>
             <MenuItem x:Name="mmenu_mgmt" Header="Management" FontWeight="Bold" Uid="5000">
@@ -62,7 +66,8 @@
                 <MenuItem x:Name="mmenu_delete_site" Header="_Delete Site" Uid="1000"/>
             </MenuItem>
             <MenuItem x:Name="mmenu_sites" Header="Sites" FontWeight="Bold" Uid="1">
-                <MenuItem x:Name="mmenu_view_sites" Header="View My _Sites" Uid="1" IsCheckable="True" IsChecked="True" Click="View_Sites_Clicked"/>
+                <MenuItem x:Name="mmenu_open_site" Header="Open Site" Uid="1"></MenuItem>
+                <MenuItem x:Name="mmenu_close_site" Header="Close Site" Uid="1" Click="Close_Site"></MenuItem>
             </MenuItem>
             <MenuItem x:Name="mmenu_sites4" Header="Tickets" FontWeight="Bold" Uid="1">
                 <MenuItem x:Name="mmenu_login4" Header="View My Live _Tickets" Uid="1"/>

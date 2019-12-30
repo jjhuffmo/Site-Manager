@@ -28,10 +28,12 @@ namespace Site_Manager
         public User_Info current_user = new User_Info();
         public User_Sites user_sites = new User_Sites();
         public Settings System_Settings = new Settings();
+        public Opened_Sites Opened_Sites = new Opened_Sites();
 
         public MainWindow()
         {
             InitializeComponent();
+            Opened_Sites.Initialize();
 
             this.DataContext = this;
 
@@ -42,15 +44,41 @@ namespace Site_Manager
             LoginLogout(current_user, 1);
         }
 
+        //
+        //  Function:  private void System_Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        //
+        //  Arguments:  object sender = Built in variable of calling object (menuitem)
+        //              PropertyChangedEventArgs e = Built in variable to hold sending objects arguments
+        //
+        //  Purpose:    Check for the modified system settings and respond appropriately
+        //
         private void System_Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             throw new NotImplementedException();
         }
 
+        //
+        //  Function:  private void View_Sites_Clicked(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = Built in variable of calling object (menuitem)
+        //              RoutedEventArgs e = Built in variable to hold sending objects arguments
+        //
+        //  Purpose:    Show or hide the sites list column based on window option
+        //
         private void View_Sites_Clicked(object sender, RoutedEventArgs e)
         {
             System_Settings.Show_Sites = mmenu_view_sites.IsChecked;
         }
+
+        //
+        //  Function:  private void SiteList_Changed(object sender, SelectionChangedEventArgs e)
+        //
+        //  Arguments:  object sender = Built in variable of calling object (menuitem)
+        //              SelectionChangedEventArgs e = Built in variable to hold sending objects arguments
+        //
+        //  Purpose:    Change the modify and delete site menu options based on if a site is selected
+        //              on the site list box.
+        //
         private void SiteList_Changed(object sender, SelectionChangedEventArgs e)
         {
             if (SiteList.SelectedItem != null)
@@ -187,9 +215,9 @@ namespace Site_Manager
 
             var newsite = new UC_Site(NS, 0, current_user);
 
-            this.Content_Control.Content = newsite;
+            //this.Content_Control.Content = newsite;
 
-            this.Content_Control.Visibility = Visibility.Visible;
+            //this.Content_Control.Visibility = Visibility.Visible;
         }
 
         //
@@ -211,7 +239,26 @@ namespace Site_Manager
             }
         }
 
-        
+        //
+        //  Function:   public void Close_Site(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = Built in variable of calling object (menuitem)
+        //              RoutedEventArgs e = Built in variable to hold sending objects arguments
+        //
+        //  Purpose:    Close the currently selected site
+        //
+        public void Close_Site(object sender, RoutedEventArgs e)
+        {
+            for (int i=0; i < SiteList.Items.Count; i++)
+            {
+                ListBoxItem site_list = (ListBoxItem)SiteList.Items[i];
+                TabItem tab_site = (TabItem)Sites_Tabs.SelectedItem;
+                if (site_list.Content == tab_site.Header)
+                    site_list.IsEnabled = true;
+            }
+            Sites_Tabs.Items.Remove(Sites_Tabs.SelectedItem);
+        }
+
         //
         //  Function:   public void SiteList_dblClick(object sender, RoutedEventArgs e)
         //
@@ -225,7 +272,8 @@ namespace Site_Manager
             // Get the site name (short name in DB)
             if (SiteList.SelectedItem != null)
             {
-                string Site_Name = (string)SiteList.SelectedItem;
+                ListBoxItem sel_site = (ListBoxItem)SiteList.SelectedItem;
+                string Site_Name = sel_site.Content.ToString();
 
                 Load_Site(Site_Name, 2);
             }
@@ -245,19 +293,32 @@ namespace Site_Manager
             if (SiteList.SelectedItem != null)
             {
                 Sites View_Site = new Sites();
+                // Make sure it's not already open
+                for (int i = 0; i < Opened_Sites.site_info.Count; i++)
+                {
+
+                }
 
                 // Try to the load the site.  If successful, display it otherwise don't (add not found handling later)
                 if (View_Site.Load_Site(Site_Name) == true)
                 {
                     var editsite = new UC_Site(View_Site, mode, current_user);
-                    this.Content_Control.Content = editsite;
-                    this.Content_Control.Visibility = Visibility.Visible;
+                    TabItem new_tab = new TabItem();
+                    
+                    TabControl site_info = new TabControl();
+                    new_tab.Header = Site_Name;
+                    
+                    Sites_Tabs.Items.Add(new_tab);
+                    TabItem new_tab2 = new TabItem();
+                    new_tab2.Header = "Info";
+                    new_tab2.Content = editsite;
+                    site_info.Items.Add(new_tab2);
+                    new_tab.Content = site_info;
+                    ListBoxItem sel_site = (ListBoxItem)SiteList.ItemContainerGenerator.ContainerFromIndex(SiteList.SelectedIndex);
+                    sel_site.IsEnabled = false;
+                    Sites_Tabs.SelectedIndex = Sites_Tabs.Items.Count;
                 }
-                else
-                    this.Content_Control.Visibility = Visibility.Hidden;
             }
-            else
-                this.Content_Control.Visibility = Visibility.Hidden;
         }
 
         //
@@ -472,7 +533,10 @@ namespace Site_Manager
             SiteList.Items.Clear();
             foreach (string sname in sites.site_name)
             {
-                SiteList.Items.Add(sname);
+                ListBoxItem site = new ListBoxItem();
+                site.Uid = sites.site_id.ToString();
+                site.Content = sname;
+                SiteList.Items.Add(site);
             }
         }
     }
