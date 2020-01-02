@@ -67,7 +67,7 @@
             </MenuItem>
             <MenuItem x:Name="mmenu_sites" Header="Sites" FontWeight="Bold" Uid="1">
                 <MenuItem x:Name="mmenu_open_site" Header="Open Site" Uid="1"></MenuItem>
-                <MenuItem x:Name="mmenu_close_site" Header="Close Site" Uid="1" Click="Close_Site"></MenuItem>
+                <MenuItem x:Name="mmenu_close_site" Header="Close Site" Uid="1" Click="Close_Site_click"></MenuItem>
             </MenuItem>
             <MenuItem x:Name="mmenu_sites4" Header="Tickets" FontWeight="Bold" Uid="1">
                 <MenuItem x:Name="mmenu_login4" Header="View My Live _Tickets" Uid="1"/>

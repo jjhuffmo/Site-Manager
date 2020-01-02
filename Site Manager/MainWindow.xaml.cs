@@ -28,12 +28,12 @@ namespace Site_Manager
         public User_Info current_user = new User_Info();
         public User_Sites user_sites = new User_Sites();
         public Settings System_Settings = new Settings();
-        public Opened_Sites Opened_Sites = new Opened_Sites();
+        public Opened_Sites Open_Sites = new Opened_Sites();
 
         public MainWindow()
         {
             InitializeComponent();
-            Opened_Sites.Initialize();
+            Open_Sites.Initialize();
 
             this.DataContext = this;
 
@@ -214,10 +214,6 @@ namespace Site_Manager
             var NS = new Sites();
 
             var newsite = new UC_Site(NS, 0, current_user);
-
-            //this.Content_Control.Content = newsite;
-
-            //this.Content_Control.Visibility = Visibility.Visible;
         }
 
         //
@@ -233,9 +229,7 @@ namespace Site_Manager
             // Get the site name (short name in DB)
             if (SiteList.SelectedItem != null)
             {
-                string Site_Name = (string)SiteList.SelectedItem;
-
-                Load_Site(Site_Name, 1);
+                Load_Site((ListBoxItem)SiteList.SelectedItem, 1);
             }
         }
 
@@ -247,18 +241,37 @@ namespace Site_Manager
         //
         //  Purpose:    Close the currently selected site
         //
-        public void Close_Site(object sender, RoutedEventArgs e)
+        public void Close_Site_click(object sender, RoutedEventArgs e)
         {
-            for (int i=0; i < SiteList.Items.Count; i++)
-            {
-                ListBoxItem site_list = (ListBoxItem)SiteList.Items[i];
-                TabItem tab_site = (TabItem)Sites_Tabs.SelectedItem;
-                if (site_list.Content == tab_site.Header)
-                    site_list.IsEnabled = true;
-            }
-            Sites_Tabs.Items.Remove(Sites_Tabs.SelectedItem);
+            if (Sites_Tabs.SelectedIndex > -1)
+                Close_Site(Sites_Tabs.SelectedIndex);
         }
 
+
+        //
+        //  Function:   public void Close_Site(int site_no)
+        //
+        //  Arguments:  int site_no = Number of the site (in open_sites) to close
+        //
+        //  Purpose:    Close the currently selected site
+        //
+        public void Close_Site(int site_no)
+        {
+            // Find the site in the site_list box and re-enable it
+            for (int i = 0; i < SiteList.Items.Count; i++)
+            {
+                ListBoxItem site_list = (ListBoxItem)SiteList.Items[i];
+                TabItem tab_site = (TabItem)Sites_Tabs.Items[site_no];
+                if ((string)site_list.Content == (string)tab_site.Header)
+                    site_list.IsEnabled = true;
+            }
+            // Remove the site from the Open_Sites variable
+            Open_Sites.Close_Site(Sites_Tabs.SelectedIndex);
+
+            // Find the sites tab for this site and remove it
+            Sites_Tabs.Items.Remove(Sites_Tabs.SelectedItem);
+
+        }
         //
         //  Function:   public void SiteList_dblClick(object sender, RoutedEventArgs e)
         //
@@ -273,9 +286,7 @@ namespace Site_Manager
             if (SiteList.SelectedItem != null)
             {
                 ListBoxItem sel_site = (ListBoxItem)SiteList.SelectedItem;
-                string Site_Name = sel_site.Content.ToString();
-
-                Load_Site(Site_Name, 2);
+                Load_Site(sel_site, 2);
             }
 
         }
@@ -288,35 +299,60 @@ namespace Site_Manager
         //
         //  Purpose:    Loads a site for viewing or modifying
         //
-        public void Load_Site(string Site_Name, int mode)
+        public void Load_Site(ListBoxItem Site_Name, int mode)
         {
             if (SiteList.SelectedItem != null)
             {
-                Sites View_Site = new Sites();
-                // Make sure it's not already open
-                for (int i = 0; i < Opened_Sites.site_info.Count; i++)
-                {
+                bool found = false;
+                int found_tab = 0;
 
+                Sites View_Site = new Sites();
+
+                // See if it's already open
+                for (int i = 0; i < Open_Sites.site_info.Count; i++)
+                {
+                    if (Int32.Parse(Site_Name.Uid) == Open_Sites.site_info[i].Site_ID)
+                    {
+                        found = true;
+                        found_tab = Open_Sites.tab_index[i];
+                    }
                 }
 
                 // Try to the load the site.  If successful, display it otherwise don't (add not found handling later)
-                if (View_Site.Load_Site(Site_Name) == true)
+                if (View_Site.Load_Site((string)Site_Name.Content) == true && found == false)
                 {
+                    // Generate a new Site_Info tab using the user control UC Site
                     var editsite = new UC_Site(View_Site, mode, current_user);
-                    TabItem new_tab = new TabItem();
-                    
-                    TabControl site_info = new TabControl();
-                    new_tab.Header = Site_Name;
-                    
-                    Sites_Tabs.Items.Add(new_tab);
-                    TabItem new_tab2 = new TabItem();
-                    new_tab2.Header = "Info";
-                    new_tab2.Content = editsite;
-                    site_info.Items.Add(new_tab2);
-                    new_tab.Content = site_info;
+
+                    // Create a new tab for the Site Tab itself
+                    TabItem sites_tab = new TabItem();
+                    sites_tab.Header = View_Site.Short_Name;
+                    Sites_Tabs.Items.Add(sites_tab);
+
+                    // Create the site tabs for info, tickets, resources, etc
+                    TabControl site_tab = new TabControl();
+                    TabItem info_tab = new TabItem();
+                    info_tab.Header = "Info";
+                    info_tab.Content = editsite;
+                    site_tab.Items.Add(info_tab);
+                    sites_tab.Content = site_tab;
+
+                    // Add the site to the Open_Sites variable
+                    Open_Sites.Insert_New(View_Site);
+
+                    // Block out the selected site so they don't try to click on it again
                     ListBoxItem sel_site = (ListBoxItem)SiteList.ItemContainerGenerator.ContainerFromIndex(SiteList.SelectedIndex);
                     sel_site.IsEnabled = false;
-                    Sites_Tabs.SelectedIndex = Sites_Tabs.Items.Count;
+                }
+
+                // If it was found, but we want to edit it then just enable the modifying of the proper tab
+                if (found == true && mode == 1)
+                {
+                    // Generate a new Site_Info tab using the user control UC Site
+                    var editsite = new UC_Site(View_Site, mode, current_user);
+
+                    TabItem site_mod = (TabItem)Sites_Tabs.Items[found_tab];
+                    site_mod.Content = editsite;
                 }
             }
         }
@@ -530,13 +566,15 @@ namespace Site_Manager
         //
         public void Update_Sites_List(User_Sites sites)
         {
+            int i = 0;
             SiteList.Items.Clear();
             foreach (string sname in sites.site_name)
             {
                 ListBoxItem site = new ListBoxItem();
-                site.Uid = sites.site_id.ToString();
+                site.Uid = sites.site_id[i].ToString();
                 site.Content = sname;
                 SiteList.Items.Add(site);
+                i++;
             }
         }
     }

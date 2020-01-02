@@ -47,10 +47,9 @@ namespace Site_Manager
             csite.PropertyChanged += new PropertyChangedEventHandler(current_site_PropertyChanged);
             
             csite = current_site;
-            Mode = mode;
 
             // Prepare fields based on mode
-            switch (Mode)
+            switch (mode)
             {
                 // Create New
                 case 0:
@@ -76,6 +75,28 @@ namespace Site_Manager
             }
         }
 
+        private void Change_Mode(int Mode)
+        {
+            // Prepare fields based on mode
+            switch (Mode)
+            {
+                // Create New
+                case 0:
+                    btn_Save.Content = "Save";
+                    break;
+
+                // Edit
+                case 1:
+                    btn_Save.Content = "Update";
+                    break;
+
+                // View Only
+                case 2:
+                    Site_Grid.IsEnabled = false;
+                    btn_Save.Content = "OK";
+                    break;
+            }
+        }
         //
         //  Function:   private void Load_Values()
         //
