@@ -58,16 +58,115 @@ namespace Site_Manager
         }
 
         //
-        //  Function:  private void View_Sites_Clicked(object sender, RoutedEventArgs e)
+        //  Function:  private void View_Sites_click(object sender, RoutedEventArgs e)
         //
         //  Arguments:  object sender = Built in variable of calling object (menuitem)
         //              RoutedEventArgs e = Built in variable to hold sending objects arguments
         //
         //  Purpose:    Show or hide the sites list column based on window option
         //
-        private void View_Sites_Clicked(object sender, RoutedEventArgs e)
+        private void View_Sites_click(object sender, RoutedEventArgs e)
         {
             System_Settings.Show_Sites = mmenu_view_sites.IsChecked;
+        }
+
+        //
+        //  Function:   private void ShowAll_Sites_click(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = Built in variable of calling object (menuitem)
+        //              RoutedEventArgs e = Built in variable to hold sending objects arguments
+        //
+        //  Purpose:    Toggle between showing all sites or only ones assigned to you (management only)
+        //
+        private void ShowAll_Sites_click(object sender, RoutedEventArgs e)
+        {
+            System_Settings.Show_All_Sites = mmenu_showall_sites.IsChecked;
+        }
+
+        //
+        //  Function:   public void Menu_Exit_click(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = Built in variable of calling object (menuitem)
+        //              RoutedEventArgs e = Built in variable to hold sending objects arguments
+        //
+        //  Purpose:    Exit the app through menu instead of X
+        //
+        public void Menu_Exit_click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        //
+        //  Function:   private void Login_Logout_click(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = Built in variable of calling object (menuitem)
+        //              RoutedEventArgs e = Built in variable to hold sending objects arguments
+        //
+        //  Purpose:    Display the Login dialog and try logging in if a name was entered and Login button pressed
+        //
+        public void Login_Logout_click(object sender, RoutedEventArgs e)
+        {
+            if (current_user.User_ID == 0)
+            {
+                var Login = new dlgLogin();
+                if (Login.ShowDialog() == true)
+                {
+                    LoginLogout(current_user, 2, Login.Entered_User);
+                }
+            }
+            else
+            {
+                LoginLogout(current_user, 0);
+            }
+        }
+
+        //
+        //  Function:   private void Login_Logout(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = Built in variable of calling object (menuitem)
+        //              RoutedEventArgs e = Built in variable to hold sending objects arguments
+        //
+        //  Purpose:    Display the custom control to create a new site
+        //
+        public void Create_Site_click(object sender, RoutedEventArgs e)
+        {
+            // Create the "New Site" listboxitem to pass to load site
+            ListBoxItem new_site = new ListBoxItem();
+            new_site.Content = "New Site";
+
+            // Create a new tab to show the site info. 
+            Load_Site(new_site, 0);
+        }
+
+        //
+        //  Function:   public void Modify_Site(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = Built in variable of calling object (menuitem)
+        //              RoutedEventArgs e = Built in variable to hold sending objects arguments
+        //
+        //  Purpose:    Modifies and existing site
+        //
+        public void Modify_Site_click(object sender, RoutedEventArgs e)
+        {
+            // Get the site name (short name in DB)
+            if (SiteList.SelectedItem != null)
+            {
+                Load_Site((ListBoxItem)SiteList.SelectedItem, 1);
+            }
+        }
+
+        //
+        //  Function:   public void Close_Site(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = Built in variable of calling object (menuitem)
+        //              RoutedEventArgs e = Built in variable to hold sending objects arguments
+        //
+        //  Purpose:    Close the currently selected site
+        //
+        public void Close_Site_click(object sender, RoutedEventArgs e)
+        {
+            if (Sites_Tabs.SelectedIndex > -1)
+                Close_Site(Sites_Tabs.SelectedIndex);
         }
 
         //
@@ -116,6 +215,12 @@ namespace Site_Manager
                         Splitter.Visibility = Visibility.Hidden;
                         Sites_Panel.Visibility = Visibility.Collapsed;
                     }
+                    mmenu_view_sites.IsChecked = System_Settings.Show_Sites;
+                    break;
+
+                case "Show_All_Sites":
+                    Load_My_Sites(current_user);
+                    mmenu_showall_sites.IsChecked = System_Settings.Show_All_Sites;
                     break;
             }
         }
@@ -138,7 +243,6 @@ namespace Site_Manager
                         mmenu_login.Header = "Logout";
                         this.Title = AppTitle + " - " + current_user.User_Name;
                         user_sites = Load_My_Sites(current_user);
-                        Update_Sites_List(user_sites);
                         SiteList.Visibility = Visibility.Visible;
                     }
                     else
@@ -152,7 +256,7 @@ namespace Site_Manager
                 case "Modified":
                     if (current_user.Modified)
                     {
-                        Update_Sites_List(Load_My_Sites(current_user));
+                        Load_My_Sites(current_user);
                         SiteList.Visibility = Visibility.Visible;
                         current_user.Modified = false;
                     }
@@ -162,89 +266,6 @@ namespace Site_Manager
                 default:
                     break;
             }
-        }
-
-        //
-        //  Function:   private void Login_Logout(object sender, RoutedEventArgs e)
-        //
-        //  Arguments:  object sender = Built in variable of calling object (menuitem)
-        //              RoutedEventArgs e = Built in variable to hold sending objects arguments
-        //
-        //  Purpose:    Display the Login dialog and try logging in if a name was entered and Login button pressed
-        //
-        public void Menu_Exit(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
-        //
-        //  Function:   private void Login_Logout(object sender, RoutedEventArgs e)
-        //
-        //  Arguments:  object sender = Built in variable of calling object (menuitem)
-        //              RoutedEventArgs e = Built in variable to hold sending objects arguments
-        //
-        //  Purpose:    Display the Login dialog and try logging in if a name was entered and Login button pressed
-        //
-        public void Login_Logout(object sender, RoutedEventArgs e)
-        {
-            if (current_user.User_ID == 0)
-            {
-                var Login = new dlgLogin();
-                if (Login.ShowDialog() == true)
-                {
-                    LoginLogout(current_user, 2, Login.Entered_User);
-                }
-            }
-            else
-            {
-                LoginLogout(current_user, 0);
-            }
-        }
-
-        //
-        //  Function:   private void Login_Logout(object sender, RoutedEventArgs e)
-        //
-        //  Arguments:  object sender = Built in variable of calling object (menuitem)
-        //              RoutedEventArgs e = Built in variable to hold sending objects arguments
-        //
-        //  Purpose:    Display the custom control to create a new site
-        //
-        public void Create_Site(object sender, RoutedEventArgs e)
-        {
-            var NS = new Sites();
-
-            var newsite = new UC_Site(NS, 0, current_user);
-        }
-
-        //
-        //  Function:   public void Modify_Site(object sender, RoutedEventArgs e)
-        //
-        //  Arguments:  object sender = Built in variable of calling object (menuitem)
-        //              RoutedEventArgs e = Built in variable to hold sending objects arguments
-        //
-        //  Purpose:    Modifies and existing site
-        //
-        public void Modify_Site(object sender, RoutedEventArgs e)
-        {
-            // Get the site name (short name in DB)
-            if (SiteList.SelectedItem != null)
-            {
-                Load_Site((ListBoxItem)SiteList.SelectedItem, 1);
-            }
-        }
-
-        //
-        //  Function:   public void Close_Site(object sender, RoutedEventArgs e)
-        //
-        //  Arguments:  object sender = Built in variable of calling object (menuitem)
-        //              RoutedEventArgs e = Built in variable to hold sending objects arguments
-        //
-        //  Purpose:    Close the currently selected site
-        //
-        public void Close_Site_click(object sender, RoutedEventArgs e)
-        {
-            if (Sites_Tabs.SelectedIndex > -1)
-                Close_Site(Sites_Tabs.SelectedIndex);
         }
 
 
@@ -286,7 +307,7 @@ namespace Site_Manager
             if (SiteList.SelectedItem != null)
             {
                 ListBoxItem sel_site = (ListBoxItem)SiteList.SelectedItem;
-                Load_Site(sel_site, 2);
+                Load_Site(sel_site, 1);
             }
 
         }
@@ -295,13 +316,30 @@ namespace Site_Manager
         //  Function:   public void Load_Site(string Site_Name, int mode)
         //
         //  Arguments:  string Site_Name = Name of site to load
-        //              int mode = Mode of load (1 = Edit, 2 = View Only)
+        //              int mode = Mode of load (0 = Create, 1 = Edit/View)
         //
         //  Purpose:    Loads a site for viewing or modifying
         //
         public void Load_Site(ListBoxItem Site_Name, int mode)
         {
-            if (SiteList.SelectedItem != null)
+            if (mode == 0)
+            {
+                var NS = new Sites();
+                var newsite = new UC_Site(NS, 0, current_user);
+
+                var New_Site_Page = new Popup_Info();
+
+                New_Site_Page.Content = newsite;
+                New_Site_Page.ShowDialog();
+
+                // New site was saved, so update the tabs
+                if (New_Site_Page.DialogResult == true)
+                {
+                    Load_My_Sites(current_user);
+                }
+            }
+
+            if (SiteList.SelectedItem != null && mode != 0)
             {
                 bool found = false;
                 int found_tab = 0;
@@ -343,6 +381,9 @@ namespace Site_Manager
                     // Block out the selected site so they don't try to click on it again
                     ListBoxItem sel_site = (ListBoxItem)SiteList.ItemContainerGenerator.ContainerFromIndex(SiteList.SelectedIndex);
                     sel_site.IsEnabled = false;
+
+                    // Switch focus to the first tab
+                    Sites_Tabs.SelectedIndex = Sites_Tabs.Items.Count - 1;
                 }
 
                 // If it was found, but we want to edit it then just enable the modifying of the proper tab
@@ -498,6 +539,7 @@ namespace Site_Manager
         //  Function:   public void Load_My_Sites(User_Info user)
         //
         //  Arguments:  user = User Info of currently logged in user
+        //              mode = Mode of list to retrieve (0 = Just Mine 'Default', 1 = All For Supervisors Only)
         //
         //  Return:     User_Sites = Structure holding all the sites
         //              accessible to the current user.
@@ -515,8 +557,13 @@ namespace Site_Manager
             // Query the Site Users Database for the sites for this user
             StringBuilder query = new StringBuilder("SELECT * FROM ");
             query.Append(tblSiteUsers);
-            query.Append(" WHERE User_ID = ");
-            query.Append(user.User_ID.ToString());
+
+            // Read the user's sites unless they're management
+            if (user.Access != 9999 || System_Settings.Show_All_Sites == false)
+            {
+                query.Append(" WHERE User_ID = ");
+                query.Append(user.User_ID.ToString());
+            }
 
             // Read all the sites associated with this user
             using (SqlConnection sqlCon = new SqlConnection(connString))
@@ -526,8 +573,11 @@ namespace Site_Manager
                 using SqlDataReader reader = SqlCmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    sites.site_id.Add((long)reader[1]);
-                    sites.site_access.Add((int)reader[3]);
+                    if (sites.site_id.Contains((long)reader[1]) == false)
+                    {
+                        sites.site_id.Add((long)reader[1]);
+                        sites.site_access.Add((int)reader[3]);
+                    }
                 }
             }
 
@@ -550,10 +600,11 @@ namespace Site_Manager
                 using SqlDataReader reader = SqlCmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    sites.site_name.Add((string)reader[0]);
+                        sites.site_name.Add((string)reader[0]);
                 }
                 sqlCon.Close();
             }
+            Update_Sites_List(sites);
             return sites;
         }
 
@@ -573,7 +624,13 @@ namespace Site_Manager
                 ListBoxItem site = new ListBoxItem();
                 site.Uid = sites.site_id[i].ToString();
                 site.Content = sname;
+                // Block out any open site so they don't try to click on it again
+                if (Open_Sites.site_info.Any(x => x.Site_ID == sites.site_id[i]))
+                {
+                    site.IsEnabled = false;
+                }
                 SiteList.Items.Add(site);
+                // Increment index
                 i++;
             }
         }

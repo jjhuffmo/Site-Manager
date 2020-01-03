@@ -82,6 +82,18 @@ namespace Site_Manager
         //
         //  Purpose:    Display the Login dialog and try logging in if a name was entered and Login button pressed
         //
+        public void Initialize()
+        {
+            Short_Name = "New Site";
+        }
+
+        //
+        //  Function:   public int Save_Site(int mode)
+        //
+        //  Arguments:  int mode = Mode of save (0 = Save New, 1 = Update)
+        //
+        //  Purpose:    Display the Login dialog and try logging in if a name was entered and Login button pressed
+        //
         public int Save_Site(int mode)
         {
             // If the user name is blank then get it from the system and try to log in with AD security

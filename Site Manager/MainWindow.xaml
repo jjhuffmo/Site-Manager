@@ -53,16 +53,17 @@
         </Grid>
         <Menu FontWeight="Normal" x:Name="MainMenu" VerticalAlignment="Top" Height="18">
             <MenuItem x:Name="mmenu_user" Header="User" FontWeight="Bold" Uid="0">
-                <MenuItem x:Name="mmenu_login" Click="Login_Logout" Uid="0"/>
+                <MenuItem x:Name="mmenu_login" Click="Login_Logout_click" Uid="0"/>
                 <MenuItem x:Name="mmenu_profile" Header="Profile" Uid="1"/>
                 <MenuItem Header="Interface Options" Uid="1">
-                        <MenuItem x:Name="mmenu_view_sites" Header="View My _Sites" Uid="1" IsCheckable="True" IsChecked="True" Click="View_Sites_Clicked"/>
+                        <MenuItem x:Name="mmenu_view_sites" Header="View My _Sites" Uid="1" IsCheckable="True" IsChecked="True" Click="View_Sites_click"/>
                 </MenuItem>
-                <MenuItem x:Name="mmenu_exit" Click="Menu_Exit" Header="Exit" Uid="0"/>
+                <MenuItem x:Name="mmenu_exit" Click="Menu_Exit_click" Header="Exit" Uid="0"/>
             </MenuItem>
             <MenuItem x:Name="mmenu_mgmt" Header="Management" FontWeight="Bold" Uid="5000">
-                <MenuItem x:Name="mmenu_create_site" Header="_Create Site" Click="Create_Site" Uid="1000"/>
-                <MenuItem x:Name ="mmenu_modify_site" Header="Modify Site" Click="Modify_Site" Uid="1000"/>
+                <MenuItem x:Name="mmenu_create_site" Header="_Create Site" Click="Create_Site_click" Uid="1000"/>
+                <MenuItem x:Name="mmenu_showall_sites" Header="Show All Sites" Click="ShowAll_Sites_click" Uid="1000" IsCheckable="True" IsChecked="False"/>
+                <MenuItem x:Name ="mmenu_modify_site" Header="Modify Site" Click="Modify_Site_click" Uid="1000"/>
                 <MenuItem x:Name="mmenu_delete_site" Header="_Delete Site" Uid="1000"/>
             </MenuItem>
             <MenuItem x:Name="mmenu_sites" Header="Sites" FontWeight="Bold" Uid="1">

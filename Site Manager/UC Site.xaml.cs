@@ -26,6 +26,7 @@ namespace Site_Manager
         DispatcherTimer _typingTimer;
         private int Mode = 0;
         User_Info cuser = new User_Info();
+        bool loaded = false;
 
         //
         //  Function:   public UC_Site(Sites current_site, int mode)
@@ -33,8 +34,9 @@ namespace Site_Manager
         //  Arguments:  Sites current_site = Site to display/edit/enter information
         //              int mode = Mode of operation
         //              (0 = Create New Site, 1 = Edit Existing Site, 2 = View Site Info
+        //              User_Info current_user = Currently logged in user to valid and store
         //
-        //  Purpose:    Display the Login dialog and try logging in if a name was entered and Login button pressed
+        //  Purpose:    Display the site information tabs for viewing/editing based on security.
         //
         public UC_Site(Sites current_site, int mode, User_Info current_user)
         {
@@ -43,57 +45,38 @@ namespace Site_Manager
             cuser = current_user;
 
             csite = new Sites();
-
-            csite.PropertyChanged += new PropertyChangedEventHandler(current_site_PropertyChanged);
-            
             csite = current_site;
+            csite.PropertyChanged += new PropertyChangedEventHandler(current_site_PropertyChanged);
+
+            Mode = mode;
+            btn_Save.Visibility = Visibility.Hidden;
 
             // Prepare fields based on mode
             switch (mode)
             {
                 // Create New
                 case 0:
+                    csite.Initialize();
                     Make_User_List(0);
                     btn_Save.Content = "Save";
+                    btn_Cancel.Visibility = Visibility.Visible;
                     break;
 
                 // Edit
                 case 1:
                     btn_Save.Content = "Update";
+                    btn_Cancel.Visibility = Visibility.Hidden;
                     Load_Values();
                     Make_User_List(1);
-
                     break;
 
                 // View Only
                 case 2:
                     Site_Grid.IsEnabled = false;
                     btn_Save.Content = "OK";
+                    btn_Cancel.Visibility = Visibility.Hidden;
                     Load_Values();
                     Make_User_List(1);
-                    break;
-            }
-        }
-
-        private void Change_Mode(int Mode)
-        {
-            // Prepare fields based on mode
-            switch (Mode)
-            {
-                // Create New
-                case 0:
-                    btn_Save.Content = "Save";
-                    break;
-
-                // Edit
-                case 1:
-                    btn_Save.Content = "Update";
-                    break;
-
-                // View Only
-                case 2:
-                    Site_Grid.IsEnabled = false;
-                    btn_Save.Content = "OK";
                     break;
             }
         }
@@ -108,18 +91,48 @@ namespace Site_Manager
             Full_Name.Text = csite.Full_Name;
             Customer_Name.Text = csite.Customer_Name;
             Site_Address.Text = csite.Address;
+            loaded = true;
         }
 
         //
-        //  Function:   private void Short_Name_Changed(object sender, TextChangedEventArgs e)
+        //  Function:   private void Field_Changed(object sender, TextChangedEventArgs e)
         //
         //  Arguments:  object sender = object that called function (Short_Name textbox)
         //              TextChangedEventArgs e = arguments for the text changed function
         //
-        //  Purpose:    Monitor when the short name text has changed (for checking existence)
-        //              Auto check every 1 second when typing has not occurred
+        //  Purpose:    Monitor when the any of the text blocks have changed 
+        //              so we can enable the Save and Cancel buttons.
         //
-        private void Short_Name_Changed(object sender, TextChangedEventArgs e)
+        private void Field_Changed(object sender, TextChangedEventArgs e)
+        {
+            if (loaded == true)
+            {
+                if ((csite.Full_Name != this.Full_Name.Text) || (csite.Customer_Name != this.Customer_Name.Text) ||
+                    (csite.Address != this.Site_Address.Text) || (csite.Short_Name != (string)Short_Name.Text && Site_Exists.Visibility == Visibility.Hidden))
+                {
+                    btn_Save.Visibility = Visibility.Visible;
+                    btn_Cancel.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    btn_Save.Visibility = Visibility.Hidden;
+                    btn_Cancel.Visibility = Visibility.Hidden;
+
+                }
+            }
+
+        }
+
+            //
+            //  Function:   private void Short_Name_Changed(object sender, TextChangedEventArgs e)
+            //
+            //  Arguments:  object sender = object that called function (Short_Name textbox)
+            //              TextChangedEventArgs e = arguments for the text changed function
+            //
+            //  Purpose:    Monitor when the short name text has changed (for checking existence)
+            //              Auto check every 1 second when typing has not occurred
+            //
+            private void Short_Name_Changed(object sender, TextChangedEventArgs e)
         {
             if (_typingTimer == null)
             {
@@ -129,7 +142,8 @@ namespace Site_Manager
             }
             _typingTimer.Stop(); // Resets the timer
             _typingTimer.Tag = (sender as TextBox).Text; // This should be done with EventArgs
-            _typingTimer.Start();
+            if (loaded)
+                _typingTimer.Start();
         }
 
         //
@@ -150,16 +164,16 @@ namespace Site_Manager
                 return;
             }
 
-            if (csite.Check_Site(Short_Name.Text) == true && Mode != 2 && (csite.Short_Name.CompareTo(Short_Name.Text) != 0))
-            {
+            if (csite.Check_Site(Short_Name.Text) == true && Mode != 2 && csite.Short_Name != (string)Short_Name.Text)
                 Site_Exists.Visibility = Visibility.Visible;
-                btn_Save.Visibility = Visibility.Hidden;
-            }
             else
-            {
                 Site_Exists.Visibility = Visibility.Hidden;
+
+            if (csite.Short_Name != (string)Short_Name.Text && Site_Exists.Visibility == Visibility.Hidden)
                 btn_Save.Visibility = Visibility.Visible;
-            }
+            else
+                btn_Save.Visibility = Visibility.Hidden;
+
             // The timer must be stopped! We want to act only once per keystroke.
             timer.Stop();
         }
@@ -199,6 +213,8 @@ namespace Site_Manager
                 default:
                     break;
             }
+            btn_Cancel.Visibility = Visibility.Visible;
+            btn_Save.Visibility = Visibility.Visible;
         }
 
         private void btn_Save_Clicked(object sender, RoutedEventArgs e)
@@ -219,8 +235,9 @@ namespace Site_Manager
                     {
                         if (csite.Save_Site(0) == 1)
                         {
-                            this.Visibility = Visibility.Hidden;
                             cuser.Modified = true;
+                            Window Parent = (Window)this.Parent;
+                            Parent.DialogResult = true;
                         }
                     }
                     break;
@@ -229,7 +246,6 @@ namespace Site_Manager
                     {
                         if (csite.Save_Site(1) == 1)
                         {
-                            this.Visibility = Visibility.Hidden;
                             cuser.Modified = true;
                         }
                     }
@@ -239,9 +255,21 @@ namespace Site_Manager
 
         private void btn_Cancel_Clicked(object sender, RoutedEventArgs e)
         {
-            csite.Short_Name = csite.Short_Name;
-
-            this.Visibility = Visibility.Hidden;
+            if (Mode == 0)
+            {
+                if (MessageBox.Show("Do you want to exit without saving the new site?", "Exit Without Saving", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    Window Parent = (Window)this.Parent;
+                    Parent.DialogResult = false;
+                }
+            }
+            else
+            {
+                if (MessageBox.Show("Do you want to discard changes to site?", "Discard Changes", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    Load_Values();
+                }
+            }
         }
 
         //

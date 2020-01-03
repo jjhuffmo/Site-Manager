@@ -34,12 +34,7 @@ namespace Site_Manager
 
         public void Insert_New(Sites site)
         {
-            // Shift all tab_indexes by 1
-            for (int i = 0; i < tab_index.Count; i++)
-            {
-                tab_index[i] += 1;
-            }
-            tab_index.Add(0);
+            tab_index.Add(tab_index.Count);
             site_info.Add(site);
         }
 
@@ -50,7 +45,7 @@ namespace Site_Manager
             x = tab_index.IndexOf(tab_no);
 
             // If the tab number is found
-            if (x >= 0)
+            if (tab_no >= 0)
             {
                 // Shift all tab_indexes greater than the selected by 1
                 for (int i = 0; i < tab_index.Count; i++)

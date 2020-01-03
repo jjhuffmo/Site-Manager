@@ -70,6 +70,36 @@ namespace Site_Manager {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] btnAdd_Users {
+            get {
+                object obj = ResourceManager.GetObject("btnAdd_Users", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] icoMinus {
+            get {
+                object obj = ResourceManager.GetObject("icoMinus", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] icoPlus {
+            get {
+                object obj = ResourceManager.GetObject("icoPlus", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Data Source=localhost\SQLEXPRESS;Initial Catalog=Site_Management;Integrated Security=True.
         /// </summary>
         public static string SQLConnString {

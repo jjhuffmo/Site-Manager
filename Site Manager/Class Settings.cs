@@ -21,6 +21,7 @@ namespace Site_Manager
         }
 
         private bool _Show_Sites;
+        private bool _Show_All_Sites;
 
         public bool Show_Sites
         {
@@ -28,6 +29,16 @@ namespace Site_Manager
             set
             {
                 _Show_Sites = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool Show_All_Sites
+        {
+            get { return _Show_All_Sites; }
+            set
+            {
+                _Show_All_Sites = value;
                 OnPropertyChanged();
             }
         }

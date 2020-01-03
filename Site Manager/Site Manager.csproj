@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="icoMinus.ico" />
+    <None Remove="icoPlus.ico" />
     <None Remove="Resources\tbUser.ico" />
   </ItemGroup>
 
@@ -31,6 +33,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="icoMinus.ico" />
+    <Resource Include="icoPlus.ico" />
     <Resource Include="Resources\tbUser.ico" />
   </ItemGroup>
 
