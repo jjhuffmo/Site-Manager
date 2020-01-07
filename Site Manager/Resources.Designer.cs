@@ -82,19 +82,9 @@ namespace Site_Manager {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        public static byte[] icoMinus {
+        public static byte[] btnRemove_Users {
             get {
-                object obj = ResourceManager.GetObject("icoMinus", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        public static byte[] icoPlus {
-            get {
-                object obj = ResourceManager.GetObject("icoPlus", resourceCulture);
+                object obj = ResourceManager.GetObject("btnRemove_Users", resourceCulture);
                 return ((byte[])(obj));
             }
         }

@@ -13,6 +13,7 @@ using System.Windows.Shapes;
 using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Windows.Threading;
+using System.Collections.ObjectModel;
 
 namespace Site_Manager
 {
@@ -27,6 +28,7 @@ namespace Site_Manager
         private int Mode = 0;
         User_Info cuser = new User_Info();
         bool loaded = false;
+        public ObservableCollection<Users> view_users = new ObservableCollection<Users>();
 
         //
         //  Function:   public UC_Site(Sites current_site, int mode)
@@ -40,8 +42,6 @@ namespace Site_Manager
         //
         public UC_Site(Sites current_site, int mode, User_Info current_user)
         {
-            InitializeComponent();
-
             cuser = current_user;
 
             csite = new Sites();
@@ -49,6 +49,10 @@ namespace Site_Manager
             csite.PropertyChanged += new PropertyChangedEventHandler(current_site_PropertyChanged);
 
             Mode = mode;
+            Make_User_List(mode);
+
+            InitializeComponent();
+
             btn_Save.Visibility = Visibility.Hidden;
 
             // Prepare fields based on mode
@@ -97,10 +101,10 @@ namespace Site_Manager
         //
         //  Function:   private void Field_Changed(object sender, TextChangedEventArgs e)
         //
-        //  Arguments:  object sender = object that called function (Short_Name textbox)
+        //  Arguments:  object sender = object that called function
         //              TextChangedEventArgs e = arguments for the text changed function
         //
-        //  Purpose:    Monitor when the any of the text blocks have changed 
+        //  Purpose:    Monitor when any of the text blocks have changed 
         //              so we can enable the Save and Cancel buttons.
         //
         private void Field_Changed(object sender, TextChangedEventArgs e)
@@ -123,16 +127,16 @@ namespace Site_Manager
 
         }
 
-            //
-            //  Function:   private void Short_Name_Changed(object sender, TextChangedEventArgs e)
-            //
-            //  Arguments:  object sender = object that called function (Short_Name textbox)
-            //              TextChangedEventArgs e = arguments for the text changed function
-            //
-            //  Purpose:    Monitor when the short name text has changed (for checking existence)
-            //              Auto check every 1 second when typing has not occurred
-            //
-            private void Short_Name_Changed(object sender, TextChangedEventArgs e)
+        //
+        //  Function:   private void Short_Name_Changed(object sender, TextChangedEventArgs e)
+        //
+        //  Arguments:  object sender = object that called function (Short_Name textbox)
+        //              TextChangedEventArgs e = arguments for the text changed function
+        //
+        //  Purpose:    Monitor when the short name text has changed (for checking existence)
+        //              Auto check every 1 second when typing has not occurred
+        //
+        private void Short_Name_Changed(object sender, TextChangedEventArgs e)
         {
             if (_typingTimer == null)
             {
@@ -149,13 +153,31 @@ namespace Site_Manager
         //
         //  Function:   private void handleTypingTimerTimeout(object sender, EventArgs e)
         //
-        //  Arguments:  object sender = object that called function (Short_Name textbox)
-        //              EventArgs e = arguments for the function
+        //  Arguments:  object sender = object that called function (Users_List listbox)
+        //              SelectionChangedEventArgs e = arguments for the function
         //
-        //  Purpose:    When the short_name text box is being modified and no typing has occurred for 1 second
-        //              Check the database to see if the short_name (site_name) is already in use
+        //  Purpose:    Enable/disable the remove users button when a selection is active in the box
         //
-        private void handleTypingTimerTimeout(object sender, EventArgs e)
+        private void User_List_Selection(object sender, SelectionChangedEventArgs e)
+        {
+            // Enable/disable the remove button when a selection is made
+            if (list_Users_List.SelectedItems.Count > 0)
+                btn_Remove_Users.IsEnabled = false;
+            else
+                btn_Remove_Users.IsEnabled = true;
+
+        }
+
+            //
+            //  Function:   private void handleTypingTimerTimeout(object sender, EventArgs e)
+            //
+            //  Arguments:  object sender = object that called function (Short_Name textbox)
+            //              EventArgs e = arguments for the function
+            //
+            //  Purpose:    When the short_name text box is being modified and no typing has occurred for 1 second
+            //              Check the database to see if the short_name (site_name) is already in use
+            //
+            private void handleTypingTimerTimeout(object sender, EventArgs e)
         {
             var timer = sender as DispatcherTimer; 
 
@@ -217,6 +239,14 @@ namespace Site_Manager
             btn_Save.Visibility = Visibility.Visible;
         }
 
+        //
+        //  Function:   private void btn_Save_Clicked(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = object that called function
+        //              RoutedEventArgs e = arguments for the event
+        //
+        //  Purpose:    Save/Update the site info when clicked (after confirmation from a messagebox)
+        //
         private void btn_Save_Clicked(object sender, RoutedEventArgs e)
         {
             // Save local variables to structure
@@ -253,7 +283,69 @@ namespace Site_Manager
             }
         }
 
+        //
+        //  Function:   private void btn_Cancel_Clicked(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = object that called function
+        //              RoutedEventArgs e = arguments for the event
+        //
+        //  Purpose:    Cancel current changes to the site after confirmation from a messagebox
+        //
         private void btn_Cancel_Clicked(object sender, RoutedEventArgs e)
+        {
+            if (Mode == 0)
+            {
+                if (MessageBox.Show("Do you want to exit without saving the new site?", "Exit Without Saving", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    Window Parent = (Window)this.Parent;
+                    Parent.DialogResult = false;
+                }
+            }
+            else
+            {
+                if (MessageBox.Show("Do you want to discard changes to site?", "Discard Changes", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    Load_Values();
+                }
+            }
+        }
+
+        //
+        //  Function:   private void btn_Remove_User_Clicked(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = object that called function (Short_Name textbox)
+        //              RoutedEventArgs e = arguments for the event
+        //
+        //  Purpose:    Cancel current changes to the site after confirmation from a messagebox
+        //
+        private void btn_Remove_User_Clicked(object sender, RoutedEventArgs e)
+        {
+            if (Mode == 0)
+            {
+                if (MessageBox.Show("Do you want to exit without saving the new site?", "Exit Without Saving", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    Window Parent = (Window)this.Parent;
+                    Parent.DialogResult = false;
+                }
+            }
+            else
+            {
+                if (MessageBox.Show("Do you want to discard changes to site?", "Discard Changes", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    Load_Values();
+                }
+            }
+        }
+
+        //
+        //  Function:   private void btn_Add_User_Clicked(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = object that called function (Short_Name textbox)
+        //              RoutedEventArgs e = arguments for the event
+        //
+        //  Purpose:    Cancel current changes to the site after confirmation from a messagebox
+        //
+        private void btn_Add_User_Clicked(object sender, RoutedEventArgs e)
         {
             if (Mode == 0)
             {
@@ -282,17 +374,26 @@ namespace Site_Manager
         private void Make_User_List(int mode)
         {
             Users users = new Users();
+
+            //Site_Grid.DataContext = users;
+
             if (mode == 0)
                 users.Get_List(0);
             else
                 users.Get_List(1, csite.Site_ID);
+            
+            view_users.Add(users);
 
-            Users_List.Items.Clear();
+           
+            //list_Users_List.ItemsSource = view_users;
 
-            for (int i = 0; i < users.User_Name.Count; i++)
-            {
-                Users_List.Items.Add(users.User_Name[i]);
-            }
+
+            /*            list_Users_List.Items.Clear();
+
+                        for (int i = 0; i < users.User_Name.Count; i++)
+                        {
+                            list_Users_List.Items.Add(users.User_Name[i]);
+                        }*/
         }
     }
 }

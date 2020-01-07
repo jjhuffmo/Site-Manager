@@ -20,9 +20,16 @@
         <Button x:Name="btn_Cancel" Content="Cancel" HorizontalAlignment="Left" Height="30" Margin="442,295,0,0" VerticalAlignment="Top" Width="200" Click="btn_Cancel_Clicked"/>
         <TextBlock x:Name="Site_Exists" HorizontalAlignment="Left" Margin="303,51,0,0" Text="Site Exists" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" FontWeight="Bold" Foreground="#FFFD0808" Visibility="Hidden"/>
         <TextBlock HorizontalAlignment="Left" Margin="440,67,0,0" Text="Users With Access:" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" FontWeight="Bold"/>
-        <ListBox x:Name="Users_List" Margin="342,88,16,56" Width="300" SelectionMode="Extended" Height="191.25" Grid.RowSpan="1" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Image x:Name="btn_Add_Users" HorizontalAlignment="Left" Height="16" Margin="343,67,0,0" VerticalAlignment="Top" Width="16" Source="/Resources/btnAdd_Users.bmp" RenderTransformOrigin="0.441,1.708" Stretch="UniformToFill"/>
-        <Image x:Name="btn_Remove_Users" HorizontalAlignment="Left" Height="16" Margin="626,67,0,0" VerticalAlignment="Top" Width="17" Source="/Resources/icoMinus.ico" RenderTransformOrigin="0.441,1.708"/>
+        <ListView x:Name="list_Users_List" ItemsSource="{Binding ElementName=UCSite, Path=view_users}" Margin="342,88,16,56" Width="300" SelectionMode="Extended" Height="191.25" Grid.RowSpan="1" HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="User_List_Selection">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="User Name" x:Name="list_Users_Name" Width="Auto" DisplayMemberBinding="{Binding User_Name}"/>
+                    <GridViewColumn Header="Access" x:Name="list_Users_Access" Width="Auto" DisplayMemberBinding="{Binding Access}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Image x:Name="btn_Add_Users" HorizontalAlignment="Left" Height="16" Margin="343,67,0,0" VerticalAlignment="Top" Width="16" Source="/Resources/btnAdd_Users.bmp" RenderTransformOrigin="0.441,1.708" Stretch="UniformToFill" MouseLeftButtonUp ="btn_Add_User_Clicked"/>
+        <Image x:Name="btn_Remove_Users" HorizontalAlignment="Left" Height="16" Margin="626,67,0,0" VerticalAlignment="Top" Width="17" Source="/Resources/btnRemove_Users.bmp" RenderTransformOrigin="0.441,1.708" MouseLeftButtonUp ="btn_Remove_User_Clicked"/>
 
     </Grid>
 </UserControl>

@@ -3,16 +3,28 @@ using System.Collections.Generic;
 using System.Text;
 using static Site_Manager.Resources;
 using System.Data.SqlClient;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace Site_Manager
 {
-    class Users
+    public class Users : INotifyPropertyChanged
     {
-        private List<int> _User_ID;
-        private List<string> _User_Name;
-        private List<int> _Access;
+        protected void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(this, e);
+        }
 
-        public List<int> User_ID
+        protected void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = "")
+        {
+            OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
+
+        private ObservableCollection<int> _User_ID;
+        private ObservableCollection<string> _User_Name;
+        private ObservableCollection<int> _Access;
+
+        public ObservableCollection<int> User_ID
         {
             get { return _User_ID; }
             set
@@ -21,7 +33,7 @@ namespace Site_Manager
             }
         }
 
-        public List<int> Access
+        public ObservableCollection<int> Access
         {
             get { return _Access; }
             set
@@ -30,7 +42,7 @@ namespace Site_Manager
             }
         }
 
-        public List<string> User_Name
+        public ObservableCollection<string> User_Name
         {
             get { return _User_Name; }
             set
@@ -39,11 +51,13 @@ namespace Site_Manager
             }
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public void Initialize()
         {
-            User_Name = new List<string>();
-            User_ID = new List<int>();
-            Access = new List<int>();
+            User_Name = new ObservableCollection<string>();
+            User_ID = new ObservableCollection<int>();
+            Access = new ObservableCollection<int>();
         }
 
         //

@@ -125,11 +125,8 @@
   <data name="btnAdd_Users" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\btnAdd_Users.bmp;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="icoMinus" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\icoPlus1.ico;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="icoPlus" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\icoPlus.ico;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnRemove_Users" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\btnRemove_Users.bmp;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="SQLConnString" xml:space="preserve">
     <value>Data Source=localhost\SQLEXPRESS;Initial Catalog=Site_Management;Integrated Security=True</value>
