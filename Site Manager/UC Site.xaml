@@ -20,11 +20,11 @@
         <Button x:Name="btn_Cancel" Content="Cancel" HorizontalAlignment="Left" Height="30" Margin="442,295,0,0" VerticalAlignment="Top" Width="200" Click="btn_Cancel_Clicked"/>
         <TextBlock x:Name="Site_Exists" HorizontalAlignment="Left" Margin="303,51,0,0" Text="Site Exists" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" FontWeight="Bold" Foreground="#FFFD0808" Visibility="Hidden"/>
         <TextBlock HorizontalAlignment="Left" Margin="440,67,0,0" Text="Users With Access:" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" FontWeight="Bold"/>
-        <ListView x:Name="list_Users_List" ItemsSource="{Binding ElementName=UCSite, Path=view_users}" Margin="342,88,16,56" Width="300" SelectionMode="Extended" Height="191.25" Grid.RowSpan="1" HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="User_List_Selection">
+        <ListView x:Name="list_Users_List" ItemsSource="{Binding ElementName=UCSite, Path=view_users[0]}" Margin="342,88,16,56" Width="300" SelectionMode="Extended" Height="191.25" Grid.RowSpan="1" HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="User_List_Selection" >
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="User Name" x:Name="list_Users_Name" Width="Auto" DisplayMemberBinding="{Binding User_Name}"/>
-                    <GridViewColumn Header="Access" x:Name="list_Users_Access" Width="Auto" DisplayMemberBinding="{Binding Access}"/>
+                    <GridViewColumn Header="User Name" x:Name="list_Users_Name" Width="Auto" DisplayMemberBinding="{Binding Path = User_Name}"/>
+                    <GridViewColumn Header="Access" x:Name="list_Users_Access" Width="Auto" DisplayMemberBinding="{Binding Path = Access}"/>
                 </GridView>
             </ListView.View>
         </ListView>

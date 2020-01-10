@@ -20,11 +20,11 @@ namespace Site_Manager
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
-        private ObservableCollection<int> _User_ID;
-        private ObservableCollection<string> _User_Name;
-        private ObservableCollection<int> _Access;
+        private List<int> _User_ID;
+        private List<string> _User_Name;
+        private List<int> _Access;
 
-        public ObservableCollection<int> User_ID
+        public List<int> User_ID
         {
             get { return _User_ID; }
             set
@@ -33,7 +33,7 @@ namespace Site_Manager
             }
         }
 
-        public ObservableCollection<int> Access
+        public List<int> Access
         {
             get { return _Access; }
             set
@@ -42,7 +42,7 @@ namespace Site_Manager
             }
         }
 
-        public ObservableCollection<string> User_Name
+        public List<string> User_Name
         {
             get { return _User_Name; }
             set
@@ -55,11 +55,15 @@ namespace Site_Manager
 
         public void Initialize()
         {
-            User_Name = new ObservableCollection<string>();
-            User_ID = new ObservableCollection<int>();
-            Access = new ObservableCollection<int>();
+            User_Name = new List<string>();
+            User_ID = new List<int>();
+            Access = new List<int>();
         }
 
+        public override string ToString()
+        {
+            return base.ToString();
+        }
         //
         //  Function:   public void Get_List(int mode, long site_id)
         //

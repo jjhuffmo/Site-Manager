@@ -26,9 +26,10 @@ namespace Site_Manager
         public Sites csite;
         DispatcherTimer _typingTimer;
         private int Mode = 0;
-        User_Info cuser = new User_Info();
+        public User_Info cuser = new User_Info();
         bool loaded = false;
-        public ObservableCollection<Users> view_users = new ObservableCollection<Users>();
+        public ObservableCollection<Users> view_users { get; set; }
+        public Users users { get; set; }
 
         //
         //  Function:   public UC_Site(Sites current_site, int mode)
@@ -49,6 +50,9 @@ namespace Site_Manager
             csite.PropertyChanged += new PropertyChangedEventHandler(current_site_PropertyChanged);
 
             Mode = mode;
+            //this.DataContext = view_users;
+            users = new Users();
+            view_users = new ObservableCollection<Users>();
             Make_User_List(mode);
 
             InitializeComponent();
@@ -373,18 +377,17 @@ namespace Site_Manager
         //
         private void Make_User_List(int mode)
         {
-            Users users = new Users();
-
-            //Site_Grid.DataContext = users;
+            //Site_Grid.DataContext = this;
 
             if (mode == 0)
                 users.Get_List(0);
             else
                 users.Get_List(1, csite.Site_ID);
-            
-            view_users.Add(users);
 
-           
+
+            view_users.Add(users);
+            //view_users.Source = users;
+
             //list_Users_List.ItemsSource = view_users;
 
 
