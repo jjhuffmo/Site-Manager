@@ -60,10 +60,6 @@ namespace Site_Manager
             Access = new List<int>();
         }
 
-        public override string ToString()
-        {
-            return base.ToString();
-        }
         //
         //  Function:   public void Get_List(int mode, long site_id)
         //

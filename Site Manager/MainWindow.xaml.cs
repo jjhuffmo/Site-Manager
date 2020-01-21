@@ -362,6 +362,9 @@ namespace Site_Manager
                     // Generate a new Site_Info tab using the user control UC Site
                     var editsite = new UC_Site(View_Site, mode, current_user);
 
+                    // Generate a new Site_Tickets tab using the user control UC Site Tickets
+                    var sitetickets = new UC_Site_Tickets();
+
                     // Create a new tab for the Site Tab itself
                     TabItem sites_tab = new TabItem();
                     sites_tab.Header = View_Site.Short_Name;
@@ -373,6 +376,13 @@ namespace Site_Manager
                     info_tab.Header = "Info";
                     info_tab.Content = editsite;
                     site_tab.Items.Add(info_tab);
+                    //sites_tab.Content = site_tab;
+
+                    // Create the tickets tab
+                    TabItem tickets_tab = new TabItem();
+                    tickets_tab.Header = "Tickets";
+                    tickets_tab.Content = sitetickets;
+                    site_tab.Items.Add(tickets_tab);
                     sites_tab.Content = site_tab;
 
                     // Add the site to the Open_Sites variable
