@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 namespace Site_Manager
 {
-    public class Users : INotifyPropertyChanged
+    public class DB_Users : INotifyPropertyChanged
     {
         protected void OnPropertyChanged(PropertyChangedEventArgs e)
         {
@@ -23,6 +23,12 @@ namespace Site_Manager
         private List<int> _User_ID;
         private List<string> _User_Name;
         private List<int> _Access;
+        private List<bool> _View_Resources;
+        private List<bool> _Add_Resources;
+        private List<bool> _Modify_Resources;
+        private List<bool> _Del_Resources;
+        private List<bool> _View_Tickets;
+        private List<bool> _Add_Tickets;
 
         public List<int> User_ID
         {
@@ -30,15 +36,6 @@ namespace Site_Manager
             set
             {
                 _User_ID = value;
-            }
-        }
-
-        public List<int> Access
-        {
-            get { return _Access; }
-            set
-            {
-                _Access = value;
             }
         }
 
@@ -51,6 +48,70 @@ namespace Site_Manager
             }
         }
 
+        public List<int> Access
+        {
+            get { return _Access; }
+            set
+            {
+                _Access = value;
+            }
+        }
+
+        public List<bool> View_Resources
+        {
+            get { return _View_Resources; }
+            set
+            {
+                _View_Resources = value;
+            }
+        }
+
+        public List<bool> Add_Resources
+        {
+            get { return _Add_Resources; }
+            set
+            {
+                _Add_Resources = value;
+            }
+        }
+
+        public List<bool> Modify_Resources
+        {
+            get { return _Modify_Resources; }
+            set
+            {
+                _Modify_Resources = value;
+            }
+        }
+
+        public List<bool> Del_Resources
+        {
+            get { return _Del_Resources; }
+            set
+            {
+                _Del_Resources = value;
+            }
+        }
+
+        public List<bool> View_Tickets
+        {
+            get { return _View_Tickets; }
+            set
+            {
+                _View_Tickets = value;
+            }
+        }
+
+        public List<bool> Add_Tickets
+        {
+            get { return _Add_Tickets; }
+            set
+            {
+                _Add_Tickets = value;
+            }
+        }
+
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void Initialize()
@@ -58,6 +119,12 @@ namespace Site_Manager
             User_Name = new List<string>();
             User_ID = new List<int>();
             Access = new List<int>();
+            View_Resources = new List<bool>();
+            Add_Resources = new List<bool>();
+            Modify_Resources = new List<bool>();
+            Del_Resources = new List<bool>();
+            View_Tickets = new List<bool>();
+            Add_Tickets = new List<bool>();
         }
 
         //
@@ -66,7 +133,7 @@ namespace Site_Manager
         //  Arguments:  int mode = Mode of list to get (0 = All Users, 1 = Only Users For This Site)
         //              long site_id = Site ID to get the list for (if mode is 1)
         //
-        //  Purpose:    Display the Login dialog and try logging in if a name was entered and Login button pressed
+        //  Purpose:    Gets a list of all users (mode = 0) or ones granted rights to see a site (mode = 1)
         //
         public void Get_List(int mode, long site_id=0)
         {
@@ -91,9 +158,10 @@ namespace Site_Manager
                         using SqlDataReader reader = SqlCmd.ExecuteReader();
                         while (reader.Read())
                         {
+                            User_ID.Add((int)reader[0]);
                             User_Name.Add(String.Format("{0}", reader[1]));
                             Access.Add((int)reader[2]);
-                            User_ID.Add((int)reader[0]);
+
                         }
                         sqlCon.Close();
                     }
@@ -113,6 +181,13 @@ namespace Site_Manager
                         while (reader.Read())
                         {
                             site_users.Add((int)reader[2]);
+                            User_ID.Add((int)reader[2]);
+                            View_Resources.Add((bool)reader[3]);
+                            Add_Resources.Add((bool)reader[4]);
+                            Modify_Resources.Add((bool)reader[5]);
+                            Del_Resources.Add((bool)reader[6]);
+                            View_Tickets.Add((bool)reader[7]);
+                            Add_Tickets.Add((bool)reader[8]);
                         }
                         sqlCon.Close();
                     }
@@ -133,8 +208,6 @@ namespace Site_Manager
                             while (reader.Read())
                             {
                                 User_Name.Add(String.Format("{0}", reader[1]));
-                                Access.Add((int)reader[2]);
-                                User_ID.Add((int)reader[0]);
                             }
                             sqlCon.Close();
                         }
@@ -143,6 +216,113 @@ namespace Site_Manager
             }
 
 
+        }
+    }
+    public class Users : INotifyPropertyChanged
+    {
+        protected void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(this, e);
+        }
+
+        protected void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = "")
+        {
+            OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
+
+        private int _User_ID;
+        private string _User_Name;
+        private bool _View_Resources;
+        private bool _Add_Resources;
+        private bool _Modify_Resources;
+        private bool _Del_Resources;
+        private bool _View_Tickets;
+        private bool _Add_Tickets;
+
+        public int User_ID
+        {
+            get { return _User_ID; }
+            set
+            {
+                _User_ID = value;
+            }
+        }
+
+        public string User_Name
+        {
+            get { return _User_Name; }
+            set
+            {
+                _User_Name = value;
+            }
+        }
+
+        public bool View_Resources
+        {
+            get { return _View_Resources; }
+            set
+            {
+                _View_Resources = value;
+            }
+        }
+
+        public bool Add_Resources
+        {
+            get { return _Add_Resources; }
+            set
+            {
+                _Add_Resources = value;
+            }
+        }
+
+        public bool Modify_Resources
+        {
+            get { return _Modify_Resources; }
+            set
+            {
+                _Modify_Resources = value;
+            }
+        }
+
+        public bool Del_Resources
+        {
+            get { return _Del_Resources; }
+            set
+            {
+                _Del_Resources = value;
+            }
+        }
+
+        public bool View_Tickets
+        {
+            get { return _View_Tickets; }
+            set
+            {
+                _View_Tickets = value;
+            }
+        }
+
+        public bool Add_Tickets
+        {
+            get { return _Add_Tickets; }
+            set
+            {
+                _Add_Tickets = value;
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void Convert_DB_Users(DB_Users db_users, int index)
+        {
+            this.User_ID = db_users.User_ID[index];
+            this.User_Name = db_users.User_Name[index];
+            this.View_Resources = db_users.View_Resources[index];
+            this.Add_Resources = db_users.Add_Resources[index];
+            this.Modify_Resources = db_users.Modify_Resources[index];
+            this.Del_Resources = db_users.Del_Resources[index];
+            this.View_Tickets = db_users.View_Tickets[index];
+            this.Add_Tickets = db_users.Add_Tickets[index];
         }
     }
 }

@@ -29,7 +29,6 @@ namespace Site_Manager
         public User_Info cuser = new User_Info();
         bool loaded = false;
         public ObservableCollection<Users> view_users { get; set; }
-        public Users users { get; set; }
 
         //
         //  Function:   public UC_Site(Sites current_site, int mode)
@@ -51,8 +50,6 @@ namespace Site_Manager
             csite.PropertyChanged += new PropertyChangedEventHandler(current_site_PropertyChanged);
 
             Mode = mode;
-
-            users = new Users();
 
             this.DataContext = this;
 
@@ -165,11 +162,7 @@ namespace Site_Manager
         //
         private void User_List_Selection(object sender, SelectionChangedEventArgs e)
         {
-            // Enable/disable the remove button when a selection is made
-            if (list_Users_List.SelectedItems.Count > 0)
-                btn_Remove_Users.IsEnabled = false;
-            else
-                btn_Remove_Users.IsEnabled = true;
+
 
         }
 
@@ -378,27 +371,19 @@ namespace Site_Manager
         //
         private void Make_User_List(int mode)
         {
-            list_Users_List.DataContext = this;
+            DB_Users users = new DB_Users();
 
             if (mode == 0)
                 users.Get_List(0);
             else
                 users.Get_List(1, csite.Site_ID);
-
-            view_users.Add(users);
-            //view_users[0].Get_List(0);
-
-            //view_users.Source = users;
-
-            //list_Users_List.ItemsSource = view_users;
-
-
-            /*            list_Users_List.Items.Clear();
-
-                        for (int i = 0; i < users.User_Name.Count; i++)
-                        {
-                            list_Users_List.Items.Add(users.User_Name[i]);
-                        }*/
+            for (int i = 0; i < users.User_Name.Count; i++)
+            {
+                Users user = new Users();
+                user.Convert_DB_Users(users, i);
+                view_users.Add(user);
+            }
         }
+
     }
 }

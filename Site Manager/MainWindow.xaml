@@ -48,7 +48,7 @@
               VerticalAlignment="Top"
               Background="LightGray"
               Height="1" IsEnabled="False" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
-            <TabControl x:Name="Sites_Tabs" Grid.Column="1">
+            <TabControl x:Name="Sites_Tabs" Grid.Column="1" Width="Auto" SizeChanged="Sites_Tabs_SizeChanged">
             </TabControl>
         </Grid>
         <Menu FontWeight="Normal" x:Name="MainMenu" VerticalAlignment="Top" Height="18">

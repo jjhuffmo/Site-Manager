@@ -40,6 +40,7 @@ namespace Site_Manager
             current_user.PropertyChanged += new PropertyChangedEventHandler(CUser_PropertyChanged);
             SiteList.SelectionChanged += new SelectionChangedEventHandler(SiteList_Changed);
             System_Settings.PropertyChanged += new PropertyChangedEventHandler(System_Settings_Changed);
+            Sites_Tabs.SelectionChanged += new SelectionChangedEventHandler(Sites_Tabs_Changed);
 
             LoginLogout(current_user, 1);
         }
@@ -372,17 +373,23 @@ namespace Site_Manager
 
                     // Create the site tabs for info, tickets, resources, etc
                     TabControl site_tab = new TabControl();
+                    site_tab.SizeChanged += new SizeChangedEventHandler(Sites_Tabs_SizeChanged);
                     TabItem info_tab = new TabItem();
                     info_tab.Header = "Info";
                     info_tab.Content = editsite;
                     site_tab.Items.Add(info_tab);
-                    //sites_tab.Content = site_tab;
 
                     // Create the tickets tab
                     TabItem tickets_tab = new TabItem();
                     tickets_tab.Header = "Tickets";
                     tickets_tab.Content = sitetickets;
                     site_tab.Items.Add(tickets_tab);
+
+                    // Create the resources tab
+                    TabItem resources_tab = new TabItem();
+                    resources_tab.Header = "Resources";
+                    //resources_tab.Content = sitetickets;
+                    site_tab.Items.Add(resources_tab);
                     sites_tab.Content = site_tab;
 
                     // Add the site to the Open_Sites variable
@@ -586,7 +593,12 @@ namespace Site_Manager
                     if (sites.site_id.Contains((long)reader[1]) == false)
                     {
                         sites.site_id.Add((long)reader[1]);
-                        sites.site_access.Add((int)reader[3]);
+                        sites.View_Resources.Add((bool)reader[3]);
+                        sites.Add_Resources.Add((bool)reader[4]);
+                        sites.Modify_Resources.Add((bool)reader[5]);
+                        sites.Del_Resources.Add((bool)reader[6]);
+                        sites.View_Tickets.Add((bool)reader[7]);
+                        sites.Add_Tickets.Add((bool)reader[8]);
                     }
                 }
             }
@@ -642,6 +654,42 @@ namespace Site_Manager
                 SiteList.Items.Add(site);
                 // Increment index
                 i++;
+            }
+        }
+
+        private void Sites_Tabs_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            TabControl tabControl = (TabControl)sender;
+
+            // Get the full length of the tab area and the # of tabs
+            double width = tabControl.ActualWidth;
+            int tabs = tabControl.Items.Count;
+
+            // Divide the width by the # of tabs to get the width of each tab
+            double eachtab = width / tabs - 20;
+
+            for (int i = 0; i < tabs; i++)
+            {
+                TabItem tabItem = (TabItem)tabControl.Items[i];
+                tabItem.Width = eachtab;
+            }
+        }
+
+        private void Sites_Tabs_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            TabControl tabControl = (TabControl)sender;
+
+            // Get the full length of the tab area and the # of tabs
+            double width = tabControl.ActualWidth;
+            int tabs = tabControl.Items.Count;
+
+            // Divide the width by the # of tabs to get the width of each tab
+            double eachtab = width / tabs - 20;
+
+            for (int i = 0; i < tabs; i++)
+            {
+                TabItem tabItem = (TabItem)tabControl.Items[i];
+                tabItem.Width = eachtab;
             }
         }
     }
