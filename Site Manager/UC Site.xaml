@@ -19,19 +19,5 @@
         <Button x:Name="btn_Save" Content="Save" HorizontalAlignment="Left" Height="30" Margin="15,294,0,0" VerticalAlignment="Top" Width="200" Click="btn_Save_Clicked"/>
         <Button x:Name="btn_Cancel" Content="Cancel" HorizontalAlignment="Left" Height="30" Margin="424,294,0,0" VerticalAlignment="Top" Width="200" Click="btn_Cancel_Clicked"/>
         <TextBlock x:Name="Site_Exists" HorizontalAlignment="Left" Margin="303,51,0,0" Text="Site Exists" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" FontWeight="Bold" Foreground="#FFFD0808" Visibility="Hidden"/>
-        <TextBlock HorizontalAlignment="Left" Margin="431,13,0,0" Text="Users With Access:" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" FontWeight="Bold"/>
-        <DataGrid x:Name="Site_Users_List" ItemsSource="{Binding Path=view_users}" HorizontalAlignment="Left" Height="248" Margin="343,31,0,0" VerticalAlignment="Top"  AutoGenerateColumns="False" Width="280" GridLinesVisibility="None" HeadersVisibility="None" CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn x:Name="lst_Name" Header="Name" Width="Auto" MinWidth="272" Binding="{Binding User_Name}"/>
-            </DataGrid.Columns>
-            <DataGrid.ContextMenu>
-                <ContextMenu>
-                    <MenuItem x:Name="User_CM_Edit" Header="Edit User"/>
-                    <MenuItem x:Name="User_CM_Delete" Header="Delete User"/>
-                    <MenuItem x:Name="User_CM_Open" Header="Open Users Panel"/>
-                </ContextMenu>
-            </DataGrid.ContextMenu>
-        </DataGrid>
-
     </Grid>
 </UserControl>

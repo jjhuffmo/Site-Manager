@@ -8,7 +8,6 @@ namespace Site_Manager
     {
         private List<long> _site_id;
         private List<string> _site_name;
-        private List<int> _Access;
         private List<bool> _View_Resources;
         private List<bool> _Add_Resources;
         private List<bool> _Modify_Resources;

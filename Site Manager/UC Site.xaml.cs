@@ -28,7 +28,6 @@ namespace Site_Manager
         private int Mode = 0;
         public User_Info cuser = new User_Info();
         bool loaded = false;
-        public ObservableCollection<Users> view_users { get; set; }
 
         //
         //  Function:   public UC_Site(Sites current_site, int mode)
@@ -42,7 +41,6 @@ namespace Site_Manager
         //
         public UC_Site(Sites current_site, int mode, User_Info current_user)
         {
-            view_users = new ObservableCollection<Users>();
             cuser = current_user;
 
             csite = new Sites();
@@ -63,7 +61,6 @@ namespace Site_Manager
                 // Create New
                 case 0:
                     csite.Initialize();
-                    Make_User_List(0);
                     btn_Save.Content = "Save";
                     btn_Cancel.Visibility = Visibility.Visible;
                     break;
@@ -73,7 +70,6 @@ namespace Site_Manager
                     btn_Save.Content = "Update";
                     btn_Cancel.Visibility = Visibility.Hidden;
                     Load_Values();
-                    Make_User_List(1);
                     break;
 
                 // View Only
@@ -82,7 +78,6 @@ namespace Site_Manager
                     btn_Save.Content = "OK";
                     btn_Cancel.Visibility = Visibility.Hidden;
                     Load_Values();
-                    Make_User_List(1);
                     break;
             }
         }
@@ -308,82 +303,5 @@ namespace Site_Manager
             }
         }
 
-        //
-        //  Function:   private void btn_Remove_User_Clicked(object sender, RoutedEventArgs e)
-        //
-        //  Arguments:  object sender = object that called function (Short_Name textbox)
-        //              RoutedEventArgs e = arguments for the event
-        //
-        //  Purpose:    Cancel current changes to the site after confirmation from a messagebox
-        //
-        private void btn_Remove_User_Clicked(object sender, RoutedEventArgs e)
-        {
-            if (Mode == 0)
-            {
-                if (MessageBox.Show("Do you want to exit without saving the new site?", "Exit Without Saving", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-                {
-                    Window Parent = (Window)this.Parent;
-                    Parent.DialogResult = false;
-                }
-            }
-            else
-            {
-                if (MessageBox.Show("Do you want to discard changes to site?", "Discard Changes", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-                {
-                    Load_Values();
-                }
-            }
-        }
-
-        //
-        //  Function:   private void btn_Add_User_Clicked(object sender, RoutedEventArgs e)
-        //
-        //  Arguments:  object sender = object that called function (Short_Name textbox)
-        //              RoutedEventArgs e = arguments for the event
-        //
-        //  Purpose:    Cancel current changes to the site after confirmation from a messagebox
-        //
-        private void btn_Add_User_Clicked(object sender, RoutedEventArgs e)
-        {
-            if (Mode == 0)
-            {
-                if (MessageBox.Show("Do you want to exit without saving the new site?", "Exit Without Saving", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-                {
-                    Window Parent = (Window)this.Parent;
-                    Parent.DialogResult = false;
-                }
-            }
-            else
-            {
-                if (MessageBox.Show("Do you want to discard changes to site?", "Discard Changes", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-                {
-                    Load_Values();
-                }
-            }
-        }
-
-        //
-        //  Function:   private void Make_User_List(int mode)
-        //
-        //  Arguments:  int mode = Mode of operation (0 = All Users, 1 = Just this site's users
-        //
-        //  Purpose:    Display the User List for a new or existing site
-        //
-        private void Make_User_List(int mode)
-        {
-            DB_Users users = new DB_Users();
-
-            if (mode == 0)
-                users.Get_List(0);
-            else
-                users.Get_List(1, csite.Site_ID);
-            for (int i = 0; i < users.User_Name.Count; i++)
-            {
-                Users user = new Users();
-                user.Convert_DB_Users(users, i);
-                view_users.Add(user);
-            }
-        }
-
-    }
+     }
 }

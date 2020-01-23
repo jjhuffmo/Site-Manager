@@ -227,6 +227,7 @@ namespace Site_Manager
 
         protected void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = "")
         {
+            _Changed = true;
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
@@ -238,6 +239,7 @@ namespace Site_Manager
         private bool _Del_Resources;
         private bool _View_Tickets;
         private bool _Add_Tickets;
+        private bool _Changed;
 
         public int User_ID
         {
@@ -245,6 +247,7 @@ namespace Site_Manager
             set
             {
                 _User_ID = value;
+                _Changed = true;
             }
         }
 
@@ -254,6 +257,7 @@ namespace Site_Manager
             set
             {
                 _User_Name = value;
+                _Changed = true;
             }
         }
 
@@ -263,6 +267,7 @@ namespace Site_Manager
             set
             {
                 _View_Resources = value;
+                _Changed = true;
             }
         }
 
@@ -272,6 +277,7 @@ namespace Site_Manager
             set
             {
                 _Add_Resources = value;
+                _Changed = true;
             }
         }
 
@@ -281,6 +287,7 @@ namespace Site_Manager
             set
             {
                 _Modify_Resources = value;
+                _Changed = true;
             }
         }
 
@@ -290,6 +297,7 @@ namespace Site_Manager
             set
             {
                 _Del_Resources = value;
+                _Changed = true;
             }
         }
 
@@ -299,6 +307,7 @@ namespace Site_Manager
             set
             {
                 _View_Tickets = value;
+                _Changed = true;
             }
         }
 
@@ -308,6 +317,16 @@ namespace Site_Manager
             set
             {
                 _Add_Tickets = value;
+                _Changed = true;
+            }
+        }
+
+        public bool Changed
+        {
+            get { return _Changed; }
+            set
+            {
+                _Changed = value;
             }
         }
 
@@ -323,6 +342,7 @@ namespace Site_Manager
             this.Del_Resources = db_users.Del_Resources[index];
             this.View_Tickets = db_users.View_Tickets[index];
             this.Add_Tickets = db_users.Add_Tickets[index];
+            this.Changed = false;
         }
     }
 }
