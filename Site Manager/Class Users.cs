@@ -227,7 +227,6 @@ namespace Site_Manager
 
         protected void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = "")
         {
-            _Changed = true;
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
@@ -308,6 +307,7 @@ namespace Site_Manager
             {
                 _View_Tickets = value;
                 _Changed = true;
+                OnPropertyChanged("View_Tickets");
             }
         }
 
@@ -327,7 +327,13 @@ namespace Site_Manager
             set
             {
                 _Changed = value;
+                OnPropertyChanged("Changed");
             }
+        }
+
+        public string Changed_Ind
+        {
+            get { return !Changed ? " " : "*"; }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

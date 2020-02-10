@@ -25,6 +25,21 @@ namespace Site_Manager
         public User_Info cuser = new User_Info();
         public Sites csite;
         public int Mode = 0;
+        public bool _Changes_Made = false;
+        public bool Init_Complete = false;
+        public bool Changes_Made
+        {
+            get
+            { return _Changes_Made; }
+            set
+            {
+                _Changes_Made = value;
+                if (value == true)
+                    btn_Save.Visibility = Visibility.Visible;
+                else
+                    btn_Save.Visibility = Visibility.Hidden;
+            }
+        }
 
         //
         //  Function:   public UC_Site_Users(Sites current_site, int mode, User_Info current_user)
@@ -43,39 +58,18 @@ namespace Site_Manager
 
             csite = new Sites();
             csite = current_site;
-            //csite.PropertyChanged += new PropertyChangedEventHandler(current_site_PropertyChanged);
-            
+
             Mode = mode;
 
             this.DataContext = this;
 
             InitializeComponent();
-            
+
             Make_User_List(Mode);
 
-            //view_users.CollectionChanged += view_users_PropertyChanged;
-            View_Users.CollectionChanged += View_Users_CollectionChanged;
+            btn_Save.Visibility = Visibility.Hidden;
 
-        }
-
-        private void View_Users_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                foreach (Users item in e.OldItems)
-                {
-                    //Removed items
-                    item.PropertyChanged -= view_users_PropertyChanged;
-                }
-            }
-            else if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                foreach (Users item in e.NewItems)
-                {
-                    //Added items
-                    item.PropertyChanged += view_users_PropertyChanged;
-                }
-            }
+            Init_Complete = true;
         }
 
         //
@@ -96,30 +90,31 @@ namespace Site_Manager
             for (int i = 0; i < users.User_Name.Count; i++)
             {
                 Users user = new Users();
+                user.PropertyChanged += User_PropertyChanged;
                 user.Convert_DB_Users(users, i);
                 View_Users.Add(user);
+                View_Users[i].Changed = false;
             }
         }
 
-        private void view_users_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void User_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            bool Change = true;
-
-            if (Change)
-                Change = false;
-            else
-                Change = true;
+            //throw new NotImplementedException();
+            if (Init_Complete)
+            {
+                Site_Users_List.Items.Refresh();
+            }
         }
 
-            //
-            //  Function:   private void btn_Remove_User_Clicked(object sender, RoutedEventArgs e)
-            //
-            //  Arguments:  object sender = object that called function (Short_Name textbox)
-            //              RoutedEventArgs e = arguments for the event
-            //
-            //  Purpose:    Cancel current changes to the site after confirmation from a messagebox
-            //
-            private void btn_Remove_User_Clicked(object sender, RoutedEventArgs e)
+        //
+        //  Function:   private void btn_Remove_User_Clicked(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = object that called function (Short_Name textbox)
+        //              RoutedEventArgs e = arguments for the event
+        //
+        //  Purpose:    Cancel current changes to the site after confirmation from a messagebox
+        //
+        private void btn_Remove_User_Clicked(object sender, RoutedEventArgs e)
         {
             if (Mode == 0)
             {
@@ -165,9 +160,22 @@ namespace Site_Manager
             }*/
         }
 
+        private void Site_Users_List_CurrentCellChanged(object sender, EventArgs e)
+        {
+            //var Current_Row = Site_Users_List.Items.IndexOf(Site_Users_List.CurrentItem);
+
+            Changes_Made = true;
+            //Site_Users_List.Items.Refresh();
+        }
+
         private void Site_Users_List_SourceUpdated(object sender, DataTransferEventArgs e)
         {
 
+        }
+
+        private void Site_Users_List_TargetUpdated(object sender, DataTransferEventArgs e)
+        {
+            Site_Users_List.Items.Refresh();
         }
     }
 }

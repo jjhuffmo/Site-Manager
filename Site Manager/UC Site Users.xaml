@@ -7,10 +7,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <DataGrid x:Name="Site_Users_List" ItemsSource="{Binding View_Users, Mode=TwoWay}" TargetUpdated="Site_Users_List_SourceUpdated" HorizontalAlignment="Left" VerticalAlignment="Top"  AutoGenerateColumns="False" GridLinesVisibility="None" 
-                  CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False" FrozenColumnCount="1" Margin="0,43,0,0">
+        <DataGrid x:Name="Site_Users_List" ItemsSource="{Binding View_Users}" HorizontalAlignment="Left" VerticalAlignment="Top" Binding.SourceUpdated="Site_Users_List_SourceUpdated" Binding.TargetUpdated="Site_Users_List_TargetUpdated" AutoGenerateColumns="False" GridLinesVisibility="None" 
+                  CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False" FrozenColumnCount="1" Margin="0,43,0,0" CurrentCellChanged="Site_Users_List_CurrentCellChanged">
             <DataGrid.Columns>
-                <DataGridTextColumn x:Name="lst_Name" Header="Name" Width="Auto" Binding="{Binding User_Name}"/>
+                <DataGridTextColumn x:Name="Row_Changed" IsReadOnly="True" Width="Auto" Binding="{Binding Changed_Ind}"/>
+                <DataGridTextColumn x:Name="lst_Name" IsReadOnly="True" Header="Name" Width="Auto" Binding="{Binding User_Name}"/>
                 <DataGridCheckBoxColumn Header="View All Resources" Binding="{Binding View_Resources}"/>
                 <DataGridCheckBoxColumn Header="Add Resources" Binding="{Binding Add_Resources}"/>
                 <DataGridCheckBoxColumn Header="Modify Resources" Binding="{Binding Modify_Resources}"/>
@@ -18,20 +19,6 @@
                 <DataGridCheckBoxColumn Header="View All Tickets" Binding="{Binding View_Tickets}"/>
                 <DataGridCheckBoxColumn Header="Add Tickets" Binding="{Binding Add_Tickets}"/>
             </DataGrid.Columns>
-            <DataGrid.RowStyle>
-                <Style TargetType="{x:Type DataGridRow}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Changed}" Value="True">
-                            <Setter Property="Background" Value="Yellow"/>
-                            <Setter Property="Opacity" Value="0.6"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Changed}" Value="False">
-                            <Setter Property="Background" Value="Gray"/>
-                            <Setter Property="Opacity" Value="1"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.RowStyle>
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem x:Name="User_CM_Edit" Header="Edit User" Visibility="Hidden"/>
@@ -39,7 +26,8 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
-        <Button Content="Button" HorizontalAlignment="Left" Height="28" Margin="10,10,0,0" VerticalAlignment="Top" Width="144" Click="btn_Add_User_Clicked"/>
 
+        <Button Content="Button" HorizontalAlignment="Left" Height="28" Margin="10,10,0,0" VerticalAlignment="Top" Width="144" Click="btn_Add_User_Clicked"/>
+        <Button x:Name="btn_Save" Content="Save" HorizontalAlignment="Left" Height="28" Margin="198,10,0,0" VerticalAlignment="Top" Width="144" Click="btn_Add_User_Clicked"/>
     </Grid>
 </UserControl>
