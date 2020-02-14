@@ -147,7 +147,8 @@ namespace Site_Manager
                         query.Append(" ");
                         query.Append(tblSiteUpdate);
                         query.Append(Site_ID.ToString());
-                        SaveCmd = query.ToString(); using (SqlCommand SqlCmd = new SqlCommand(SaveCmd))
+                        SaveCmd = query.ToString(); 
+                        using (SqlCommand SqlCmd = new SqlCommand(SaveCmd))
                         {
                             SqlCmd.Connection = sqlCon;
                             SqlCmd.Parameters.AddWithValue("@short_name", Short_Name);

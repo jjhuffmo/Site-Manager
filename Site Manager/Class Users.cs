@@ -5,6 +5,8 @@ using static Site_Manager.Resources;
 using System.Data.SqlClient;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows;
+using System.Data;
 
 namespace Site_Manager
 {
@@ -20,6 +22,8 @@ namespace Site_Manager
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
+        private List<long> _Site_User_ID;
+        private List<long> _Site_ID;
         private List<int> _User_ID;
         private List<string> _User_Name;
         private List<int> _Access;
@@ -29,6 +33,24 @@ namespace Site_Manager
         private List<bool> _Del_Resources;
         private List<bool> _View_Tickets;
         private List<bool> _Add_Tickets;
+
+        public List<long> Site_User_ID
+        {
+            get { return _Site_User_ID; }
+            set
+            {
+                _Site_User_ID = value;
+            }
+        }
+
+        public List<long> Site_ID
+        {
+            get { return _Site_ID; }
+            set
+            {
+                _Site_ID = value;
+            }
+        }
 
         public List<int> User_ID
         {
@@ -116,6 +138,8 @@ namespace Site_Manager
 
         public void Initialize()
         {
+            Site_User_ID = new List<long>();
+            Site_ID = new List<long>();
             User_Name = new List<string>();
             User_ID = new List<int>();
             Access = new List<int>();
@@ -125,6 +149,32 @@ namespace Site_Manager
             Del_Resources = new List<bool>();
             View_Tickets = new List<bool>();
             Add_Tickets = new List<bool>();
+        }
+
+        //
+        //  Function:   public void Remove_User(int user_type, int index_no)
+        //
+        //  Arguments:  int user_type = Type of user to remove (0 = System User, 1 = Site)
+        //              int index_no = Index number of user to remove from list
+        //
+        //  Purpose:    Removes an entire record of a user at a certain index
+        //
+        public void Remove_User(int user_type, int index_no)
+        {
+            User_Name.RemoveAt(index_no);
+            User_ID.RemoveAt(index_no);
+            Access.RemoveAt(index_no);
+            if (user_type == 1)
+            {
+                Site_User_ID.RemoveAt(index_no);
+                Site_ID.RemoveAt(index_no);
+                View_Resources.RemoveAt(index_no);
+                Add_Resources.RemoveAt(index_no);
+                Modify_Resources.RemoveAt(index_no);
+                Del_Resources.RemoveAt(index_no);
+                View_Tickets.RemoveAt(index_no);
+                Add_Tickets.RemoveAt(index_no);
+            }
         }
 
         //
@@ -151,6 +201,7 @@ namespace Site_Manager
                 // All Users
                 case 0:
                     query.Append(tblUserInfo);
+                    query.Append(" ORDER BY User_Name");
                     using (SqlConnection sqlCon = new SqlConnection(connString))
                     {
                         sqlCon.Open();
@@ -161,7 +212,6 @@ namespace Site_Manager
                             User_ID.Add((int)reader[0]);
                             User_Name.Add(String.Format("{0}", reader[1]));
                             Access.Add((int)reader[2]);
-
                         }
                         sqlCon.Close();
                     }
@@ -180,6 +230,8 @@ namespace Site_Manager
                         using SqlDataReader reader = SqlCmd.ExecuteReader();
                         while (reader.Read())
                         {
+                            Site_User_ID.Add((long)reader[0]);
+                            Site_ID.Add((long)reader[1]);
                             site_users.Add((int)reader[2]);
                             User_ID.Add((int)reader[2]);
                             View_Resources.Add((bool)reader[3]);
@@ -214,8 +266,180 @@ namespace Site_Manager
                     }
                     break;
             }
+        }
 
+        //
+        //  Function:   public void Save_List(int mode, long site_id = 0)
+        //
+        //  Arguments:  int mode = Mode of list to save (0 = All Users, 1 = Only Users For This Site)
+        //              long site_id = Site ID to get the list for (if mode is 1)
+        //
+        //  Purpose:    Saves a list of all users (mode = 0) or ones granted rights to see a site (mode = 1)
+        //
+        public bool Save_List(int mode, long site_id = 0)
+        {
+            List<int> site_users = new List<int>();
+            bool return_code = true;
 
+            // If the user name is blank then get it from the system and try to log in with AD security
+            string connString = SQLConnString;
+            string SaveCmd = "";
+            int SqlResult = 0;
+
+            using (SqlConnection sqlCon = new SqlConnection(connString))
+            {
+                switch (mode)
+                {
+                    // All Users
+                    case 0:
+                        for (int j = 0; j < User_ID.Count; j++)
+                        {
+                            StringBuilder query = new StringBuilder("");
+                            if (User_ID[j] == 0)
+                            {
+                                query.Append("INSERT INTO ");
+                                query.Append(tblUserInfo);
+                                query.Append(" ");
+                                query.Append(tblUserFields);
+                                query.Append(" ");
+                                query.Append(tblUserInsert);
+                                SaveCmd = query.ToString();
+                                using (SqlCommand SqlCmd = new SqlCommand(SaveCmd))
+                                {
+                                    // Write the current site information to the database
+                                    SqlCmd.Connection = sqlCon;
+                                    SqlCmd.Parameters.AddWithValue("@user_name", User_Name[j]);
+                                    SqlCmd.Parameters.AddWithValue("@access_level", Access[j]);
+
+                                    try
+                                    {
+                                        if (sqlCon.State != ConnectionState.Open)
+                                            sqlCon.Open();
+                                        SqlResult = SqlCmd.ExecuteNonQuery();
+                                    }
+                                    catch (SqlException e)
+                                    {
+                                        if (e.Number == 2627)
+                                            MessageBox.Show("A user with this name already exists.  Please select a unique user name and try again.", "Site Exists", MessageBoxButton.OK, MessageBoxImage.Error);
+                                        else
+                                            MessageBox.Show(e.Message, "Failed To Save User", MessageBoxButton.OK, MessageBoxImage.Error);
+                                        SqlResult = 0;
+                                        return_code = false;
+                                    }
+
+                                }
+                            }
+                            else
+                            {
+                                query.Append("UPDATE ");
+                                query.Append(tblUserInfo);
+                                query.Append(" ");
+                                query.Append(tblUserUpdate);
+                                query.Append(User_ID.ToString());
+                                SaveCmd = query.ToString(); using (SqlCommand SqlCmd = new SqlCommand(SaveCmd))
+                                {
+                                    SqlCmd.Connection = sqlCon;
+                                    SqlCmd.Parameters.AddWithValue("@user_name", User_Name);
+                                    SqlCmd.Parameters.AddWithValue("@access_level", Access);
+
+                                    try
+                                    {
+                                        if (sqlCon.State != ConnectionState.Open)
+                                            sqlCon.Open();
+                                        SqlResult = SqlCmd.ExecuteNonQuery();
+                                    }
+                                    catch (SqlException e)
+                                    {
+                                        MessageBox.Show(e.Message, "Failed To Save Site", MessageBoxButton.OK, MessageBoxImage.Error);
+                                        return_code = false;
+                                    }
+
+                                }
+                            }
+                        }
+                        sqlCon.Close();
+                        break;
+
+                    case 1:
+                        for (int j = 0; j < Site_ID.Count; j++)
+                        {
+                            StringBuilder query = new StringBuilder("");
+                            if (Site_User_ID[j] == 0)  // New site user
+                            {
+                                query.Append("INSERT ");
+                                query.Append(tblSiteUsers);
+                                query.Append(" ");
+                                query.Append(tblSiteUserFields);
+                                query.Append(" ");
+                                query.Append(tblSiteUserInsert);
+                                SaveCmd = query.ToString();
+                                using (SqlCommand SqlCmd = new SqlCommand(SaveCmd))
+                                {
+                                    SqlCmd.Connection = sqlCon;
+                                    SqlCmd.Parameters.AddWithValue("@site_id", (long)Site_ID[j]);
+                                    SqlCmd.Parameters.AddWithValue("@user_id", (int)User_ID[j]);
+                                    SqlCmd.Parameters.AddWithValue("@view_all_resources", (bool)View_Resources[j]);
+                                    SqlCmd.Parameters.AddWithValue("@add_resources", (bool)Add_Resources[j]);
+                                    SqlCmd.Parameters.AddWithValue("@modify_resources", (bool)Modify_Resources[j]);
+                                    SqlCmd.Parameters.AddWithValue("@delete_resources", (bool)Del_Resources[j]);
+                                    SqlCmd.Parameters.AddWithValue("@view_all_tickets", (bool)View_Tickets[j]);
+                                    SqlCmd.Parameters.AddWithValue("@add_tickets", (bool)Add_Tickets[j]);
+
+                                    try
+                                    {
+                                        if (sqlCon.State != ConnectionState.Open)
+                                            sqlCon.Open();
+                                        SqlResult = SqlCmd.ExecuteNonQuery();
+                                    }
+                                    catch (SqlException e)
+                                    {
+                                        MessageBox.Show(e.Message, "Failed To Save Site Users", MessageBoxButton.OK, MessageBoxImage.Error);
+                                        return_code = false;
+                                    }
+                                }
+                            }
+                            else // Update existing site user
+                            {
+                                query.Append("UPDATE ");
+                                query.Append(tblSiteUsers);
+                                query.Append(" ");
+                                query.Append(tblSiteUserUpdate);
+                                query.Append(Site_User_ID[j].ToString());
+                                SaveCmd = query.ToString();
+                                using (SqlCommand SqlCmd = new SqlCommand(SaveCmd))
+                                {
+                                    SqlCmd.Connection = sqlCon;
+                                    SqlCmd.Parameters.AddWithValue("@site_id", (long)Site_ID[j]);
+                                    SqlCmd.Parameters.AddWithValue("@user_id", (int)User_ID[j]);
+                                    SqlCmd.Parameters.AddWithValue("@view_all_resources", (bool)View_Resources[j]);
+                                    SqlCmd.Parameters.AddWithValue("@add_resources", (bool)Add_Resources[j]);
+                                    SqlCmd.Parameters.AddWithValue("@modify_resources", (bool)Modify_Resources[j]);
+                                    SqlCmd.Parameters.AddWithValue("@delete_resources", (bool)Del_Resources[j]);
+                                    SqlCmd.Parameters.AddWithValue("@view_all_tickets", (bool)View_Tickets[j]);
+                                    SqlCmd.Parameters.AddWithValue("@add_tickets", (bool)Add_Tickets[j]);
+
+                                    try
+                                    {
+                                        if (sqlCon.State != ConnectionState.Open)
+                                            sqlCon.Open();
+                                        SqlResult = SqlCmd.ExecuteNonQuery();
+                                        if (SqlResult == 0)
+                                            return_code = false;
+                                    }
+                                    catch (SqlException e)
+                                    {
+                                        MessageBox.Show(e.Message, "Failed To Save Site Users", MessageBoxButton.OK, MessageBoxImage.Error);
+                                        return_code = false;
+                                    }
+
+                                }
+                            }
+                        }
+                        sqlCon.Close();
+                        break;
+                }
+            }
+            return return_code;
         }
     }
     public class Users : INotifyPropertyChanged
@@ -230,6 +454,8 @@ namespace Site_Manager
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
+        private long _Site_User_ID;
+        private long _Site_ID;
         private int _User_ID;
         private string _User_Name;
         private bool _View_Resources;
@@ -240,13 +466,33 @@ namespace Site_Manager
         private bool _Add_Tickets;
         private bool _Changed;
 
+        public long Site_User_ID
+        {
+            get { return _Site_User_ID; }
+            set
+            {
+                _Site_User_ID = value;
+                Changed = true;
+            }
+        }
+
+        public long Site_ID
+        {
+            get { return _Site_ID; }
+            set
+            {
+                _Site_ID = value;
+                Changed = true;
+            }
+        }
+
         public int User_ID
         {
             get { return _User_ID; }
             set
             {
                 _User_ID = value;
-                _Changed = true;
+                Changed = true;
             }
         }
 
@@ -256,7 +502,7 @@ namespace Site_Manager
             set
             {
                 _User_Name = value;
-                _Changed = true;
+                Changed = true;
             }
         }
 
@@ -266,7 +512,8 @@ namespace Site_Manager
             set
             {
                 _View_Resources = value;
-                _Changed = true;
+                Changed = true;
+                OnPropertyChanged("View_Resources");
             }
         }
 
@@ -276,7 +523,7 @@ namespace Site_Manager
             set
             {
                 _Add_Resources = value;
-                _Changed = true;
+                Changed = true;
             }
         }
 
@@ -286,7 +533,7 @@ namespace Site_Manager
             set
             {
                 _Modify_Resources = value;
-                _Changed = true;
+                Changed = true;
             }
         }
 
@@ -296,7 +543,7 @@ namespace Site_Manager
             set
             {
                 _Del_Resources = value;
-                _Changed = true;
+                Changed = true;
             }
         }
 
@@ -306,8 +553,7 @@ namespace Site_Manager
             set
             {
                 _View_Tickets = value;
-                _Changed = true;
-                OnPropertyChanged("View_Tickets");
+                Changed = true;
             }
         }
 
@@ -317,7 +563,7 @@ namespace Site_Manager
             set
             {
                 _Add_Tickets = value;
-                _Changed = true;
+                Changed = true;
             }
         }
 
@@ -333,13 +579,20 @@ namespace Site_Manager
 
         public string Changed_Ind
         {
-            get { return !Changed ? " " : "*"; }
+            get 
+            {
+                //OnPropertyChanged("Changed_Ind");
+                return !Changed ? " " : "*";
+            }
+
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void Convert_DB_Users(DB_Users db_users, int index)
         {
+            this.Site_User_ID = db_users.Site_User_ID[index];
+            this.Site_ID = db_users.Site_ID[index];
             this.User_ID = db_users.User_ID[index];
             this.User_Name = db_users.User_Name[index];
             this.View_Resources = db_users.View_Resources[index];

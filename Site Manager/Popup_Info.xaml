@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Site_Manager"
         mc:Ignorable="d"
-        Title="Popup_Info" Height="450" Width="800">
+        Title="Popup_Info" HorizontalAlignment="Center" VerticalAlignment="Center" SizeToContent="WidthAndHeight" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
     <Grid>
         
     </Grid>

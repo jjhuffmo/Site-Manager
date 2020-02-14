@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="Site_Manager.UC_User_Selection"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Site_Manager"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="458" Width="450" Height="450" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxWidth="450" MaxHeight="450">
+    <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
+        <ListBox x:Name="User_List" SelectionChanged="User_List_SelectionChanged" ItemsSource="{Binding Path=User_Name}"
+                 HorizontalAlignment="Left" Height="430" Margin="10,10,0,0" 
+                 VerticalAlignment="Top" Width="263" SelectionMode="Extended"/>
+        <Button x:Name="btn_Add_User" Content="Add Users" HorizontalAlignment="Left" Margin="293,10,0,0" VerticalAlignment="Top" Height="55" Width="143" FontWeight="Bold" Click="btn_Add_User_Click"/>
+        <Button x:Name="btn_Close" Content="Close Window" HorizontalAlignment="Center" Margin="293,385,0,0" VerticalAlignment="Center" Height="55" Width="143" FontWeight="Bold" Click="btn_Close_Click"/>
+        <TextBlock HorizontalAlignment="Left" Margin="293,84,0,0" Text="Select Users To Add To Current Site:" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" FontWeight="Bold" TextAlignment="Center"/>
+        <TextBlock HorizontalAlignment="Left" Margin="293,180,0,0" Text="Select multiple by holding down CTRL while clicking." TextWrapping="Wrap" VerticalAlignment="Top" Width="143" FontWeight="Bold" TextAlignment="Center"/>
+        <TextBlock HorizontalAlignment="Left" Margin="293,247,0,0" Text="Select a continuous group by clicking on the first, hold down the SHIFT key, and click on the last name in your list " TextWrapping="Wrap" VerticalAlignment="Top" Width="143" FontWeight="Bold" TextAlignment="Center"/>
+        <TextBlock HorizontalAlignment="Left" Margin="293,132,0,0" Text="Select a user by clicking on the name." TextWrapping="Wrap" VerticalAlignment="Top" Width="143" FontWeight="Bold" TextAlignment="Center"/>
+    </Grid>
+</UserControl>

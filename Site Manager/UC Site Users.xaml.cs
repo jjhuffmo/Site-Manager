@@ -35,9 +35,15 @@ namespace Site_Manager
             {
                 _Changes_Made = value;
                 if (value == true)
+                {
                     btn_Save.Visibility = Visibility.Visible;
+                    btn_Cancel.Visibility = Visibility.Visible;
+                }
                 else
+                {
                     btn_Save.Visibility = Visibility.Hidden;
+                    btn_Cancel.Visibility = Visibility.Hidden;
+                }
             }
         }
 
@@ -68,6 +74,7 @@ namespace Site_Manager
             Make_User_List(Mode);
 
             btn_Save.Visibility = Visibility.Hidden;
+            btn_Cancel.Visibility = Visibility.Hidden;
 
             Init_Complete = true;
         }
@@ -81,6 +88,7 @@ namespace Site_Manager
         //
         private void Make_User_List(int mode)
         {
+            View_Users.Clear();
             DB_Users users = new DB_Users();
 
             if (mode == 0)
@@ -95,14 +103,56 @@ namespace Site_Manager
                 View_Users.Add(user);
                 View_Users[i].Changed = false;
             }
+            Changes_Made = false;
         }
 
         private void User_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            //throw new NotImplementedException();
-            if (Init_Complete)
+            if (e.PropertyName == "Changed")
+                Changes_Made = true;
+
+        }
+
+        //
+        //  Function:   private void btn_Add_User_Clicked(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = object that called function (Short_Name textbox)
+        //              RoutedEventArgs e = arguments for the event
+        //
+        //  Purpose:    Add a new site user after confirmation from a messagebox
+        //
+        private void btn_Add_User_Clicked(object sender, RoutedEventArgs e)
+        {
+            // Testing hardcoded add
+            Users new_user = new Users();
+            List<Users> exist_users = new List<Users>();
+
+            for (int i = 0; i < View_Users.Count; i++)
             {
-                Site_Users_List.Items.Refresh();
+                exist_users.Add(View_Users[i]);
+            }
+
+            var addusers = new UC_User_Selection(exist_users);
+
+            var Add_User_Page = new Popup_Info();
+
+            Add_User_Page.Title = "Add Users To Site";
+            Add_User_Page.Content = addusers;
+            Add_User_Page.ShowDialog();
+
+            // New site was saved, so update the tabs
+            if (Add_User_Page.DialogResult == true)
+            {
+                List<Users> chosen_users = new List<Users>();
+
+                chosen_users = addusers.chosen_users;
+
+                for (int q = 0; q < chosen_users.Count; q++)
+                {
+                    View_Users.Add(chosen_users[q]);
+                }
+
+                Changes_Made = true;
             }
         }
 
@@ -112,70 +162,74 @@ namespace Site_Manager
         //  Arguments:  object sender = object that called function (Short_Name textbox)
         //              RoutedEventArgs e = arguments for the event
         //
-        //  Purpose:    Cancel current changes to the site after confirmation from a messagebox
+        //  Purpose:    Remove the highlighted site user after confirmation from a messagebox
         //
         private void btn_Remove_User_Clicked(object sender, RoutedEventArgs e)
         {
-            if (Mode == 0)
-            {
-                if (MessageBox.Show("Do you want to exit without saving the new site?", "Exit Without Saving", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-                {
-                    Window Parent = (Window)this.Parent;
-                    Parent.DialogResult = false;
-                }
-            }
-            else
-            {
-                if (MessageBox.Show("Do you want to discard changes to site?", "Discard Changes", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-                {
-                    //Load_Values();
-                }
-            }
+
+            Changes_Made = true;
         }
 
         //
-        //  Function:   private void btn_Add_User_Clicked(object sender, RoutedEventArgs e)
+        //  Function:   private void btn_Save_Clicked(object sender, RoutedEventArgs e)
         //
         //  Arguments:  object sender = object that called function (Short_Name textbox)
         //              RoutedEventArgs e = arguments for the event
         //
-        //  Purpose:    Cancel current changes to the site after confirmation from a messagebox
+        //  Purpose:    Save current changes to the site users after confirmation from a messagebox
         //
-        private void btn_Add_User_Clicked(object sender, RoutedEventArgs e)
+        private void btn_Save_Clicked(object sender, RoutedEventArgs e)
         {
-            /*if (Mode == 0)
+            if (MessageBox.Show("Do you want to save your changes?", "Save Changes", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                if (MessageBox.Show("Do you want to exit without saving the new site?", "Exit Without Saving", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                DB_Users changed_users = new DB_Users();
+                changed_users.Initialize();
+
+                for (int i = 0; i < View_Users.Count; i++)
                 {
-                    Window Parent = (Window)this.Parent;
-                    Parent.DialogResult = false;
+                    if (View_Users[i].Changed == true)
+                    {
+                        changed_users.Site_User_ID.Add(View_Users[i].Site_User_ID);
+                        changed_users.Site_ID.Add(csite.Site_ID);
+                        changed_users.User_ID.Add(View_Users[i].User_ID);
+                        changed_users.View_Resources.Add(View_Users[i].View_Resources);
+                        changed_users.Add_Resources.Add(View_Users[i].Add_Resources);
+                        changed_users.Modify_Resources.Add(View_Users[i].Modify_Resources);
+                        changed_users.Del_Resources.Add(View_Users[i].Del_Resources);
+                        changed_users.View_Tickets.Add(View_Users[i].View_Tickets);
+                        changed_users.Add_Tickets.Add(View_Users[i].Add_Tickets);
+                    }
+                }
+                if (changed_users.Save_List(1, csite.Site_ID) == true)
+                {
+                    MessageBox.Show("Changes Successfully Saved", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Init_Complete = false;
+                    Make_User_List(Mode);
+                    Init_Complete = true;
+                }
+                else
+                {
+                    MessageBox.Show("Changes Could Not Be Saved", "Failed To Save", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            else
+        }
+
+        //
+        //  Function:   private void btn_Cancel_Clicked(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = object that called function (Short_Name textbox)
+        //              RoutedEventArgs e = arguments for the event
+        //
+        //  Purpose:    Cancel current changes to the site users after confirmation from a messagebox
+        //
+        private void btn_Cancel_Clicked(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("Do you want to cancel your changes?", "Cancel Changes", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                if (MessageBox.Show("Do you want to discard changes to site?", "Discard Changes", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-                {
-                    //Load_Values();
-                }
-            }*/
-        }
-
-        private void Site_Users_List_CurrentCellChanged(object sender, EventArgs e)
-        {
-            //var Current_Row = Site_Users_List.Items.IndexOf(Site_Users_List.CurrentItem);
-
-            Changes_Made = true;
-            //Site_Users_List.Items.Refresh();
-        }
-
-        private void Site_Users_List_SourceUpdated(object sender, DataTransferEventArgs e)
-        {
-
-        }
-
-        private void Site_Users_List_TargetUpdated(object sender, DataTransferEventArgs e)
-        {
-            Site_Users_List.Items.Refresh();
+                Init_Complete = false;
+                Make_User_List(Mode);
+                Init_Complete = true;
+            }
         }
     }
 }

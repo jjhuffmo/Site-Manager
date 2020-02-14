@@ -135,6 +135,24 @@ namespace Site_Manager {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (Site_ID, User_ID, View_All_Resources, Add_Resources, Modify_Resources, Delete_Resources, View_All_Tickets, Add_Tickets).
+        /// </summary>
+        public static string tblSiteUserFields {
+            get {
+                return ResourceManager.GetString("tblSiteUserFields", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VALUES (@site_id, @user_id, @view_all_resources, @add_resources, @modify_resources, @delete_resources, @view_all_tickets, @add_tickets).
+        /// </summary>
+        public static string tblSiteUserInsert {
+            get {
+                return ResourceManager.GetString("tblSiteUserInsert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to dbo.Site_Users.
         /// </summary>
         public static string tblSiteUsers {
@@ -144,11 +162,47 @@ namespace Site_Manager {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SET Site_ID = @site_id, User_ID = @user_id, View_All_Resources = @view_all_resources, Add_Resources = @add_resources, Modify_Resources = @modify_resources, Delete_Resources = @delete_resources, View_All_Tickets = @view_all_tickets, Add_Tickets = @add_tickets WHERE Site_Users_ID = .
+        /// </summary>
+        public static string tblSiteUserUpdate {
+            get {
+                return ResourceManager.GetString("tblSiteUserUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (User_Name, Access_Level).
+        /// </summary>
+        public static string tblUserFields {
+            get {
+                return ResourceManager.GetString("tblUserFields", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to dbo.User_Info.
         /// </summary>
         public static string tblUserInfo {
             get {
                 return ResourceManager.GetString("tblUserInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VALUES (@user_name, @access_level).
+        /// </summary>
+        public static string tblUserInsert {
+            get {
+                return ResourceManager.GetString("tblUserInsert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SET User_Name = @user_name, Access_Level = @access_level WHERE User_ID =.
+        /// </summary>
+        public static string tblUserUpdate {
+            get {
+                return ResourceManager.GetString("tblUserUpdate", resourceCulture);
             }
         }
         

@@ -64,7 +64,10 @@
                 <MenuItem x:Name="mmenu_create_site" Header="_Create Site" Click="Create_Site_click" Uid="1000"/>
                 <MenuItem x:Name="mmenu_showall_sites" Header="Show All Sites" Click="ShowAll_Sites_click" Uid="1000" IsCheckable="True" IsChecked="False"/>
                 <MenuItem x:Name ="mmenu_modify_site" Header="Modify Site" Click="Modify_Site_click" Uid="1000"/>
-                <MenuItem x:Name="mmenu_delete_site" Header="_Delete Site" Uid="1000"/>
+                <MenuItem x:Name="mmenu_delete_site" Header="_Delete Site" Click="Delete_Site_click" Uid="1000"/>
+                <MenuItem x:Name="mmenu_create_user" Header="_Create Site" Click="Create_User_click" Uid="1000"/>
+                <MenuItem x:Name ="mmenu_modify_user" Header="Modify Site" Click="Modify_User_click" Uid="1000"/>
+                <MenuItem x:Name="mmenu_delete_user" Header="_Delete Site" Click="Delete_User_click" Uid="1000"/>
             </MenuItem>
             <MenuItem x:Name="mmenu_sites" Header="Sites" FontWeight="Bold" Uid="1">
                 <MenuItem x:Name="mmenu_open_site" Header="Open Site" Uid="1"></MenuItem>

@@ -170,6 +170,10 @@ namespace Site_Manager
                 Close_Site(Sites_Tabs.SelectedIndex);
         }
 
+        private void Delete_Site_click(object sender, RoutedEventArgs e)
+        {
+
+        }
         //
         //  Function:  private void SiteList_Changed(object sender, SelectionChangedEventArgs e)
         //
@@ -330,7 +334,11 @@ namespace Site_Manager
 
                 var New_Site_Page = new Popup_Info();
 
+                Site_Name.HorizontalContentAlignment = HorizontalAlignment.Left;
+                Site_Name.VerticalContentAlignment = VerticalAlignment.Top;
                 New_Site_Page.Content = newsite;
+                New_Site_Page.Title = "Create New Site";
+                Site_Name.DataContext = New_Site_Page;
                 New_Site_Page.ShowDialog();
 
                 // New site was saved, so update the tabs
@@ -697,6 +705,24 @@ namespace Site_Manager
                 TabItem tabItem = (TabItem)tabControl.Items[i];
                 tabItem.Width = eachtab;
             }
+        }
+
+        private void Create_User_click(object sender, RoutedEventArgs e)
+        {
+            Create_User();
+        }
+        private void Modify_User_click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void Delete_User_click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Create_User()
+        {
+
         }
     }
 }

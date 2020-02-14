@@ -148,13 +148,37 @@
     <value>SET Short_Name = @short_name, Full_Name = @full_name, Customer_Name = @customer_name, Address = @address WHERE Site_ID = </value>
     <comment>Command to Update a Site Record</comment>
   </data>
+  <data name="tblSiteUserFields" xml:space="preserve">
+    <value>(Site_ID, User_ID, View_All_Resources, Add_Resources, Modify_Resources, Delete_Resources, View_All_Tickets, Add_Tickets)</value>
+    <comment>Site User Info table fields.</comment>
+  </data>
+  <data name="tblSiteUserInsert" xml:space="preserve">
+    <value>VALUES (@site_id, @user_id, @view_all_resources, @add_resources, @modify_resources, @delete_resources, @view_all_tickets, @add_tickets)</value>
+    <comment>Command to Insert a new Site User Record</comment>
+  </data>
   <data name="tblSiteUsers" xml:space="preserve">
     <value>dbo.Site_Users</value>
     <comment>Name of the table containing site user information</comment>
   </data>
+  <data name="tblSiteUserUpdate" xml:space="preserve">
+    <value>SET Site_ID = @site_id, User_ID = @user_id, View_All_Resources = @view_all_resources, Add_Resources = @add_resources, Modify_Resources = @modify_resources, Delete_Resources = @delete_resources, View_All_Tickets = @view_all_tickets, Add_Tickets = @add_tickets WHERE Site_Users_ID = </value>
+    <comment>Command to Update a Site User Record</comment>
+  </data>
+  <data name="tblUserFields" xml:space="preserve">
+    <value>(User_Name, Access_Level)</value>
+    <comment>User Info table fields.</comment>
+  </data>
   <data name="tblUserInfo" xml:space="preserve">
     <value>dbo.User_Info</value>
     <comment>Name of the table containing user information</comment>
+  </data>
+  <data name="tblUserInsert" xml:space="preserve">
+    <value>VALUES (@user_name, @access_level)</value>
+    <comment>Command to Insert a new User Record</comment>
+  </data>
+  <data name="tblUserUpdate" xml:space="preserve">
+    <value>SET User_Name = @user_name, Access_Level = @access_level WHERE User_ID =</value>
+    <comment>Command to Update a User Record</comment>
   </data>
   <data name="tbUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\tbUser.ico;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

@@ -28,6 +28,26 @@ namespace Site_Manager
         private int Mode = 0;
         public User_Info cuser = new User_Info();
         bool loaded = false;
+        private bool _changed = false;
+        private bool changed
+        {
+            get
+            { return _changed; }
+            set
+            {
+                _changed = value;
+                if (value == true)
+                {
+                    btn_Cancel.Visibility = Visibility.Visible;
+                    btn_Save.Visibility = Visibility.Visible;                }
+                else
+                {
+                    btn_Save.Visibility = Visibility.Hidden;
+                    if (Mode != 0)
+                        btn_Cancel.Visibility = Visibility.Hidden;
+                }
+            }
+        }
 
         //
         //  Function:   public UC_Site(Sites current_site, int mode)
@@ -41,19 +61,22 @@ namespace Site_Manager
         //
         public UC_Site(Sites current_site, int mode, User_Info current_user)
         {
+            InitializeComponent();
+
             cuser = current_user;
 
             csite = new Sites();
             csite = current_site;
             csite.PropertyChanged += new PropertyChangedEventHandler(current_site_PropertyChanged);
+            changed = false;
 
             Mode = mode;
 
             this.DataContext = this;
 
-            InitializeComponent();
 
-            btn_Save.Visibility = Visibility.Hidden;
+
+            //btn_Save.Visibility = Visibility.Hidden;
 
             // Prepare fields based on mode
             switch (mode)
@@ -61,14 +84,15 @@ namespace Site_Manager
                 // Create New
                 case 0:
                     csite.Initialize();
+                    Load_Values();
                     btn_Save.Content = "Save";
-                    btn_Cancel.Visibility = Visibility.Visible;
+                    //btn_Cancel.Visibility = Visibility.Hidden;
                     break;
 
                 // Edit
                 case 1:
                     btn_Save.Content = "Update";
-                    btn_Cancel.Visibility = Visibility.Hidden;
+                    //btn_Cancel.Visibility = Visibility.Hidden;
                     Load_Values();
                     break;
 
@@ -76,7 +100,7 @@ namespace Site_Manager
                 case 2:
                     Site_Grid.IsEnabled = false;
                     btn_Save.Content = "OK";
-                    btn_Cancel.Visibility = Visibility.Hidden;
+                    //btn_Cancel.Visibility = Visibility.Hidden;
                     Load_Values();
                     break;
             }
@@ -93,6 +117,7 @@ namespace Site_Manager
             Customer_Name.Text = csite.Customer_Name;
             Site_Address.Text = csite.Address;
             loaded = true;
+            changed = false;
         }
 
         //
@@ -111,13 +136,15 @@ namespace Site_Manager
                 if ((csite.Full_Name != this.Full_Name.Text) || (csite.Customer_Name != this.Customer_Name.Text) ||
                     (csite.Address != this.Site_Address.Text) || (csite.Short_Name != (string)Short_Name.Text && Site_Exists.Visibility == Visibility.Hidden))
                 {
-                    btn_Save.Visibility = Visibility.Visible;
-                    btn_Cancel.Visibility = Visibility.Visible;
+                    changed = true;
+                    //btn_Save.Visibility = Visibility.Visible;
+                    //btn_Cancel.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    btn_Save.Visibility = Visibility.Hidden;
-                    btn_Cancel.Visibility = Visibility.Hidden;
+                    changed = false;
+                    //btn_Save.Visibility = Visibility.Hidden;
+                    //btn_Cancel.Visibility = Visibility.Hidden;
 
                 }
             }
@@ -161,16 +188,16 @@ namespace Site_Manager
 
         }
 
-            //
-            //  Function:   private void handleTypingTimerTimeout(object sender, EventArgs e)
-            //
-            //  Arguments:  object sender = object that called function (Short_Name textbox)
-            //              EventArgs e = arguments for the function
-            //
-            //  Purpose:    When the short_name text box is being modified and no typing has occurred for 1 second
-            //              Check the database to see if the short_name (site_name) is already in use
-            //
-            private void handleTypingTimerTimeout(object sender, EventArgs e)
+        //
+        //  Function:   private void handleTypingTimerTimeout(object sender, EventArgs e)
+        //
+        //  Arguments:  object sender = object that called function (Short_Name textbox)
+        //              EventArgs e = arguments for the function
+        //
+        //  Purpose:    When the short_name text box is being modified and no typing has occurred for 1 second
+        //              Check the database to see if the short_name (site_name) is already in use
+        //
+        private void handleTypingTimerTimeout(object sender, EventArgs e)
         {
             var timer = sender as DispatcherTimer; 
 
@@ -185,9 +212,9 @@ namespace Site_Manager
                 Site_Exists.Visibility = Visibility.Hidden;
 
             if (csite.Short_Name != (string)Short_Name.Text && Site_Exists.Visibility == Visibility.Hidden)
-                btn_Save.Visibility = Visibility.Visible;
+                changed = true;
             else
-                btn_Save.Visibility = Visibility.Hidden;
+                changed = false;
 
             // The timer must be stopped! We want to act only once per keystroke.
             timer.Stop();
@@ -228,8 +255,8 @@ namespace Site_Manager
                 default:
                     break;
             }
-            btn_Cancel.Visibility = Visibility.Visible;
-            btn_Save.Visibility = Visibility.Visible;
+            //btn_Cancel.Visibility = Visibility.Visible;
+            //btn_Save.Visibility = Visibility.Visible;
         }
 
         //
@@ -270,6 +297,9 @@ namespace Site_Manager
                         if (csite.Save_Site(1) == 1)
                         {
                             cuser.Modified = true;
+                            changed = false;
+                            //btn_Cancel.Visibility = Visibility.Hidden;
+                            //btn_Save.Visibility = Visibility.Hidden;
                         }
                     }
                     break;

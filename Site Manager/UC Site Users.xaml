@@ -7,11 +7,16 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <DataGrid x:Name="Site_Users_List" ItemsSource="{Binding View_Users}" HorizontalAlignment="Left" VerticalAlignment="Top" Binding.SourceUpdated="Site_Users_List_SourceUpdated" Binding.TargetUpdated="Site_Users_List_TargetUpdated" AutoGenerateColumns="False" GridLinesVisibility="None" 
-                  CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False" FrozenColumnCount="1" Margin="0,43,0,0" CurrentCellChanged="Site_Users_List_CurrentCellChanged">
+
+        <Button x:Name="btn_Add_User" Content="Add User" HorizontalAlignment="Left" Height="28" Margin="10,10,0,0" VerticalAlignment="Top" Width="144" Click="btn_Add_User_Clicked"/>
+        <Button x:Name="btn_Save" Content="Save" HorizontalAlignment="Left" Height="28" Margin="386,10,0,0" VerticalAlignment="Top" Width="144" Click="btn_Save_Clicked"/>
+        <Button x:Name="btn_Cancel" Content="Cancel" HorizontalAlignment="Left" Height="28" Margin="535,10,0,0" VerticalAlignment="Top" Width="144" Click="btn_Cancel_Clicked"/>
+        <Button x:Name="btn_Remove_User" Content="Remove User" HorizontalAlignment="Left" Height="28" Margin="159,10,0,0" VerticalAlignment="Top" Width="144" Click="btn_Remove_User_Clicked"/>
+        <DataGrid x:Name="Site_Users_List" ItemsSource="{Binding View_Users, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" GridLinesVisibility="None" 
+                CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False" FrozenColumnCount="1" VerticalAlignment="Top" Margin="10,43,0,0" HorizontalAlignment="Left">
             <DataGrid.Columns>
-                <DataGridTextColumn x:Name="Row_Changed" IsReadOnly="True" Width="Auto" Binding="{Binding Changed_Ind}"/>
-                <DataGridTextColumn x:Name="lst_Name" IsReadOnly="True" Header="Name" Width="Auto" Binding="{Binding User_Name}"/>
+                <DataGridCheckBoxColumn IsReadOnly="True" Header="Changed" Width="Auto" Binding="{Binding Changed, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="Name" Width="Auto" Binding="{Binding User_Name}"/>
                 <DataGridCheckBoxColumn Header="View All Resources" Binding="{Binding View_Resources}"/>
                 <DataGridCheckBoxColumn Header="Add Resources" Binding="{Binding Add_Resources}"/>
                 <DataGridCheckBoxColumn Header="Modify Resources" Binding="{Binding Modify_Resources}"/>
@@ -26,8 +31,5 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
-
-        <Button Content="Button" HorizontalAlignment="Left" Height="28" Margin="10,10,0,0" VerticalAlignment="Top" Width="144" Click="btn_Add_User_Clicked"/>
-        <Button x:Name="btn_Save" Content="Save" HorizontalAlignment="Left" Height="28" Margin="198,10,0,0" VerticalAlignment="Top" Width="144" Click="btn_Add_User_Clicked"/>
     </Grid>
 </UserControl>
