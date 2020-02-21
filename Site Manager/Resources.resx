@@ -133,7 +133,7 @@
     <comment>SQL Connection String for default logging in.</comment>
   </data>
   <data name="tblSiteFields" xml:space="preserve">
-    <value>(Short_Name, Full_Name, Customer_Name, Address)</value>
+    <value>(Short_Name, Full_Name, Customer_Name, Address, Job_Number)</value>
     <comment>Site Info table fields.</comment>
   </data>
   <data name="tblSiteInfo" xml:space="preserve">
@@ -141,11 +141,11 @@
     <comment>Name of table containing site information (Customer, Address, etc.)</comment>
   </data>
   <data name="tblSiteInsert" xml:space="preserve">
-    <value>VALUES (@short_name, @full_name, @customer_name, @address)</value>
+    <value>VALUES (@short_name, @full_name, @customer_name, @address @job_number)</value>
     <comment>Command to Insert a new Site Record</comment>
   </data>
   <data name="tblSiteUpdate" xml:space="preserve">
-    <value>SET Short_Name = @short_name, Full_Name = @full_name, Customer_Name = @customer_name, Address = @address WHERE Site_ID = </value>
+    <value>SET Short_Name = @short_name, Full_Name = @full_name, Customer_Name = @customer_name, Address = @address, Job_Number = @job_number WHERE Site_ID = </value>
     <comment>Command to Update a Site Record</comment>
   </data>
   <data name="tblSiteUserFields" xml:space="preserve">
@@ -163,6 +163,18 @@
   <data name="tblSiteUserUpdate" xml:space="preserve">
     <value>SET Site_ID = @site_id, User_ID = @user_id, View_All_Resources = @view_all_resources, Add_Resources = @add_resources, Modify_Resources = @modify_resources, Delete_Resources = @delete_resources, View_All_Tickets = @view_all_tickets, Add_Tickets = @add_tickets WHERE Site_Users_ID = </value>
     <comment>Command to Update a Site User Record</comment>
+  </data>
+  <data name="tblTickets" xml:space="preserve">
+    <value>dbo.Site_Tickets</value>
+    <comment>Name of table containing site ticket information</comment>
+  </data>
+  <data name="tblTicketsInsert" xml:space="preserve">
+    <value>VALUES (@site_id, @ticket_id, @creator_id, @created_on, @due_on, @brief_desc, @desc, @alarm1, @alarm1_enabled, @alarm1_ack_ts, @alarm1_ack_id, @alarm2, @alarm2_enabled, @alarm2_ack_ts, @alarm2_ack_id, @alarm3, @alarm3_enabled, @alarm3_ack_ts, @alarm3_ack_id,@late_alarm, @started, @started_ts, @started_id, @completed, @completed_ts, @completed_id</value>
+    <comment>Command to Insert a new Ticket</comment>
+  </data>
+  <data name="tblTicketsUpdate" xml:space="preserve">
+    <value>SET Site_ID = @site_id, Ticket_ID = @ticket_id, Creator_User_ID = @creator_id, Created_On = @created_on, Due_On = @due_on, Brief_Desc = @brief_desc, Desc = @desc, Alarm1 = @alarm1, Alarm1_Enabled = @alarm1_enabled, Alarm1_Ack_TS = @alarm1_ack_ts, Alarm1_Ack_User_ID = @alarm1_ack_id, @desc, Alarm2 = @alarm2, Alarm2_Enabled = @alarm2_enabled, Alarm2_Ack_TS = @alarm2_ack_ts, Alarm2_Ack_User_ID = @alarm2_ack_id,@desc, Alarm3 = @alarm3, Alarm3_Enabled = @alarm3_enabled, Alarm3_Ack_TS = @alarm3_ack_ts, Alarm3_Ack_User_ID = @alarm3_ack_id,  Late_Alarm = @late_alarm, Started = @started, Started_TS = @started_ts, Started_User_ID = @started_id, Completed = @completed, Completed_TS = @completed_ts, Completed_User_ID = @completed_id</value>
+    <comment>Command to Update a Ticket</comment>
   </data>
   <data name="tblUserFields" xml:space="preserve">
     <value>(User_Name, Access_Level)</value>

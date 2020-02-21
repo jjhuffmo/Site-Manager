@@ -13,7 +13,8 @@
         <Button x:Name="btn_Cancel" Content="Cancel" HorizontalAlignment="Left" Height="28" Margin="535,10,0,0" VerticalAlignment="Top" Width="144" Click="btn_Cancel_Clicked"/>
         <Button x:Name="btn_Remove_User" Content="Remove User" HorizontalAlignment="Left" Height="28" Margin="159,10,0,0" VerticalAlignment="Top" Width="144" Click="btn_Remove_User_Clicked"/>
         <DataGrid x:Name="Site_Users_List" ItemsSource="{Binding View_Users, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" GridLinesVisibility="None" 
-                CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False" FrozenColumnCount="1" VerticalAlignment="Top" Margin="10,43,0,0" HorizontalAlignment="Left">
+                CanUserAddRows="False" CanUserDeleteRows="True" CanUserResizeRows="False" FrozenColumnCount="1" VerticalAlignment="Top" Margin="10,43,0,0" HorizontalAlignment="Left"
+                SelectionChanged="Site_Users_List_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn IsReadOnly="True" Header="Changed" Width="Auto" Binding="{Binding Changed, UpdateSourceTrigger=PropertyChanged}"/>
                 <DataGridTextColumn IsReadOnly="True" Header="Name" Width="Auto" Binding="{Binding User_Name}"/>
@@ -25,9 +26,9 @@
                 <DataGridCheckBoxColumn Header="Add Tickets" Binding="{Binding Add_Tickets}"/>
             </DataGrid.Columns>
             <DataGrid.ContextMenu>
-                <ContextMenu>
-                    <MenuItem x:Name="User_CM_Edit" Header="Edit User" Visibility="Hidden"/>
-                    <MenuItem x:Name="User_CM_Delete" Header="Delete User" Visibility="Hidden"/>
+                <ContextMenu x:Name="Site_Users_ContextMenu">
+                    <MenuItem x:Name="User_CM_Add" Header="Add User" Visibility="Visible" Click="User_CM_Add_Click"/>
+                    <MenuItem x:Name="User_CM_Delete" Header="Delete User" Visibility="Collapsed" Click="User_CM_Delete_Click"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>

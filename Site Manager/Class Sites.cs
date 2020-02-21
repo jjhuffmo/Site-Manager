@@ -26,6 +26,7 @@ namespace Site_Manager
         public string _Customer_Name;
         public string _Address;
         public long _Site_ID;
+        public string _Job_Number;
 
         public long Site_ID
         {
@@ -72,7 +73,16 @@ namespace Site_Manager
                 OnPropertyChanged();
             }
         }
-        
+        public string Job_Number
+        {
+            get { return _Job_Number; }
+            set
+            {
+                _Job_Number = value;
+                OnPropertyChanged();
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         //
@@ -122,6 +132,7 @@ namespace Site_Manager
                             SqlCmd.Parameters.AddWithValue("@full_name", Full_Name);
                             SqlCmd.Parameters.AddWithValue("@customer_name", Customer_Name);
                             SqlCmd.Parameters.AddWithValue("@address", Address);
+                            SqlCmd.Parameters.AddWithValue("@job_number", Job_Number);
 
                             try
                             {
@@ -155,6 +166,7 @@ namespace Site_Manager
                             SqlCmd.Parameters.AddWithValue("@full_name", Full_Name);
                             SqlCmd.Parameters.AddWithValue("@customer_name", Customer_Name);
                             SqlCmd.Parameters.AddWithValue("@address", Address);
+                            SqlCmd.Parameters.AddWithValue("@job_number", Job_Number);
 
                             try
                             {
@@ -229,6 +241,7 @@ namespace Site_Manager
                         Full_Name = ((string)reader[2]);
                         Customer_Name = ((string)reader[3]);
                         Address = ((string)reader[4]);
+                        Job_Number = ((string)reader[5]);
                     }
                     return true;
                 }

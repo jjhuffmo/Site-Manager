@@ -99,7 +99,7 @@ namespace Site_Manager {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to (Short_Name, Full_Name, Customer_Name, Address).
+        ///   Looks up a localized string similar to (Short_Name, Full_Name, Customer_Name, Address, Job_Number).
         /// </summary>
         public static string tblSiteFields {
             get {
@@ -117,7 +117,7 @@ namespace Site_Manager {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to VALUES (@short_name, @full_name, @customer_name, @address).
+        ///   Looks up a localized string similar to VALUES (@short_name, @full_name, @customer_name, @address @job_number).
         /// </summary>
         public static string tblSiteInsert {
             get {
@@ -126,7 +126,7 @@ namespace Site_Manager {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SET Short_Name = @short_name, Full_Name = @full_name, Customer_Name = @customer_name, Address = @address WHERE Site_ID = .
+        ///   Looks up a localized string similar to SET Short_Name = @short_name, Full_Name = @full_name, Customer_Name = @customer_name, Address = @address, Job_Number = @job_number WHERE Site_ID = .
         /// </summary>
         public static string tblSiteUpdate {
             get {
@@ -167,6 +167,33 @@ namespace Site_Manager {
         public static string tblSiteUserUpdate {
             get {
                 return ResourceManager.GetString("tblSiteUserUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to dbo.Site_Tickets.
+        /// </summary>
+        public static string tblTickets {
+            get {
+                return ResourceManager.GetString("tblTickets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VALUES (@site_id, @ticket_id, @creator_id, @created_on, @due_on, @brief_desc, @desc, @alarm1, @alarm1_enabled, @alarm1_ack_ts, @alarm1_ack_id, @alarm2, @alarm2_enabled, @alarm2_ack_ts, @alarm2_ack_id, @alarm3, @alarm3_enabled, @alarm3_ack_ts, @alarm3_ack_id,@late_alarm, @started, @started_ts, @started_id, @completed, @completed_ts, @completed_id.
+        /// </summary>
+        public static string tblTicketsInsert {
+            get {
+                return ResourceManager.GetString("tblTicketsInsert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SET Site_ID = @site_id, Ticket_ID = @ticket_id, Creator_User_ID = @creator_id, Created_On = @created_on, Due_On = @due_on, Brief_Desc = @brief_desc, Desc = @desc, Alarm1 = @alarm1, Alarm1_Enabled = @alarm1_enabled, Alarm1_Ack_TS = @alarm1_ack_ts, Alarm1_Ack_User_ID = @alarm1_ack_id, @desc, Alarm2 = @alarm2, Alarm2_Enabled = @alarm2_enabled, Alarm2_Ack_TS = @alarm2_ack_ts, Alarm2_Ack_User_ID = @alarm2_ack_id,@desc, Alarm3 = @alarm3, Alarm3_Enabled = @alarm3_enabled, Alarm3_Ack_TS = @alarm3_ack_ts, Alarm3_Ack [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string tblTicketsUpdate {
+            get {
+                return ResourceManager.GetString("tblTicketsUpdate", resourceCulture);
             }
         }
         

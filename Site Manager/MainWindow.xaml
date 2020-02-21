@@ -32,7 +32,7 @@
                     </ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="My Sites" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center"></TextBlock>
-                <ListBox x:Name="SiteList" ScrollViewer.VerticalScrollBarVisibility="Auto" FontWeight="Bold" BorderThickness="1,1,1,1" Margin="0,20,0,0" VerticalContentAlignment="Top" MouseDoubleClick="SiteList_dblClick" >
+                <ListBox x:Name="SiteList" ScrollViewer.VerticalScrollBarVisibility="Auto" FontWeight="Bold" BorderThickness="1,1,1,1" Margin="0,20,0,0" VerticalContentAlignment="Top" MouseDoubleClick="SiteList_dblClick" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" >
                 </ListBox>
             </Grid>
             <GridSplitter x:Name="Splitter" Grid.Column="1" 
@@ -48,8 +48,7 @@
               VerticalAlignment="Top"
               Background="LightGray"
               Height="1" IsEnabled="False" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
-            <TabControl x:Name="Sites_Tabs" Grid.Column="1" Width="Auto" SizeChanged="Sites_Tabs_SizeChanged">
-            </TabControl>
+            <TabControl x:Name="Sites_Tabs" Grid.Column="1" Width="Auto" SizeChanged="Sites_Tabs_SizeChanged" ScrollViewer.HorizontalScrollBarVisibility="Visible" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" BorderBrush="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}"/>
         </Grid>
         <Menu FontWeight="Normal" x:Name="MainMenu" VerticalAlignment="Top" Height="18">
             <MenuItem x:Name="mmenu_user" Header="User" FontWeight="Bold" Uid="0">

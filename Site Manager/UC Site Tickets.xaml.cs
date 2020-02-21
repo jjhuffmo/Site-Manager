@@ -26,11 +26,6 @@ namespace Site_Manager
             site_tickets = new ObservableCollection<Site_Tickets>();
             Site_Tickets new_ticket = new Site_Tickets();
 
-            new_ticket.Created_On = DateTime.Now;
-            new_ticket.Creator = "Jeremy";
-            new_ticket.Desc = "Test Ticket";
-            new_ticket.Due_On = DateTime.Now;
-            new_ticket.Ticket_ID = 123456;
 
             site_tickets.Add(new_ticket);
 
@@ -47,15 +42,8 @@ namespace Site_Manager
         //
         private void btn_Add_Ticket_Clicked(object sender, RoutedEventArgs e)
         {
-            Site_Tickets new_ticket = new Site_Tickets();
-
-            new_ticket.Created_On = DateTime.Now;
-            new_ticket.Creator = "Jeremy2";
-            new_ticket.Desc = "Test Ticket2";
-            new_ticket.Due_On = DateTime.Now;
-            new_ticket.Ticket_ID = 23456789;
-
-            site_tickets.Add(new_ticket);
+            Task_Detail.Content = new UC_Ticket_Tasks();
+            Add_Ticket();
         }
 
         //
@@ -67,6 +55,29 @@ namespace Site_Manager
         //  Purpose:    Save/Update the site info when clicked (after confirmation from a messagebox)
         //
         private void btn_Remove_Ticket_Clicked(object sender, RoutedEventArgs e)
+        {
+            Remove_Ticket();
+        }
+
+        //
+        //  Function:   private void Add_Ticket()
+        //
+        //  Purpose:    Add a new ticket to the current site
+        //
+        private void Add_Ticket()
+        {
+            Site_Tickets new_ticket = new Site_Tickets();
+
+
+            site_tickets.Add(new_ticket);
+        }
+
+        //
+        //  Function:   private void Remove_Ticket()
+        //
+        //  Purpose:    Remove the currently selected ticket after confirmation.
+        //
+        private void Remove_Ticket()
         {
             site_tickets.RemoveAt(0);
         }

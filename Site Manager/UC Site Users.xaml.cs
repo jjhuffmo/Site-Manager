@@ -75,6 +75,7 @@ namespace Site_Manager
 
             btn_Save.Visibility = Visibility.Hidden;
             btn_Cancel.Visibility = Visibility.Hidden;
+            btn_Remove_User.Visibility = Visibility.Hidden;
 
             Init_Complete = true;
         }
@@ -119,41 +120,11 @@ namespace Site_Manager
         //  Arguments:  object sender = object that called function (Short_Name textbox)
         //              RoutedEventArgs e = arguments for the event
         //
-        //  Purpose:    Add a new site user after confirmation from a messagebox
+        //  Purpose:    Calls the Add_User() function
         //
         private void btn_Add_User_Clicked(object sender, RoutedEventArgs e)
         {
-            // Testing hardcoded add
-            Users new_user = new Users();
-            List<Users> exist_users = new List<Users>();
-
-            for (int i = 0; i < View_Users.Count; i++)
-            {
-                exist_users.Add(View_Users[i]);
-            }
-
-            var addusers = new UC_User_Selection(exist_users);
-
-            var Add_User_Page = new Popup_Info();
-
-            Add_User_Page.Title = "Add Users To Site";
-            Add_User_Page.Content = addusers;
-            Add_User_Page.ShowDialog();
-
-            // New site was saved, so update the tabs
-            if (Add_User_Page.DialogResult == true)
-            {
-                List<Users> chosen_users = new List<Users>();
-
-                chosen_users = addusers.chosen_users;
-
-                for (int q = 0; q < chosen_users.Count; q++)
-                {
-                    View_Users.Add(chosen_users[q]);
-                }
-
-                Changes_Made = true;
-            }
+            Add_User();
         }
 
         //
@@ -162,12 +133,11 @@ namespace Site_Manager
         //  Arguments:  object sender = object that called function (Short_Name textbox)
         //              RoutedEventArgs e = arguments for the event
         //
-        //  Purpose:    Remove the highlighted site user after confirmation from a messagebox
+        //  Purpose:    Call Remove_User() function
         //
         private void btn_Remove_User_Clicked(object sender, RoutedEventArgs e)
         {
-
-            Changes_Made = true;
+            Remove_User();
         }
 
         //
@@ -229,6 +199,94 @@ namespace Site_Manager
                 Init_Complete = false;
                 Make_User_List(Mode);
                 Init_Complete = true;
+            }
+        }
+
+        private void Site_Users_List_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Site_Users_List.SelectedIndex > -1)
+            {
+                btn_Remove_User.Visibility = Visibility.Visible;
+                User_CM_Delete.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                btn_Remove_User.Visibility = Visibility.Hidden;
+                User_CM_Delete.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void User_CM_Add_Click(object sender, RoutedEventArgs e)
+        {
+            Add_User();
+        }
+
+        private void User_CM_Delete_Click(object sender, RoutedEventArgs e)
+        {
+            Remove_User();
+        }
+
+        //
+        //  Function:   private void Add_User()
+        //
+        //  Purpose:    Add a new site user after confirmation from a messagebox
+        //
+        private void Add_User()
+        {
+            Users new_user = new Users();
+            List<Users> exist_users = new List<Users>();
+
+            for (int i = 0; i < View_Users.Count; i++)
+            {
+                exist_users.Add(View_Users[i]);
+            }
+
+            var addusers = new UC_User_Selection(exist_users);
+
+            var Add_User_Page = new Popup_Info();
+
+            Add_User_Page.Title = "Add Users To Site";
+            Add_User_Page.Content = addusers;
+            Add_User_Page.ShowDialog();
+
+            // New site was saved, so update the tabs
+            if (Add_User_Page.DialogResult == true)
+            {
+                List<Users> chosen_users = new List<Users>();
+
+                chosen_users = addusers.chosen_users;
+
+                for (int q = 0; q < chosen_users.Count; q++)
+                {
+                    View_Users.Add(chosen_users[q]);
+                }
+
+                Changes_Made = true;
+            }
+        }
+
+        //
+        //  Function:   private void Remove_User()
+        //
+        //  Purpose:    Remove the highlighted site user after confirmation from a messagebox
+        //
+        private void Remove_User()
+        {
+            if (Site_Users_List.SelectedIndex > -1)
+            {
+                //Find all the selected users and mark them for deletion
+                for (int i = 0; i < Site_Users_List.SelectedItems.Count; i++)
+                {
+                    Users selected_user = new Users();
+                    selected_user = (Users)Site_Users_List.SelectedItems[i];
+                    //MessageBox.Show("Selected User: " + selected_user.User_ID.ToString(), "Selected User", MessageBoxButton.OK, MessageBoxImage.Information);
+                    for (int j = 0; j < View_Users.Count; j++)
+                    {
+                        if (View_Users[j].User_ID == selected_user.User_ID)
+                            View_Users.RemoveAt(j);
+                    }
+                }
+                Changes_Made = true;
             }
         }
     }

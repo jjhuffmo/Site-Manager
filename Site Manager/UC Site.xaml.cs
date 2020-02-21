@@ -116,6 +116,7 @@ namespace Site_Manager
             Full_Name.Text = csite.Full_Name;
             Customer_Name.Text = csite.Customer_Name;
             Site_Address.Text = csite.Address;
+            Job_Number.Text = csite.Job_Number;
             loaded = true;
             changed = false;
         }
@@ -134,18 +135,14 @@ namespace Site_Manager
             if (loaded == true)
             {
                 if ((csite.Full_Name != this.Full_Name.Text) || (csite.Customer_Name != this.Customer_Name.Text) ||
-                    (csite.Address != this.Site_Address.Text) || (csite.Short_Name != (string)Short_Name.Text && Site_Exists.Visibility == Visibility.Hidden))
+                    (csite.Address != this.Site_Address.Text) || (csite.Job_Number != this.Job_Number.Text) ||  
+                    (csite.Short_Name != (string)Short_Name.Text && Site_Exists.Visibility == Visibility.Hidden))
                 {
                     changed = true;
-                    //btn_Save.Visibility = Visibility.Visible;
-                    //btn_Cancel.Visibility = Visibility.Visible;
                 }
                 else
                 {
                     changed = false;
-                    //btn_Save.Visibility = Visibility.Hidden;
-                    //btn_Cancel.Visibility = Visibility.Hidden;
-
                 }
             }
 
@@ -252,11 +249,14 @@ namespace Site_Manager
                         this.Site_Address.Text = csite.Address;
                         break;
                     }
+                case "Job_Number":
+                    {
+                        this.Job_Number.Text = csite.Job_Number;
+                        break;
+                    }
                 default:
                     break;
             }
-            //btn_Cancel.Visibility = Visibility.Visible;
-            //btn_Save.Visibility = Visibility.Visible;
         }
 
         //
@@ -274,6 +274,7 @@ namespace Site_Manager
             csite.Full_Name = this.Full_Name.Text;
             csite.Customer_Name = this.Customer_Name.Text;
             csite.Address = this.Site_Address.Text;
+            csite.Job_Number = this.Job_Number.Text;
 
             switch (btn_Save.Content)
             {
@@ -298,8 +299,6 @@ namespace Site_Manager
                         {
                             cuser.Modified = true;
                             changed = false;
-                            //btn_Cancel.Visibility = Visibility.Hidden;
-                            //btn_Save.Visibility = Visibility.Hidden;
                         }
                     }
                     break;
@@ -332,6 +331,5 @@ namespace Site_Manager
                 }
             }
         }
-
-     }
+    }
 }

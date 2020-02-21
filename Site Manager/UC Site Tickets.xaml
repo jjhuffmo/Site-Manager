@@ -5,18 +5,25 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Site_Manager"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <DataGrid x:Name="Site_Ticket_List" ItemsSource="{Binding Path=site_tickets}" HorizontalAlignment="Left" Height="Auto" Margin="10,72,0,0" VerticalAlignment="Top" Width="Auto"  AutoGenerateColumns="False">
+             d:DesignHeight="450" d:DesignWidth="800" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+    <Grid ScrollViewer.HorizontalScrollBarVisibility="Auto" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MinWidth="360"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <DataGrid x:Name="Site_Ticket_List" ItemsSource="{Binding Path=site_tickets}" HorizontalAlignment="Center" 
+                  VerticalAlignment="Top"  AutoGenerateColumns="False" Margin="0,62,0,0" Height="Auto" Width="Auto">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="ID_Col" Header="Ticket ID" Width="Auto" Binding="{Binding Ticket_ID}"/>
-                <DataGridTextColumn x:Name="Creator_Col" Header="Created By" Width="Auto" Binding="{Binding Creator}"/>
+                <DataGridTextColumn x:Name="Creator_Col" Header="Created By" Width="Auto" Binding="{Binding Creator_ID}"/>
                 <DataGridTextColumn x:Name="Create_Date_Col" Header="Creation Date" Width="Auto" Binding="{Binding Created_On}"/>
                 <DataGridTextColumn x:Name="Due_Date_Col" Header="Due Date" Width="Auto" Binding="{Binding Due_On}"/>
-                <DataGridTextColumn x:Name="Desc_Col" Header="Description" Width="Auto" Binding="{Binding Desc}"/>
+                <DataGridTextColumn x:Name="Desc_Col" Header="Description" Width="Auto" Binding="{Binding Short_Desc}"/>
             </DataGrid.Columns>
         </DataGrid>
         <Button x:Name="btn_Add_Ticket" Content="Add" HorizontalAlignment="Left" Height="43" Margin="10,10,0,0" VerticalAlignment="Top" Width="69" Click="btn_Add_Ticket_Clicked" />
-        <Button x:Name="btn_Remove_Ticket" Content="Remove" HorizontalAlignment="Left" Height="43" Margin="279,10,0,0" VerticalAlignment="Top" Width="69" Click="btn_Remove_Ticket_Clicked"/>
+        <Button x:Name="btn_Remove_Ticket" Content="Remove" HorizontalAlignment="Left" Height="43" Margin="279,10,0,0" VerticalAlignment="Top" Width="69" Click="btn_Remove_Ticket_Clicked" Visibility="Hidden"/>
+        <ContentControl x:Name="Task_Detail" Content="ContentControl" HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top" Grid.Column="1"/>
     </Grid>
 </UserControl>
