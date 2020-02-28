@@ -16,10 +16,10 @@
                   VerticalAlignment="Top"  AutoGenerateColumns="False" Margin="0,62,0,0" Height="Auto" Width="Auto">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="ID_Col" Header="Ticket ID" Width="Auto" Binding="{Binding Ticket_ID}"/>
-                <DataGridTextColumn x:Name="Creator_Col" Header="Created By" Width="Auto" Binding="{Binding Creator_ID}"/>
+                <DataGridTextColumn x:Name="Creator_Col" Header="Created By" Width="Auto" Binding="{Binding Creator}"/>
                 <DataGridTextColumn x:Name="Create_Date_Col" Header="Creation Date" Width="Auto" Binding="{Binding Created_On}"/>
                 <DataGridTextColumn x:Name="Due_Date_Col" Header="Due Date" Width="Auto" Binding="{Binding Due_On}"/>
-                <DataGridTextColumn x:Name="Desc_Col" Header="Description" Width="Auto" Binding="{Binding Short_Desc}"/>
+                <DataGridTextColumn x:Name="Desc_Col" Header="Description" Width="Auto" Binding="{Binding Desc}"/>
             </DataGrid.Columns>
         </DataGrid>
         <Button x:Name="btn_Add_Ticket" Content="Add" HorizontalAlignment="Left" Height="43" Margin="10,10,0,0" VerticalAlignment="Top" Width="69" Click="btn_Add_Ticket_Clicked" />
