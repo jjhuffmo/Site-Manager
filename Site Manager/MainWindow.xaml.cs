@@ -287,8 +287,8 @@ namespace Site_Manager
             for (int i = 0; i < SiteList.Items.Count; i++)
             {
                 ListBoxItem site_list = (ListBoxItem)SiteList.Items[i];
-                TabItem tab_site = (TabItem)Sites_Tabs.Items[site_no];
-                if ((string)site_list.Content == (string)tab_site.Header)
+                CloseableTab tab_site = (CloseableTab)Sites_Tabs.Items[site_no];
+                if ((string)site_list.Content == tab_site.Title)
                     site_list.IsEnabled = true;
             }
             // Remove the site from the Open_Sites variable
@@ -311,8 +311,12 @@ namespace Site_Manager
             // Get the site name (short name in DB)
             if (SiteList.SelectedItem != null)
             {
-                ListBoxItem sel_site = (ListBoxItem)SiteList.SelectedItem;
-                Load_Site(sel_site, 1);
+                ListBoxItem site_list = (ListBoxItem)SiteList.Items[SiteList.SelectedIndex];
+                if (site_list.IsEnabled == true)
+                {
+                    ListBoxItem sel_site = (ListBoxItem)SiteList.SelectedItem;
+                    Load_Site(sel_site, 1);
+                }
             }
 
         }
@@ -370,10 +374,27 @@ namespace Site_Manager
                 {
                     // Generate a new Site_Info tab using the user control UC Site
                     var editsite = new UC_Site(View_Site, mode, current_user);
+                    var current_site_user = new Users();
+
+                    // if the current user is an admin, just give them all rights to all settings
+                   // if (current_user.)
+                    // Define the current site user for access to the remaining portions
+                    DB_Users users = new DB_Users();
+
+                    users.Get_List(1, View_Site.Site_ID);
+                    for (int q = 0; q < users.User_Name.Count; q++)
+                    {
+                        Users user = new Users();
+                        user.Convert_DB_Users(users, q);
+                        if (user.User_ID == current_user.User_ID)
+                            current_site_user = user;
+                    }
 
                     // Create a new tab for the Site Tab itself
-                    TabItem sites_tab = new TabItem();
-                    sites_tab.Header = View_Site.Short_Name;
+                    //TabItem sites_tab = new TabItem();
+                    CloseableTab sites_tab = new CloseableTab();
+                    sites_tab.Title = View_Site.Short_Name;
+                    sites_tab.AddHandler(CloseableTab.CloseTabEvent, new RoutedEventHandler(this.Close_Site_click));
                     Sites_Tabs.Items.Add(sites_tab);
 
                     // Create the site tabs for info, tickets, resources, etc
@@ -396,7 +417,8 @@ namespace Site_Manager
                     TabItem tickets_tab = new TabItem();
                     tickets_tab.Header = "Tickets";
                     // Generate a new Site_Tickets tab using the user control UC Site Tickets
-                    var sitetickets = new UC_Site_Tickets(); tickets_tab.Content = sitetickets;
+                    var sitetickets = new UC_Site_Tickets(View_Site, current_user, current_site_user); 
+                    tickets_tab.Content = sitetickets;
                     site_tab.Items.Add(tickets_tab);
 
                     // Create the resources tab
@@ -410,8 +432,13 @@ namespace Site_Manager
                     Open_Sites.Insert_New(View_Site);
 
                     // Block out the selected site so they don't try to click on it again
-                    ListBoxItem sel_site = (ListBoxItem)SiteList.ItemContainerGenerator.ContainerFromIndex(SiteList.SelectedIndex);
-                    sel_site.IsEnabled = false;
+                    // Find the site in the site_list box and re-enable it
+                    for (int i = 0; i < SiteList.Items.Count; i++)
+                    {
+                        ListBoxItem site_list = (ListBoxItem)SiteList.Items[i];
+                        if ((string)site_list.Content == sites_tab.Title)
+                            site_list.IsEnabled = false;
+                    }
 
                     // Switch focus to the first tab
                     Sites_Tabs.SelectedIndex = Sites_Tabs.Items.Count - 1;
@@ -723,6 +750,12 @@ namespace Site_Manager
         private void Create_User()
         {
 
+        }
+
+        private void mmenu_about_Click(object sender, RoutedEventArgs e)
+        {
+            Window About_Window = new About_Windows();
+            About_Window.ShowDialog();
         }
     }
 }

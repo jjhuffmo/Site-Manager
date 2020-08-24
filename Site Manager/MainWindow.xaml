@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
         <ToolBarPanel x:Name="MainToolbarPanel" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Disabled" Orientation="Horizontal" IsManipulationEnabled="True" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" OpacityMask="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
             <ToolBar x:Name="MainToolbar" >
-                <RibbonButton LargeImageSource="/Resources/tbUser.ico" SmallImageSource="/Resources/tbUser.ico"/>
+                <RibbonButton LargeImageSource="/Resources/TBUser.ico" SmallImageSource="/Resources/TBUser.ico"/>
             </ToolBar>
         </ToolBarPanel>
 
@@ -48,7 +48,8 @@
               VerticalAlignment="Top"
               Background="LightGray"
               Height="1" IsEnabled="False" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
-            <TabControl x:Name="Sites_Tabs" Grid.Column="1" Width="Auto" SizeChanged="Sites_Tabs_SizeChanged" ScrollViewer.HorizontalScrollBarVisibility="Visible" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" BorderBrush="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}"/>
+            <TabControl x:Name="Sites_Tabs" Grid.Column="1" Width="Auto" SizeChanged="Sites_Tabs_SizeChanged" ScrollViewer.HorizontalScrollBarVisibility="Visible" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" BorderBrush="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}">
+            </TabControl>
         </Grid>
         <Menu FontWeight="Normal" x:Name="MainMenu" VerticalAlignment="Top" Height="18">
             <MenuItem x:Name="mmenu_user" Header="User" FontWeight="Bold" Uid="0">
@@ -72,14 +73,15 @@
                 <MenuItem x:Name="mmenu_open_site" Header="Open Site" Uid="1"></MenuItem>
                 <MenuItem x:Name="mmenu_close_site" Header="Close Site" Uid="1" Click="Close_Site_click"></MenuItem>
             </MenuItem>
-            <MenuItem x:Name="mmenu_sites4" Header="Tickets" FontWeight="Bold" Uid="1">
-                <MenuItem x:Name="mmenu_login4" Header="View My Live _Tickets" Uid="1"/>
-                <MenuItem x:Name="mmenu_profile4" Header="View My Closed Tickets" Uid="1">
-                    <MenuItem x:Name="mmenu_login5" Header="Last 7 Days" Uid="1"/>
-                    <MenuItem x:Name="mmenu_profile5" Header="Last 30 Days" Uid="1"/>
-                    <MenuItem x:Name="mmenu_profile6" Header="Last 60 Days" Uid="1"/>
+            <MenuItem x:Name="mmenu_tickets" Header="Tickets" FontWeight="Bold" Uid="1">
+                <MenuItem x:Name="mmenu_livetickets" Header="View My Live _Tickets" Uid="1"/>
+                <MenuItem Header="View My Closed Tickets" Uid="1">
+                    <MenuItem x:Name="mmenu_tickets7days" Header="Last 7 Days" Uid="1"/>
+                    <MenuItem x:Name="mmenu_tickets30days" Header="Last 30 Days" Uid="1"/>
+                    <MenuItem x:Name="mmenu_tickets60days" Header="Last 60 Days" Uid="1"/>
                 </MenuItem>
             </MenuItem>
+            <MenuItem x:Name="mmenu_about" Header="About" FontWeight="Bold" Uid="1" Click="mmenu_about_Click" />
         </Menu>
     </Grid>
 </Window>

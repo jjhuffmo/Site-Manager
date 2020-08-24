@@ -23,7 +23,8 @@
             </DataGrid.Columns>
         </DataGrid>
         <Button x:Name="btn_Add_Ticket" Content="Add" HorizontalAlignment="Left" Height="43" Margin="10,10,0,0" VerticalAlignment="Top" Width="69" Click="btn_Add_Ticket_Clicked" />
-        <Button x:Name="btn_Remove_Ticket" Content="Remove" HorizontalAlignment="Left" Height="43" Margin="279,10,0,0" VerticalAlignment="Top" Width="69" Click="btn_Remove_Ticket_Clicked" Visibility="Hidden"/>
-        <ContentControl x:Name="Task_Detail" Content="ContentControl" HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+        <Button x:Name="btn_Remove_Ticket" Content="Remove" HorizontalAlignment="Left" Height="43" Margin="101,10,0,0" VerticalAlignment="Top" Width="69" Click="btn_Remove_Ticket_Clicked" Visibility="Visible"/>
+        <ContentControl x:Name="Task_Detail" Content="ContentControl" HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top" Grid.Column="1" Visibility="Hidden"/>
+        <CheckBox x:Name="site_tickets_viewall" Content="View All" HorizontalAlignment="Left" Margin="219,10,0,0" VerticalAlignment="Top" Width="114"/>
     </Grid>
 </UserControl>

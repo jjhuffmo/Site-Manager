@@ -61,6 +61,15 @@ namespace Site_Manager {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Jeremy Huff.
+        /// </summary>
+        public static string AppAuthor {
+            get {
+                return ResourceManager.GetString("AppAuthor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Site Manager.
         /// </summary>
         public static string AppTitle {
@@ -86,6 +95,25 @@ namespace Site_Manager {
             get {
                 object obj = ResourceManager.GetObject("btnRemove_Users", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] Close_Tab {
+            get {
+                object obj = ResourceManager.GetObject("Close_Tab", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Icons made by Smashicons from Flaticon..
+        /// </summary>
+        public static string ResourceProviders {
+            get {
+                return ResourceManager.GetString("ResourceProviders", resourceCulture);
             }
         }
         
@@ -239,6 +267,25 @@ namespace Site_Manager {
         public static byte[] tbUser {
             get {
                 object obj = ResourceManager.GetObject("tbUser", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Andrea Huff, Brayden Huff, Kiefer Huff.
+        /// </summary>
+        public static string Thanks {
+            get {
+                return ResourceManager.GetString("Thanks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] user {
+            get {
+                object obj = ResourceManager.GetObject("user", resourceCulture);
                 return ((byte[])(obj));
             }
         }

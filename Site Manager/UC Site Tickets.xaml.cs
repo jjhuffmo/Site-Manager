@@ -20,14 +20,13 @@ namespace Site_Manager
     public partial class UC_Site_Tickets : UserControl
     {
         public ObservableCollection<Site_Tickets> site_tickets { get; set; }
-        public UC_Site_Tickets()
+        public UC_Site_Tickets(Sites Site_ID, User_Info current_user, Users current_site_user)
         {
             this.DataContext = this;
             site_tickets = new ObservableCollection<Site_Tickets>();
             Site_Tickets new_ticket = new Site_Tickets();
 
-
-            site_tickets.Add(new_ticket);
+            // Determine if the current user can create new and view all tickets
 
             InitializeComponent();
         }
@@ -42,7 +41,6 @@ namespace Site_Manager
         //
         private void btn_Add_Ticket_Clicked(object sender, RoutedEventArgs e)
         {
-            Task_Detail.Content = new UC_Ticket_Tasks();
             Add_Ticket();
         }
 
@@ -68,8 +66,10 @@ namespace Site_Manager
         {
             Site_Tickets new_ticket = new Site_Tickets();
 
-
             site_tickets.Add(new_ticket);
+
+            Task_Detail.Content = new UC_Ticket_Tasks();
+            Task_Detail.Visibility = Visibility.Visible;
         }
 
         //

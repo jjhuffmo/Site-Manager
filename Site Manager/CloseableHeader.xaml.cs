@@ -10,22 +10,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Collections.ObjectModel;
 
 namespace Site_Manager
 {
     /// <summary>
-    /// Interaction logic for UC_Ticket_Tasks.xaml
+    /// Interaction logic for CloseableHeader.xaml
     /// </summary>
-    public partial class UC_Ticket_Tasks : UserControl
+    public partial class CloseableHeader : UserControl
     {
-        public ObservableCollection<Tickets_Tasks> ticket_tasks { get; set; }
-
-        public UC_Ticket_Tasks()
+        public CloseableHeader()
         {
-            this.DataContext = this;
-            ticket_tasks = new ObservableCollection<Tickets_Tasks>();
-            Tickets_Tasks new_task = new Tickets_Tasks();
             InitializeComponent();
         }
     }

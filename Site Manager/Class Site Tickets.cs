@@ -196,5 +196,10 @@ namespace Site_Manager
             Completed_Tasks = 0;
             Incomplete_Tasks = 0;
         }
+
+        public void Load_Site_Tickets(long site_id, string site_name, long user_id, string user)
+        {
+
+        }
     }
 }

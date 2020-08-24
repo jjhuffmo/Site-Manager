@@ -117,6 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AppAuthor" xml:space="preserve">
+    <value>Jeremy Huff</value>
+    <comment>Program Author/Programmer</comment>
+  </data>
   <data name="AppTitle" xml:space="preserve">
     <value>Site Manager</value>
     <comment>Name to display in the title bar.</comment>
@@ -127,6 +131,13 @@
   </data>
   <data name="btnRemove_Users" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\btnRemove_Users.bmp;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Close_Tab" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Close_Tab.bmp;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="ResourceProviders" xml:space="preserve">
+    <value>Icons made by Smashicons from Flaticon.</value>
+    <comment>People/sites who provided items used in the program</comment>
   </data>
   <data name="SQLConnString" xml:space="preserve">
     <value>Data Source=localhost\SQLEXPRESS;Initial Catalog=Site_Management;Integrated Security=True</value>
@@ -194,5 +205,12 @@
   </data>
   <data name="tbUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\tbUser.ico;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Thanks" xml:space="preserve">
+    <value>Andrea Huff, Brayden Huff, Kiefer Huff</value>
+    <comment>People To Thank</comment>
+  </data>
+  <data name="user" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\user.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

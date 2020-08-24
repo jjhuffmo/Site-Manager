@@ -10,6 +10,8 @@
   <ItemGroup>
     <None Remove="icoMinus.ico" />
     <None Remove="icoPlus.ico" />
+    <None Remove="Resources\Close_Tab.bmp" />
+    <None Remove="Resources\Close_Tab_Active.bmp" />
     <None Remove="Resources\tbUser.ico" />
   </ItemGroup>
 
@@ -39,6 +41,8 @@
   <ItemGroup>
     <Resource Include="icoMinus.ico" />
     <Resource Include="icoPlus.ico" />
+    <Resource Include="Resources\close_tab_active.bmp" />
+    <Resource Include="Resources\Close_Tab.bmp" />
     <Resource Include="Resources\tbUser.ico" />
   </ItemGroup>
 
