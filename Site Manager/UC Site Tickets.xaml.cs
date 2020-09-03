@@ -11,6 +11,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections.ObjectModel;
+using static Site_Manager.Resources;
+using System.Data.SqlClient;
 
 namespace Site_Manager
 {
@@ -20,15 +22,39 @@ namespace Site_Manager
     public partial class UC_Site_Tickets : UserControl
     {
         public ObservableCollection<Site_Tickets> site_tickets { get; set; }
+        public User_Info user { get; set; }
+        public Sites site_id { get; set; }
+        public Users cuser { get; set; }
+
         public UC_Site_Tickets(Sites Site_ID, User_Info current_user, Users current_site_user)
         {
             this.DataContext = this;
             site_tickets = new ObservableCollection<Site_Tickets>();
-            Site_Tickets new_ticket = new Site_Tickets();
 
-            // Determine if the current user can create new and view all tickets
+            // Load the user and site information into local variables
+            user = current_user;
+            site_id = Site_ID;
+            cuser = current_site_user;
+
+            //Site_Tickets new_ticket = new Site_Tickets();
 
             InitializeComponent();
+
+            // Determine if the current user can view all tickets
+            if (current_site_user.View_Tickets == true)
+                site_tickets_viewall.Visibility = Visibility.Visible;
+            else
+                site_tickets_viewall.Visibility = Visibility.Hidden;
+
+            // Determine if the current user can add tickets
+            if (current_site_user.Add_Tickets == true)
+                btn_Add_Ticket.Visibility = Visibility.Visible;
+            else
+                btn_Add_Ticket.Visibility = Visibility.Hidden;
+
+            //site_tickets_viewall += site_tickets_viewall.AddHandler(IsCh)
+
+            Load_Site_Tickets(Site_ID.Site_ID, current_user.User_ID, Site_ID.Short_Name, current_user.User_Name, (bool)site_tickets_viewall.IsChecked);
         }
 
         //
@@ -37,7 +63,7 @@ namespace Site_Manager
         //  Arguments:  object sender = object that called function
         //              RoutedEventArgs e = arguments for the event
         //
-        //  Purpose:    Save/Update the site info when clicked (after confirmation from a messagebox)
+        //  Purpose:    Add a new ticket to the site
         //
         private void btn_Add_Ticket_Clicked(object sender, RoutedEventArgs e)
         {
@@ -45,17 +71,18 @@ namespace Site_Manager
         }
 
         //
-        //  Function:   private void btn_Save_Clicked(object sender, RoutedEventArgs e)
+        //  Function:   private void btn_Add_Task_Clicked(object sender, RoutedEventArgs e)
         //
         //  Arguments:  object sender = object that called function
         //              RoutedEventArgs e = arguments for the event
         //
-        //  Purpose:    Save/Update the site info when clicked (after confirmation from a messagebox)
+        //  Purpose:    Add a task to a site ticket
         //
-        private void btn_Remove_Ticket_Clicked(object sender, RoutedEventArgs e)
+        private void btn_Add_Task_Clicked(object sender, RoutedEventArgs e)
         {
-            Remove_Ticket();
+            Add_Ticket();
         }
+
 
         //
         //  Function:   private void Add_Ticket()
@@ -80,6 +107,81 @@ namespace Site_Manager
         private void Remove_Ticket()
         {
             site_tickets.RemoveAt(0);
+        }
+
+        public void Load_Site_Tickets(long site_id, long user_id, string site_name, string user_name, bool all_tickets)
+        {
+            int current_tick = 0;
+            DB_Users users = new DB_Users();
+            users.Get_List(0);
+
+            // Delete the site tickets array before starting
+            site_tickets.Clear();
+
+            // Open the database and retrieve tickets for the current user or all of them if all is selected
+            string connString = SQLConnString;
+
+            // Query the tickets for this site for this user
+            StringBuilder query = new StringBuilder("SELECT * FROM ");
+            query.Append(tblTickets);
+            query.Append(" WHERE Site_ID = '");
+            query.Append(site_id);
+            query.Append("'");
+            // If select all is not enabled, only show this users tickets
+            if (all_tickets == false)
+            {
+                query.Append(" AND Creator_ID = '");
+                query.Append(user_id);
+                query.Append("'");
+            }
+
+            // Read all the sites associated with this user
+            using (SqlConnection sqlCon = new SqlConnection(connString))
+            {
+                sqlCon.Open();
+                SqlCommand SqlCmd = new SqlCommand(query.ToString(), sqlCon);
+                using SqlDataReader reader = SqlCmd.ExecuteReader();
+                while(reader.Read())
+                {
+                    Site_Tickets site_ticket = new Site_Tickets();
+
+                    //using (reader)
+                    //{
+                    //reader.Read();
+                    //site_ticket.Generate_New(site_id, site_name, user_id, user_name);
+                    current_tick = site_tickets.Count - 1;
+                    site_ticket.Site_ID = ((long)reader[0]);
+                    site_ticket.Ticket_ID = ((long)reader[1]);
+                    site_ticket.Creator_User_ID = ((long)reader[2]);
+                    for (int i = 0; i < users.User_ID.Count; i++)
+                    {
+                        if (users.User_ID[i] == (int)site_ticket.Creator_User_ID)
+                            site_ticket.Creator = users.User_Name[i];
+                    }
+                    site_ticket.Created_On = ((DateTime)reader[3]);
+                    if (!DBNull.Value.Equals(reader[4]))
+                        site_ticket.Due_On = ((DateTime)reader[4]);
+                    if (!DBNull.Value.Equals(reader[5]))
+                        site_ticket.Desc = ((string)reader[5]);
+                    if (!DBNull.Value.Equals(reader[6]))
+                        site_ticket.Ticket_Status = ((int)reader[6]);
+                    if (!DBNull.Value.Equals(reader[7]))
+                        site_ticket.Notes = ((string)reader[7]);
+                    if (!DBNull.Value.Equals(reader[8]))
+                        site_ticket.Total_Tasks = ((int)reader[8]);
+                    if (!DBNull.Value.Equals(reader[9]))
+                        site_ticket.Completed_Tasks = ((int)reader[9]);
+                    if (!DBNull.Value.Equals(reader[10]))
+                        site_ticket.Active_Tasks = ((int)reader[10]);
+                    site_tickets.Add(site_ticket);
+                    //}
+                }
+            }
+        }
+
+        private void site_tickets_viewall_Click(object sender, RoutedEventArgs e)
+        {
+            Load_Site_Tickets(site_id.Site_ID, user.User_ID, site_id.Short_Name, user.User_Name, (bool)site_tickets_viewall.IsChecked);
         }
     }
 }

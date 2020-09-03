@@ -140,23 +140,6 @@ namespace Site_Manager
         }
 
         //
-        //  Function:   public void Modify_Site(object sender, RoutedEventArgs e)
-        //
-        //  Arguments:  object sender = Built in variable of calling object (menuitem)
-        //              RoutedEventArgs e = Built in variable to hold sending objects arguments
-        //
-        //  Purpose:    Modifies and existing site
-        //
-        public void Modify_Site_click(object sender, RoutedEventArgs e)
-        {
-            // Get the site name (short name in DB)
-            if (SiteList.SelectedItem != null)
-            {
-                Load_Site((ListBoxItem)SiteList.SelectedItem, 1);
-            }
-        }
-
-        //
         //  Function:   public void Close_Site(object sender, RoutedEventArgs e)
         //
         //  Arguments:  object sender = Built in variable of calling object (menuitem)
@@ -170,10 +153,6 @@ namespace Site_Manager
                 Close_Site(Sites_Tabs.SelectedIndex);
         }
 
-        private void Delete_Site_click(object sender, RoutedEventArgs e)
-        {
-
-        }
         //
         //  Function:  private void SiteList_Changed(object sender, SelectionChangedEventArgs e)
         //
@@ -187,13 +166,13 @@ namespace Site_Manager
         {
             if (SiteList.SelectedItem != null)
             {
-                mmenu_delete_site.Visibility = Visibility.Visible;
-                mmenu_modify_site.Visibility = Visibility.Visible;
+                //mmenu_delete_site.Visibility = Visibility.Visible;
+                //mmenu_modify_site.Visibility = Visibility.Visible;
             }
             else
             {
-                mmenu_delete_site.Visibility = Visibility.Collapsed;
-                mmenu_modify_site.Visibility = Visibility.Collapsed;
+                //mmenu_delete_site.Visibility = Visibility.Collapsed;
+                //mmenu_modify_site.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -225,7 +204,7 @@ namespace Site_Manager
 
                 case "Show_All_Sites":
                     Load_My_Sites(current_user);
-                    mmenu_showall_sites.IsChecked = System_Settings.Show_All_Sites;
+                    //mmenu_showall_sites.IsChecked = System_Settings.Show_All_Sites;
                     break;
             }
         }
@@ -576,8 +555,8 @@ namespace Site_Manager
             }
             if (SiteList.SelectedItem == null)
             {
-                mmenu_delete_site.Visibility = Visibility.Collapsed;
-                mmenu_modify_site.Visibility = Visibility.Collapsed;
+                //mmenu_delete_site.Visibility = Visibility.Collapsed;
+                //mmenu_modify_site.Visibility = Visibility.Collapsed;
             }
             return 1;
         }
@@ -734,29 +713,23 @@ namespace Site_Manager
             }
         }
 
-        private void Create_User_click(object sender, RoutedEventArgs e)
-        {
-            Create_User();
-        }
-        private void Modify_User_click(object sender, RoutedEventArgs e)
-        {
-
-        }
-        private void Delete_User_click(object sender, RoutedEventArgs e)
+        private void Manage_Users_click(object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void Create_User()
+        private void Manage_Sites_click(object sender, RoutedEventArgs e)
         {
 
         }
+
 
         private void mmenu_about_Click(object sender, RoutedEventArgs e)
         {
             Window About_Window = new About_Windows();
             About_Window.ShowDialog();
         }
+
     }
 }
 

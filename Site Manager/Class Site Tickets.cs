@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using static Site_Manager.Resources;
+using System.Data.SqlClient;
 
 namespace Site_Manager
 {
@@ -18,9 +20,8 @@ namespace Site_Manager
         private int _Ticket_Status = 0;
         private int _Total_Tasks = 0;
         private int _Completed_Tasks = 0;
-        private int _Incomplete_Tasks = 0;
+        private int _Active_Tasks = 0;
 
-        private DateTime _Started_TS;
         private DateTime _Completed_TS;
 
         private string _Site = "";
@@ -81,15 +82,6 @@ namespace Site_Manager
             }
         }
 
-
-        public DateTime Started_TS
-        {
-            get { return _Started_TS; }
-            set
-            {
-                _Started_TS = value;
-            }
-        }
 
         public DateTime Completed_TS
         {
@@ -163,12 +155,12 @@ namespace Site_Manager
             }
         }
 
-        public int Incomplete_Tasks
+        public int Active_Tasks
         {
-            get { return _Incomplete_Tasks; }
+            get { return _Active_Tasks; }
             set
             {
-                _Incomplete_Tasks = value;
+                _Active_Tasks = value;
             }
         }
         public event PropertyChangedEventHandler PropertyChanged;
@@ -187,19 +179,62 @@ namespace Site_Manager
             Due_On = DateTime.Now;
             Desc = "New Ticket";
             Ticket_Status = 0;
-            Started_TS = DateTime.Now;
             Completed_TS = DateTime.Now;
             Notes = "";
             Site = site_name;
             Creator = user;
             Total_Tasks = 0;
             Completed_Tasks = 0;
-            Incomplete_Tasks = 0;
+            Active_Tasks = 0;
         }
 
-        public void Load_Site_Tickets(long site_id, string site_name, long user_id, string user)
+        public bool Load_Site_Ticket(long site_id, long user_id, bool all_tickets)
         {
+            // Open the database and retrieve tickets for the current user or all of them if all is selected
+            string connString = SQLConnString;
 
+            // Query the tickets for this site for this user
+            StringBuilder query = new StringBuilder("SELECT * FROM ");
+            query.Append(tblTickets);
+            query.Append(" WHERE Site_ID = '");
+            query.Append(site_id);
+            query.Append("'");
+            // If select all is not enabled, only show this users tickets
+            if (all_tickets == false)
+            {
+                query.Append(" AND Creator_ID = '");
+                query.Append(user_id);
+                query.Append("'");
+            }
+
+            // Read all the sites associated with this user
+            using (SqlConnection sqlCon = new SqlConnection(connString))
+            {
+                sqlCon.Open();
+                SqlCommand SqlCmd = new SqlCommand(query.ToString(), sqlCon);
+                using SqlDataReader reader = SqlCmd.ExecuteReader();
+                if (reader.HasRows == true)
+                {
+                    using (reader)
+                    {
+                        reader.Read();
+                        Site_ID = ((long)reader[0]);
+                        Ticket_ID = ((long)reader[1]);
+                        Creator_User_ID = ((long)reader[2]);
+                        Created_On = ((DateTime)reader[3]);
+                        Due_On = ((DateTime)reader[4]);
+                        Desc = ((string)reader[5]);
+                        Ticket_Status = ((int)reader[6]);
+                        Notes = ((string)reader[7]);
+                        Total_Tasks = ((int)reader[8]);
+                        Completed_Tasks = ((int)reader[9]);
+                        Active_Tasks = ((int)reader[10]);
+                    }
+                    return true;
+                }
+                else
+                    return false;
+            }
         }
     }
 }
