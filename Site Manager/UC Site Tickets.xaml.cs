@@ -12,6 +12,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 using static Site_Manager.Resources;
+using System.ComponentModel;
 using System.Data.SqlClient;
 
 namespace Site_Manager
@@ -40,18 +41,7 @@ namespace Site_Manager
 
             InitializeComponent();
 
-            // Determine if the current user can view all tickets
-            if (current_site_user.View_Tickets == true)
-                site_tickets_viewall.Visibility = Visibility.Visible;
-            else
-                site_tickets_viewall.Visibility = Visibility.Hidden;
-
-            // Determine if the current user can add tickets
-            if (current_site_user.Add_Tickets == true)
-                btn_Add_Ticket.Visibility = Visibility.Visible;
-            else
-                btn_Add_Ticket.Visibility = Visibility.Hidden;
-
+            Update_User_Options();
             //site_tickets_viewall += site_tickets_viewall.AddHandler(IsCh)
 
             Load_Site_Tickets(Site_ID.Site_ID, current_user.User_ID, Site_ID.Short_Name, current_user.User_Name, (bool)site_tickets_viewall.IsChecked);
@@ -141,7 +131,7 @@ namespace Site_Manager
                 sqlCon.Open();
                 SqlCommand SqlCmd = new SqlCommand(query.ToString(), sqlCon);
                 using SqlDataReader reader = SqlCmd.ExecuteReader();
-                while(reader.Read())
+                while (reader.Read())
                 {
                     Site_Tickets site_ticket = new Site_Tickets();
 
@@ -179,9 +169,34 @@ namespace Site_Manager
             }
         }
 
+        public void Update_User_Options()
+        {
+            // if the current user is an admin, just give them all rights to all settings
+            // if (current_user.)
+            // Define the current site user for access to the remaining portions
+            cuser = cuser.Get_User_Settings(site_id.Site_ID, cuser.User_ID);
+
+            // Determine if the current user can view all tickets
+            if (cuser.View_Tickets == true)
+                site_tickets_viewall.Visibility = Visibility.Visible;
+            else
+                site_tickets_viewall.Visibility = Visibility.Hidden;
+
+            // Determine if the current user can add tickets
+            if (cuser.Add_Tickets == true)
+                btn_Add_Ticket.Visibility = Visibility.Visible;
+            else
+                btn_Add_Ticket.Visibility = Visibility.Hidden;
+        }
+
         private void site_tickets_viewall_Click(object sender, RoutedEventArgs e)
         {
             Load_Site_Tickets(site_id.Site_ID, user.User_ID, site_id.Short_Name, user.User_Name, (bool)site_tickets_viewall.IsChecked);
+        }
+
+        public void Open_Site_Changed(object sender, PropertyChangedEventArgs e)
+        {
+            Update_User_Options();
         }
     }
 }

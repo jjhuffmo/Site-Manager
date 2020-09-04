@@ -15,7 +15,8 @@ using System.Windows.Shapes;
 using System.Data.SqlClient;
 using System.ComponentModel;
 using static Site_Manager.Resources;
-
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace Site_Manager
 {
@@ -28,12 +29,13 @@ namespace Site_Manager
         public User_Info current_user = new User_Info();
         public User_Sites user_sites = new User_Sites();
         public Settings System_Settings = new Settings();
-        public Opened_Sites Open_Sites = new Opened_Sites();
+        public ObservableCollection<Opened_Sites> Open_Sites { get; set; }
 
         public MainWindow()
         {
+            Open_Sites = new ObservableCollection<Opened_Sites>();
+
             InitializeComponent();
-            Open_Sites.Initialize();
 
             this.DataContext = this;
 
@@ -271,7 +273,8 @@ namespace Site_Manager
                     site_list.IsEnabled = true;
             }
             // Remove the site from the Open_Sites variable
-            Open_Sites.Close_Site(Sites_Tabs.SelectedIndex);
+            //Open_Sites.Close_Site(Sites_Tabs.SelectedIndex);
+            Open_Sites.RemoveAt(Sites_Tabs.SelectedIndex);
 
             // Find the sites tab for this site and remove it
             Sites_Tabs.Items.Remove(Sites_Tabs.SelectedItem);
@@ -336,18 +339,23 @@ namespace Site_Manager
                 bool found = false;
                 int found_tab = 0;
 
+                Opened_Sites New_Open_Site = new Opened_Sites();
+                New_Open_Site.Initialize();
+               
                 Sites View_Site = new Sites();
 
                 // See if it's already open
-                for (int i = 0; i < Open_Sites.site_info.Count; i++)
+                if (Open_Sites is null == false)
                 {
-                    if (Int32.Parse(Site_Name.Uid) == Open_Sites.site_info[i].Site_ID)
+                    for (int i = 0; i < Open_Sites.Count; i++)
                     {
-                        found = true;
-                        found_tab = Open_Sites.tab_index[i];
+                        if (Int32.Parse(Site_Name.Uid) == Open_Sites[i].site_info.Site_ID)
+                        {
+                            found = true;
+                            found_tab = Open_Sites[i].tab_index;
+                        }
                     }
                 }
-
                 // Try to the load the site.  If successful, display it otherwise don't (add not found handling later)
                 if (View_Site.Load_Site((string)Site_Name.Content) == true && found == false)
                 {
@@ -355,19 +363,7 @@ namespace Site_Manager
                     var editsite = new UC_Site(View_Site, mode, current_user);
                     var current_site_user = new Users();
 
-                    // if the current user is an admin, just give them all rights to all settings
-                   // if (current_user.)
-                    // Define the current site user for access to the remaining portions
-                    DB_Users users = new DB_Users();
-
-                    users.Get_List(1, View_Site.Site_ID);
-                    for (int q = 0; q < users.User_Name.Count; q++)
-                    {
-                        Users user = new Users();
-                        user.Convert_DB_Users(users, q);
-                        if (user.User_ID == current_user.User_ID)
-                            current_site_user = user;
-                    }
+                    current_site_user = current_site_user.Get_User_Settings(View_Site.Site_ID, current_user.User_ID);
 
                     // Create a new tab for the Site Tab itself
                     //TabItem sites_tab = new TabItem();
@@ -375,6 +371,9 @@ namespace Site_Manager
                     sites_tab.Title = View_Site.Short_Name;
                     sites_tab.AddHandler(CloseableTab.CloseTabEvent, new RoutedEventHandler(this.Close_Site_click));
                     Sites_Tabs.Items.Add(sites_tab);
+
+                    // Add the site to the Open_Sites variable
+                    New_Open_Site.site_info = View_Site;
 
                     // Create the site tabs for info, tickets, resources, etc
                     TabControl site_tab = new TabControl();
@@ -388,7 +387,7 @@ namespace Site_Manager
                     TabItem users_tab = new TabItem();
                     users_tab.Header = "Users";
                     // Generate a new Site Users tab using the user control UC Site Tickets
-                    var siteusers = new UC_Site_Users(View_Site, mode, current_user);
+                    var siteusers = new UC_Site_Users(New_Open_Site, mode, current_user, current_site_user);
                     users_tab.Content = siteusers;
                     site_tab.Items.Add(users_tab);
 
@@ -407,8 +406,10 @@ namespace Site_Manager
                     site_tab.Items.Add(resources_tab);
                     sites_tab.Content = site_tab;
 
-                    // Add the site to the Open_Sites variable
-                    Open_Sites.Insert_New(View_Site);
+                    
+                    Open_Sites.Add(New_Open_Site);
+                    Open_Sites[Open_Sites.Count - 1].PropertyChanged += new PropertyChangedEventHandler(Open_Site_Changed);
+                    Open_Sites[Open_Sites.Count - 1].PropertyChanged += new PropertyChangedEventHandler(sitetickets.Open_Site_Changed);
 
                     // Block out the selected site so they don't try to click on it again
                     // Find the site in the site_list box and re-enable it
@@ -433,6 +434,11 @@ namespace Site_Manager
                     site_mod.Content = editsite;
                 }
             }
+        }
+
+        private void MainWindow_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         //
@@ -667,9 +673,19 @@ namespace Site_Manager
                 site.Uid = sites.site_id[i].ToString();
                 site.Content = sname;
                 // Block out any open site so they don't try to click on it again
-                if (Open_Sites.site_info.Any(x => x.Site_ID == sites.site_id[i]))
+                if (Open_Sites is null)
                 {
-                    site.IsEnabled = false;
+                    site.IsEnabled = true;
+                }
+                else
+                {
+                    for (int j = 0; j < Open_Sites.Count; j++)
+                    {
+                        if (Open_Sites[j].site_info.Site_ID == sites.site_id[i])
+                        {
+                            site.IsEnabled = false;
+                        }
+                    }
                 }
                 SiteList.Items.Add(site);
                 // Increment index
@@ -712,6 +728,19 @@ namespace Site_Manager
                 tabItem.Width = eachtab;
             }
         }
+
+        private void Open_Site_Changed(object sender, PropertyChangedEventArgs e)
+        {
+            // Update the changed site(s)
+            for (int i = 0; i < Open_Sites.Count; i++)
+            {
+                if (Open_Sites[i].changed)
+                {
+                    //UC_Site_Tickets.Update_User_Options();
+                }
+            }
+        }
+
 
         private void Manage_Users_click(object sender, RoutedEventArgs e)
         {

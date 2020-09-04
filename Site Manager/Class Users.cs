@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Data;
+using System.Runtime.CompilerServices;
 
 namespace Site_Manager
 {
@@ -564,6 +565,7 @@ namespace Site_Manager
             {
                 _Add_Tickets = value;
                 Changed = true;
+                OnPropertyChanged();
             }
         }
 
@@ -602,6 +604,32 @@ namespace Site_Manager
             this.View_Tickets = db_users.View_Tickets[index];
             this.Add_Tickets = db_users.Add_Tickets[index];
             this.Changed = false;
+        }
+
+        // Update the current users options
+        public void Update_Current_User(Users update_data )
+        {
+            this.View_Resources = update_data.View_Resources;
+            this.Add_Resources = update_data.Add_Resources;
+            this.Modify_Resources = update_data.Modify_Resources;
+            this.Del_Resources = update_data.Del_Resources;
+            this.View_Tickets = update_data.View_Tickets;
+            this.Add_Tickets = update_data.Add_Tickets;
+        }
+
+        public Users Get_User_Settings(long site_id, int user_id)
+        {
+            DB_Users users = new DB_Users();
+            Users blank_user = new Users();
+            users.Get_List(1, site_id);
+            for (int q = 0; q < users.User_Name.Count; q++)
+            {
+                Users user = new Users();
+                user.Convert_DB_Users(users, q);
+                if (user.User_ID == user_id)
+                    return user;
+            }
+            return blank_user;
         }
     }
 }

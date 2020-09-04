@@ -21,9 +21,11 @@ namespace Site_Manager
     /// </summary>
     public partial class UC_Site_Users : UserControl
     {
+        //public ObservableCollection<Users> View_Users { get; set; }
         public ObservableCollection<Users> View_Users { get; set; }
-        public User_Info cuser = new User_Info();
-        public Sites csite;
+        public User_Info cuser_info = new User_Info();
+        public Users cuser = new Users();
+        public Opened_Sites csite;
         public int Mode = 0;
         public bool _Changes_Made = false;
         public bool Init_Complete = false;
@@ -53,17 +55,20 @@ namespace Site_Manager
         //  Arguments:  Sites current_site = Site to display/edit/enter information
         //              int mode = Mode of operation
         //              (0 = Edit Users Enabled, 1 = View Users Only)
-        //              User_Info current_user = Currently logged in user to valid and store
+        //              User_Info current_user = Currently logged in user to validate and store
         //
         //  Purpose:    Display the user information 
         //
-        public UC_Site_Users(Sites current_site, int mode, User_Info current_user)
+        public UC_Site_Users(Opened_Sites current_site, int mode, User_Info current_user_info, Users current_user)
         {
-            View_Users = new ObservableCollection<Users>();
+            View_Users = new ObservableCollection<Users>(current_site.site_users);
+
+            View_Users = current_site.site_users;
+            cuser_info = current_user_info;
             cuser = current_user;
 
-            csite = new Sites();
             csite = current_site;
+            //csite = current_site.site_info;
 
             Mode = mode;
 
@@ -95,7 +100,7 @@ namespace Site_Manager
             if (mode == 0)
                 users.Get_List(0);
             else
-                users.Get_List(1, csite.Site_ID);
+                users.Get_List(1, csite.site_info.Site_ID);
             for (int i = 0; i < users.User_Name.Count; i++)
             {
                 Users user = new Users();
@@ -160,7 +165,7 @@ namespace Site_Manager
                     if (View_Users[i].Changed == true)
                     {
                         changed_users.Site_User_ID.Add(View_Users[i].Site_User_ID);
-                        changed_users.Site_ID.Add(csite.Site_ID);
+                        changed_users.Site_ID.Add(csite.site_info.Site_ID);
                         changed_users.User_ID.Add(View_Users[i].User_ID);
                         changed_users.View_Resources.Add(View_Users[i].View_Resources);
                         changed_users.Add_Resources.Add(View_Users[i].Add_Resources);
@@ -170,12 +175,24 @@ namespace Site_Manager
                         changed_users.Add_Tickets.Add(View_Users[i].Add_Tickets);
                     }
                 }
-                if (changed_users.Save_List(1, csite.Site_ID) == true)
+                if (changed_users.Save_List(1, csite.site_info.Site_ID) == true)
                 {
                     MessageBox.Show("Changes Successfully Saved", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    
                     Init_Complete = false;
                     Make_User_List(Mode);
                     Init_Complete = true;
+                    csite.changed = true;
+
+                    // Update the current users options
+                    for (int i = 0; i < View_Users.Count; i++)
+                    {
+                        if (View_Users[i].User_ID == cuser_info.User_ID)
+                        {
+                            cuser.Update_Current_User(View_Users[i]);
+                        }
+                    }
+                    
                 }
                 else
                 {

@@ -1,15 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Xps.Serialization;
+using System.ComponentModel;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace Site_Manager
 {
-    public class Opened_Sites
+    public class Opened_Sites : INotifyPropertyChanged
     {
-        private List<Sites> _site_info;
-        private List<int> _tab_index;
+        private Sites _site_info;
+        private ObservableCollection<Users> _site_users = new ObservableCollection<Users>();
+        private ObservableCollection<Site_Tickets> _site_tickets = new ObservableCollection<Site_Tickets>();
+        private int _tab_index;
+        private bool _changed;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public List<int> tab_index
+        protected void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(this, e);
+        }
+
+        protected void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = "")
+        {
+            OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
+
+        public int tab_index
         {
             get { return _tab_index; }
             set
@@ -17,46 +35,48 @@ namespace Site_Manager
                 _tab_index = value;
             }
         }
-        public List<Sites> site_info
+        public Sites site_info
         {
             get { return _site_info; }
             set
             {
                 _site_info = value;
+                OnPropertyChanged();
             }
         }
-
+        public ObservableCollection<Users> site_users
+        {
+            get { return _site_users; }
+            set
+            {
+                _site_users = site_users;
+                OnPropertyChanged();
+            }
+        }
+        public ObservableCollection<Site_Tickets> site_tickets
+        {
+            get { return _site_tickets; }
+            set
+            {
+                _site_tickets = site_tickets;
+                OnPropertyChanged();
+            }
+        }
+        public bool changed
+        {
+            get { return _changed; }
+            set
+            {
+                _changed = value;
+                OnPropertyChanged();
+            }
+        }
         public void Initialize()
         {
-            tab_index = new List<int>();
-            site_info = new List<Sites>();
-        }
-
-        public void Insert_New(Sites site)
-        {
-            tab_index.Add(tab_index.Count);
-            site_info.Add(site);
-        }
-
-        public void Close_Site(int tab_no)
-        {
-            int x;
-
-            x = tab_index.IndexOf(tab_no);
-
-            // If the tab number is found
-            if (tab_no >= 0)
-            {
-                // Shift all tab_indexes greater than the selected by 1
-                for (int i = 0; i < tab_index.Count; i++)
-                {
-                    if (tab_index[i] > tab_no)
-                        tab_index[i]--;
-                }
-                // Delete the record from the stack
-                tab_index.RemoveAt(x);
-                site_info.RemoveAt(x);
-            }
+            site_users = new ObservableCollection<Users>();
+            site_tickets = new ObservableCollection<Site_Tickets>();
+            tab_index = new int();
+            changed = new bool();
         }
     }
 }

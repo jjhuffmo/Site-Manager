@@ -17,13 +17,13 @@
                 SelectionChanged="Site_Users_List_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn IsReadOnly="True" Header="Changed" Width="Auto" Binding="{Binding Changed, UpdateSourceTrigger=PropertyChanged}"/>
-                <DataGridTextColumn IsReadOnly="True" Header="Name" Width="Auto" Binding="{Binding User_Name}"/>
-                <DataGridCheckBoxColumn Header="View All Resources" Binding="{Binding View_Resources}"/>
-                <DataGridCheckBoxColumn Header="Add Resources" Binding="{Binding Add_Resources}"/>
-                <DataGridCheckBoxColumn Header="Modify Resources" Binding="{Binding Modify_Resources}"/>
-                <DataGridCheckBoxColumn Header="Delete Resources" Binding="{Binding Del_Resources}"/>
-                <DataGridCheckBoxColumn Header="View All Tickets" Binding="{Binding View_Tickets}"/>
-                <DataGridCheckBoxColumn Header="Add Tickets" Binding="{Binding Add_Tickets}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="Name" Width="Auto" Binding="{Binding User_Name, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridCheckBoxColumn Header="View All Resources" Binding="{Binding View_Resources, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridCheckBoxColumn Header="Add Resources" Binding="{Binding Add_Resources, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridCheckBoxColumn Header="Modify Resources" Binding="{Binding Modify_Resources, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridCheckBoxColumn Header="Delete Resources" Binding="{Binding Del_Resources, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridCheckBoxColumn Header="View All Tickets" Binding="{Binding View_Tickets, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridCheckBoxColumn Header="Add Tickets" Binding="{Binding Add_Tickets, UpdateSourceTrigger=PropertyChanged}"/>
             </DataGrid.Columns>
             <DataGrid.ContextMenu>
                 <ContextMenu x:Name="Site_Users_ContextMenu">
