@@ -15,6 +15,7 @@ namespace Site_Manager
         private long _Creator_User_ID = 0;
         private DateTime _Created_On;
         private DateTime _Due_On;
+        private string _Brief_Desc = "";
         private string _Desc = "";
         private string _Notes = "";
         private int _Ticket_Status = 0;
@@ -89,6 +90,15 @@ namespace Site_Manager
             set
             {
                 _Completed_TS = value;
+            }
+        }
+
+        public string Brief_Desc
+        {
+            get { return _Brief_Desc; }
+            set
+            {
+                _Brief_Desc = value;
             }
         }
 
@@ -177,7 +187,8 @@ namespace Site_Manager
             Creator_User_ID = user_id;
             Created_On = DateTime.Now;
             Due_On = DateTime.Now;
-            Desc = "New Ticket";
+            Brief_Desc = "New Ticket";
+            Desc = "Basic New Ticket For Testing";
             Ticket_Status = 0;
             Completed_TS = DateTime.Now;
             Notes = "";
@@ -223,12 +234,13 @@ namespace Site_Manager
                         Creator_User_ID = ((long)reader[2]);
                         Created_On = ((DateTime)reader[3]);
                         Due_On = ((DateTime)reader[4]);
-                        Desc = ((string)reader[5]);
-                        Ticket_Status = ((int)reader[6]);
-                        Notes = ((string)reader[7]);
-                        Total_Tasks = ((int)reader[8]);
-                        Completed_Tasks = ((int)reader[9]);
-                        Active_Tasks = ((int)reader[10]);
+                        Brief_Desc = ((string)reader[5]);
+                        Desc = ((string)reader[6]);
+                        Ticket_Status = ((int)reader[7]);
+                        Notes = ((string)reader[8]);
+                        Total_Tasks = ((int)reader[9]);
+                        Completed_Tasks = ((int)reader[10]);
+                        Active_Tasks = ((int)reader[11]);
                     }
                     return true;
                 }

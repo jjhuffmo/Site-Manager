@@ -14,6 +14,7 @@ using System.Collections.ObjectModel;
 using static Site_Manager.Resources;
 using System.ComponentModel;
 using System.Data.SqlClient;
+using System.Collections;
 
 namespace Site_Manager
 {
@@ -45,6 +46,7 @@ namespace Site_Manager
             //site_tickets_viewall += site_tickets_viewall.AddHandler(IsCh)
 
             Load_Site_Tickets(Site_ID.Site_ID, current_user.User_ID, Site_ID.Short_Name, current_user.User_Name, (bool)site_tickets_viewall.IsChecked);
+
         }
 
         //
@@ -125,7 +127,7 @@ namespace Site_Manager
                 query.Append("'");
             }
 
-            // Read all the sites associated with this user
+            // Read all the tickets associated with this user
             using (SqlConnection sqlCon = new SqlConnection(connString))
             {
                 sqlCon.Open();
@@ -146,23 +148,28 @@ namespace Site_Manager
                     for (int i = 0; i < users.User_ID.Count; i++)
                     {
                         if (users.User_ID[i] == (int)site_ticket.Creator_User_ID)
+                        {
                             site_ticket.Creator = users.User_Name[i];
+                            break;
+                        }
                     }
                     site_ticket.Created_On = ((DateTime)reader[3]);
                     if (!DBNull.Value.Equals(reader[4]))
                         site_ticket.Due_On = ((DateTime)reader[4]);
                     if (!DBNull.Value.Equals(reader[5]))
-                        site_ticket.Desc = ((string)reader[5]);
+                        site_ticket.Brief_Desc = ((string)reader[5]);
                     if (!DBNull.Value.Equals(reader[6]))
-                        site_ticket.Ticket_Status = ((int)reader[6]);
+                        site_ticket.Desc = ((string)reader[6]);
                     if (!DBNull.Value.Equals(reader[7]))
-                        site_ticket.Notes = ((string)reader[7]);
+                        site_ticket.Ticket_Status = ((int)reader[7]);
                     if (!DBNull.Value.Equals(reader[8]))
-                        site_ticket.Total_Tasks = ((int)reader[8]);
+                        site_ticket.Notes = ((string)reader[8]);
                     if (!DBNull.Value.Equals(reader[9]))
-                        site_ticket.Completed_Tasks = ((int)reader[9]);
+                        site_ticket.Total_Tasks = ((int)reader[9]);
                     if (!DBNull.Value.Equals(reader[10]))
-                        site_ticket.Active_Tasks = ((int)reader[10]);
+                        site_ticket.Completed_Tasks = ((int)reader[10]);
+                    if (!DBNull.Value.Equals(reader[11]))
+                        site_ticket.Active_Tasks = ((int)reader[11]);
                     site_tickets.Add(site_ticket);
                     //}
                 }
@@ -197,6 +204,19 @@ namespace Site_Manager
         public void Open_Site_Changed(object sender, PropertyChangedEventArgs e)
         {
             Update_User_Options();
+        }
+
+        private void Site_Ticket_List_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
+        {
+            if (Site_Ticket_List.SelectedIndex > -1)
+            {
+                Site_Tickets sel_row;
+                // Get the ticket_id from the list
+                sel_row = (Site_Tickets)Site_Ticket_List.SelectedItem;
+                long ticket_id = sel_row.Ticket_ID;
+                Task_Detail.Content = new UC_Task_Detail(ticket_id, cuser.User_ID, false);
+                Task_Detail.Visibility = Visibility.Visible;
+            }
         }
     }
 }

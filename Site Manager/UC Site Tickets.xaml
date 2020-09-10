@@ -13,7 +13,7 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <DataGrid x:Name="Site_Ticket_List" ItemsSource="{Binding Path=site_tickets}" HorizontalAlignment="Center" 
-                  VerticalAlignment="Top"  AutoGenerateColumns="False" Margin="0,62,0,0" Height="Auto" Width="Auto">
+                  VerticalAlignment="Top"  AutoGenerateColumns="False" SelectionMode="Single" SelectionUnit="FullRow" SelectedCellsChanged="Site_Ticket_List_SelectedCellsChanged" Margin="0,62,0,0" Height="Auto" Width="Auto">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="ID_Col" Header="Ticket ID" Width="Auto" Binding="{Binding Ticket_ID}"/>
                 <DataGridTextColumn x:Name="Creator_Col" Header="Created By" Width="Auto" Binding="{Binding Creator}"/>

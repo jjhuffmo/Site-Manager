@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.Design;
 
 namespace Site_Manager
 {
@@ -12,12 +13,14 @@ namespace Site_Manager
         private long _Ticket_ID = 0;
         private long _Ticket_Task_ID = 0;
         private DateTime _Created_On;
+        private int _Creator_ID = 0;
+        private string _Creator = "";
         private int _Task_Status = 0;
         private long _Task_ID = 0;
         private int _Priority = 0;
         private string _Task_Overview = "";
         private string _Task_Details = "";
-        private long _Assigned_User_ID = 0;
+        private int _Assigned_User_ID = 0;
         private int _Progress = 0;
         private DateTime _Due_On;
         private DateTime _Started_TS;
@@ -83,7 +86,16 @@ namespace Site_Manager
             }
         }
 
-        public long Assigned_User_ID
+        public int Creator_ID
+        {
+            get { return _Creator_ID; }
+            set
+            {
+                _Creator_ID = value;
+            }
+        }
+
+        public int Assigned_User_ID
         {
             get { return _Assigned_User_ID; }
             set
@@ -209,6 +221,15 @@ namespace Site_Manager
             }
         }
 
+        public string Creator
+        {
+            get { return _Creator; }
+            set
+            {
+                _Creator = value;
+            }
+        }
+
         public string Task_Overview
         {
             get { return _Task_Overview; }
@@ -297,11 +318,13 @@ namespace Site_Manager
         //
         //  Purpose:    Create a new ticket with some default values so we don't run into NULL's
         //
-        public void Generate_New(long site_id, string site_name, long user_id, string user)
+        public void Generate_New(long site_id, string site_name, int user_id, string user)
         {
             Site_ID = site_id;
             Ticket_ID = 0;
             Ticket_Task_ID = 0;
+            Creator_ID = 0;
+            Creator = "";
             Created_On = DateTime.Now;
             Task_Status = 0;
             Task_ID = 0;

@@ -199,6 +199,33 @@ namespace Site_Manager {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to dbo.Ticket_Tasks.
+        /// </summary>
+        public static string tblTasks {
+            get {
+                return ResourceManager.GetString("tblTasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VALUES (@site_id, @ticket_id, @ticket_task_id, @creator_id, @created_on, @task_status, @task_id, @priority, @task_overview, @task_details, @assigned_user_id, @progress, @due_on, @started_ts, @completed_ts, @notes, @alarm1, @alarm1_enabled, @alarm1_ack_ts, @alarm2, @alarm2_enabled, @alarm2_ack_ts, @alarm3, @alarm3_enabled, @alarm3_ack_ts, @late_alarm.
+        /// </summary>
+        public static string tblTasksInsert {
+            get {
+                return ResourceManager.GetString("tblTasksInsert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SET Site_ID =  @site_id, Ticket_ID = @ticket_id, Ticket_Task_ID = @ticket_task_id, Creator_ID = @creator_id, Created_On = @created_on, Task_Status = @task_status, Task_ID = @task_id, Priority = @priority, Task_Overview = @task_overview, Task_Details = @task_details, Assigned_User_ID = @assigned_user_id, Progress = @progress, Due_On = @due_on, Started_TS = @started_ts, Completed_TS = @completed_ts, Notes = @notes, Alarm1 = @alarm1, Alarm1_Enabled = @alarm1_enabled, Alarm1_Ack_TS = @alarm1_ack_ts, Alarm2 = @a [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string tblTasksUpdate {
+            get {
+                return ResourceManager.GetString("tblTasksUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to dbo.Site_Tickets.
         /// </summary>
         public static string tblTickets {
@@ -208,7 +235,7 @@ namespace Site_Manager {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to VALUES (@site_id, @ticket_id, @creator_id, @created_on, @due_on, @brief_desc, @desc, @alarm1, @alarm1_enabled, @alarm1_ack_ts, @alarm1_ack_id, @alarm2, @alarm2_enabled, @alarm2_ack_ts, @alarm2_ack_id, @alarm3, @alarm3_enabled, @alarm3_ack_ts, @alarm3_ack_id,@late_alarm, @started, @started_ts, @started_id, @completed, @completed_ts, @completed_id.
+        ///   Looks up a localized string similar to VALUES (@site_id, @ticket_id, @creator_id, @created_on, @due_on, @brief_desc, @desc, @status, @completed_on, @notes, @total_tasks, @completed_tasks, @active_tasks.
         /// </summary>
         public static string tblTicketsInsert {
             get {
@@ -217,7 +244,7 @@ namespace Site_Manager {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SET Site_ID = @site_id, Ticket_ID = @ticket_id, Creator_User_ID = @creator_id, Created_On = @created_on, Due_On = @due_on, Brief_Desc = @brief_desc, Desc = @desc, Alarm1 = @alarm1, Alarm1_Enabled = @alarm1_enabled, Alarm1_Ack_TS = @alarm1_ack_ts, Alarm1_Ack_User_ID = @alarm1_ack_id, @desc, Alarm2 = @alarm2, Alarm2_Enabled = @alarm2_enabled, Alarm2_Ack_TS = @alarm2_ack_ts, Alarm2_Ack_User_ID = @alarm2_ack_id,@desc, Alarm3 = @alarm3, Alarm3_Enabled = @alarm3_enabled, Alarm3_Ack_TS = @alarm3_ack_ts, Alarm3_Ack [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to SET Site_ID = @site_id, Ticket_ID = @ticket_id, Creator_ID = @creator_id, Created_On = @created_on, Due_On = @due_on, Brief_Desc = @brief_desc, Desc = @desc, Status = @status, Completed_TS = @completed_on, Notes = @notes, Total_Tasks = @total_tasks, Completed_Tasks = @completed_tasks, Active_Tasks = @active_tasks.
         /// </summary>
         public static string tblTicketsUpdate {
             get {
