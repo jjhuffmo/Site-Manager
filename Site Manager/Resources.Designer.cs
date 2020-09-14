@@ -235,6 +235,15 @@ namespace Site_Manager {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (Site_ID, Ticket_ID, Creator_ID, Created_On, Due_On, Brief_Desc, Desc, Status, Completed_TS, Notes, Total_Tasks, Completed_Tasks, Active_Tasks).
+        /// </summary>
+        public static string tblTicketsFields {
+            get {
+                return ResourceManager.GetString("tblTicketsFields", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to VALUES (@site_id, @ticket_id, @creator_id, @created_on, @due_on, @brief_desc, @desc, @status, @completed_on, @notes, @total_tasks, @completed_tasks, @active_tasks.
         /// </summary>
         public static string tblTicketsInsert {
@@ -244,7 +253,7 @@ namespace Site_Manager {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SET Site_ID = @site_id, Ticket_ID = @ticket_id, Creator_ID = @creator_id, Created_On = @created_on, Due_On = @due_on, Brief_Desc = @brief_desc, Desc = @desc, Status = @status, Completed_TS = @completed_on, Notes = @notes, Total_Tasks = @total_tasks, Completed_Tasks = @completed_tasks, Active_Tasks = @active_tasks.
+        ///   Looks up a localized string similar to SET Site_ID = @site_id,  Creator_ID = @creator_id, Created_On = @created_on, Due_On = @due_on, Brief_Desc = @brief_desc, Desc = @desc, Status = @status, Completed_TS = @completed_on, Notes = @notes, Total_Tasks = @total_tasks, Completed_Tasks = @completed_tasks, Active_Tasks = @active_tasks WHERE Ticket_ID = .
         /// </summary>
         public static string tblTicketsUpdate {
             get {

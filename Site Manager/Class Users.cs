@@ -34,6 +34,7 @@ namespace Site_Manager
         private List<bool> _Del_Resources;
         private List<bool> _View_Tickets;
         private List<bool> _Add_Tickets;
+        private List<bool> _Mark_Delete;
 
         public List<long> Site_User_ID
         {
@@ -134,6 +135,14 @@ namespace Site_Manager
             }
         }
 
+        public List<bool> Mark_Delete
+        {
+            get { return _Mark_Delete; }
+            set
+            {
+                _Mark_Delete = value;
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -150,6 +159,7 @@ namespace Site_Manager
             Del_Resources = new List<bool>();
             View_Tickets = new List<bool>();
             Add_Tickets = new List<bool>();
+            Mark_Delete = new List<bool>();
         }
 
         //
@@ -241,6 +251,7 @@ namespace Site_Manager
                             Del_Resources.Add((bool)reader[6]);
                             View_Tickets.Add((bool)reader[7]);
                             Add_Tickets.Add((bool)reader[8]);
+                            Mark_Delete.Add(false);
                         }
                         sqlCon.Close();
                     }
@@ -401,24 +412,39 @@ namespace Site_Manager
                             }
                             else // Update existing site user
                             {
-                                query.Append("UPDATE ");
-                                query.Append(tblSiteUsers);
-                                query.Append(" ");
-                                query.Append(tblSiteUserUpdate);
-                                query.Append(Site_User_ID[j].ToString());
+                                if (Mark_Delete[j] == true)
+                                {
+                                    query.Append("DELETE FROM ");
+                                    query.Append(tblSiteUsers);
+                                    query.Append(" WHERE Site_ID = '");
+                                    query.Append(Site_ID[j].ToString());
+                                    query.Append("' and User_ID = '");
+                                    query.Append(User_ID[j].ToString());
+                                    query.Append("'");
+                                }
+                                else
+                                {
+                                    query.Append("UPDATE ");
+                                    query.Append(tblSiteUsers);
+                                    query.Append(" ");
+                                    query.Append(tblSiteUserUpdate);
+                                    query.Append(Site_User_ID[j].ToString());
+                                }
                                 SaveCmd = query.ToString();
                                 using (SqlCommand SqlCmd = new SqlCommand(SaveCmd))
                                 {
                                     SqlCmd.Connection = sqlCon;
-                                    SqlCmd.Parameters.AddWithValue("@site_id", (long)Site_ID[j]);
-                                    SqlCmd.Parameters.AddWithValue("@user_id", (int)User_ID[j]);
-                                    SqlCmd.Parameters.AddWithValue("@view_all_resources", (bool)View_Resources[j]);
-                                    SqlCmd.Parameters.AddWithValue("@add_resources", (bool)Add_Resources[j]);
-                                    SqlCmd.Parameters.AddWithValue("@modify_resources", (bool)Modify_Resources[j]);
-                                    SqlCmd.Parameters.AddWithValue("@delete_resources", (bool)Del_Resources[j]);
-                                    SqlCmd.Parameters.AddWithValue("@view_all_tickets", (bool)View_Tickets[j]);
-                                    SqlCmd.Parameters.AddWithValue("@add_tickets", (bool)Add_Tickets[j]);
-
+                                    if (Mark_Delete[j] == false)
+                                    {
+                                        SqlCmd.Parameters.AddWithValue("@site_id", (long)Site_ID[j]);
+                                        SqlCmd.Parameters.AddWithValue("@user_id", (int)User_ID[j]);
+                                        SqlCmd.Parameters.AddWithValue("@view_all_resources", (bool)View_Resources[j]);
+                                        SqlCmd.Parameters.AddWithValue("@add_resources", (bool)Add_Resources[j]);
+                                        SqlCmd.Parameters.AddWithValue("@modify_resources", (bool)Modify_Resources[j]);
+                                        SqlCmd.Parameters.AddWithValue("@delete_resources", (bool)Del_Resources[j]);
+                                        SqlCmd.Parameters.AddWithValue("@view_all_tickets", (bool)View_Tickets[j]);
+                                        SqlCmd.Parameters.AddWithValue("@add_tickets", (bool)Add_Tickets[j]);
+                                    }
                                     try
                                     {
                                         if (sqlCon.State != ConnectionState.Open)
@@ -466,6 +492,7 @@ namespace Site_Manager
         private bool _View_Tickets;
         private bool _Add_Tickets;
         private bool _Changed;
+        private bool _Mark_Delete;
 
         public long Site_User_ID
         {
@@ -579,6 +606,16 @@ namespace Site_Manager
             }
         }
 
+        public bool Mark_Delete
+        {
+            get { return _Mark_Delete; }
+            set
+            {
+                _Mark_Delete = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string Changed_Ind
         {
             get 
@@ -603,6 +640,7 @@ namespace Site_Manager
             this.Del_Resources = db_users.Del_Resources[index];
             this.View_Tickets = db_users.View_Tickets[index];
             this.Add_Tickets = db_users.Add_Tickets[index];
+            this.Mark_Delete = db_users.Mark_Delete[index];
             this.Changed = false;
         }
 
@@ -615,6 +653,7 @@ namespace Site_Manager
             this.Del_Resources = update_data.Del_Resources;
             this.View_Tickets = update_data.View_Tickets;
             this.Add_Tickets = update_data.Add_Tickets;
+            this.Mark_Delete = update_data.Mark_Delete;
         }
 
         public Users Get_User_Settings(long site_id, int user_id)

@@ -20,23 +20,32 @@ namespace Site_Manager
     /// Interaction logic for UC_Task_Detail.xaml
     /// </summary>
     
-    public partial class UC_Task_Detail : UserControl
+    public partial class UC_Ticket_Tasks : UserControl
     {
         public ObservableCollection<Tickets_Tasks> active_tasks { get; set; }
+        public long CTicket_ID = 0;
+        public int CUser_ID = 0;
 
-        public UC_Task_Detail(long Ticket_ID, int User_ID, bool All_Tasks)
+        public UC_Ticket_Tasks(long Ticket_ID, int User_ID)
         {
             this.DataContext = this;
 
             active_tasks = new ObservableCollection<Tickets_Tasks>();
+            CTicket_ID = Ticket_ID;
+            CUser_ID = User_ID;
 
             InitializeComponent();
 
-            Load_Task_Details(Ticket_ID, User_ID, All_Tasks);
+            btn_Task_Detail.Visibility = Visibility.Hidden;
+
+            Load_Task_Details(CTicket_ID, CUser_ID, (bool)ticket_tasks_viewall.IsChecked);
+
+            txt_Ticket_ID.Text = CTicket_ID.ToString();
         }
 
         public void Load_Task_Details(long Ticket_ID, int User_ID, bool All_Tasks)
         {
+            int task_count = 0;
             DB_Users users = new DB_Users();
             users.Get_List(0);
 
@@ -131,8 +140,60 @@ namespace Site_Manager
                     if (!DBNull.Value.Equals(reader[25]))
                         ticket_task.Late_Alarm = ((bool)reader[25]);
                     active_tasks.Add(ticket_task);
+                    task_count++;
                 }
             }
+            if (task_count == 0)
+                Task_Grid.Visibility = Visibility.Hidden;
+            else
+                Task_Grid.Visibility = Visibility.Visible;
+        }
+
+        //
+        //  Function:   private void btn_Add_Task_Clicked(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = object that called function
+        //              RoutedEventArgs e = arguments for the event
+        //
+        //  Purpose:    Add a task to the currently selected ticket
+        //
+        private void btn_Add_Task_Clicked(object sender, RoutedEventArgs e)
+        {
+            //Add_Ticket();
+        }
+
+        //
+        //  Function:   private void btn_Task_Details_Clicked(object sender, RoutedEventArgs e)
+        //
+        //  Arguments:  object sender = object that called function
+        //              RoutedEventArgs e = arguments for the event
+        //
+        //  Purpose:    View currently selected task's details
+        //
+        private void btn_Task_Details_Clicked(object sender, RoutedEventArgs e)
+        {
+            //Add_Ticket();
+        }
+
+        private void Task_Grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Task_Grid.SelectedIndex > -1)
+            {
+                Tickets_Tasks sel_row;
+                // Get the ticket_id from the list
+                sel_row = (Tickets_Tasks)Task_Grid.SelectedItem;
+                long task_id = sel_row.Task_ID;
+                //Task_Detail.Content = new UC_Task_Detail(ticket_id, cuser.User_ID, false);
+                //Task_Detail.Visibility = Visibility.Visible;
+                btn_Task_Detail.Visibility = Visibility.Visible;
+            }
+            else
+                btn_Task_Detail.Visibility = Visibility.Hidden;
+        }
+
+        private void ticket_tasks_viewall_Click(object sender, RoutedEventArgs e)
+        {
+            Load_Task_Details(CTicket_ID, CUser_ID, (bool)ticket_tasks_viewall.IsChecked);
         }
     }
 }

@@ -5,6 +5,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using static Site_Manager.Resources;
 using System.Data.SqlClient;
+using System.Data;
+using System.Windows;
 
 namespace Site_Manager
 {
@@ -22,6 +24,7 @@ namespace Site_Manager
         private int _Total_Tasks = 0;
         private int _Completed_Tasks = 0;
         private int _Active_Tasks = 0;
+        private bool _Just_Created = false;
 
         private DateTime _Completed_TS;
 
@@ -173,6 +176,16 @@ namespace Site_Manager
                 _Active_Tasks = value;
             }
         }
+
+        public bool Just_Created
+        {
+            get { return _Just_Created; }
+            set
+            {
+                _Just_Created = value;
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         //
@@ -197,6 +210,7 @@ namespace Site_Manager
             Total_Tasks = 0;
             Completed_Tasks = 0;
             Active_Tasks = 0;
+            Just_Created = true;
         }
 
         public bool Load_Site_Ticket(long site_id, long user_id, bool all_tickets)
@@ -247,6 +261,131 @@ namespace Site_Manager
                 else
                     return false;
             }
+        }
+
+        public string Get_Site_Name(long Site_No)
+        {
+            Site = "Not Found";
+            string connString = SQLConnString;
+
+            // Query the Site Users Database for the sites for this user
+            StringBuilder query = new StringBuilder("SELECT Short_Name FROM ");
+            query.Append(tblSiteInfo);
+            query.Append(" WHERE Site_ID = '");
+            query.Append(Site_No.ToString());
+            query.Append("'");
+
+            // Read all the sites associated with this user
+            using (SqlConnection sqlCon = new SqlConnection(connString))
+            {
+                sqlCon.Open();
+                SqlCommand SqlCmd = new SqlCommand(query.ToString(), sqlCon);
+                using SqlDataReader reader = SqlCmd.ExecuteReader();
+                if (reader.HasRows == true)
+                {
+                    using (reader)
+                    {
+                        reader.Read();
+                        Site = ((string)reader[0]);
+                    }
+                    return Site;
+                }
+                else
+                    return Site;
+            }
+        }
+
+        public bool Save_Ticket(bool New_Ticket)
+        {
+            string connString = SQLConnString;
+            string SaveCmd = "";
+            int SqlResult = 0;
+            bool return_code = false;
+
+            // Query the Site Users Database for the sites for this user
+            StringBuilder query = new StringBuilder("");
+            using (SqlConnection sqlCon = new SqlConnection(connString))
+            {
+                if (New_Ticket)  // New site user
+                {
+                    query.Append("INSERT ");
+                    query.Append(tblTickets);
+                    query.Append(" ");
+                    query.Append(tblTicketsFields);
+                    query.Append(" ");
+                    query.Append(tblTicketsInsert);
+                    SaveCmd = query.ToString();
+                    using (SqlCommand SqlCmd = new SqlCommand(SaveCmd))
+                    {
+                        SqlCmd.Connection = sqlCon;
+                        SqlCmd.Parameters.AddWithValue("@site_id", (long)Site_ID);
+                        SqlCmd.Parameters.AddWithValue("@creator_id", (int)Creator_User_ID);
+                        SqlCmd.Parameters.AddWithValue("@created_on", (DateTime)Created_On);
+                        SqlCmd.Parameters.AddWithValue("@due_on", (DateTime)Due_On);
+                        SqlCmd.Parameters.AddWithValue("@brief_desc", (string)Brief_Desc);
+                        SqlCmd.Parameters.AddWithValue("@desc", (string)Desc);
+                        SqlCmd.Parameters.AddWithValue("@status", (int)Ticket_Status);
+                        SqlCmd.Parameters.AddWithValue("@completed_ts", (DateTime)Completed_TS);
+                        SqlCmd.Parameters.AddWithValue("@notes", (string)Notes);
+                        SqlCmd.Parameters.AddWithValue("@total_tasks", (int)Total_Tasks);
+                        SqlCmd.Parameters.AddWithValue("@completed_tasks", (int)Completed_Tasks);
+                        SqlCmd.Parameters.AddWithValue("@active_tasks", (int)Active_Tasks);
+
+                        try
+                        {
+                            if (sqlCon.State != ConnectionState.Open)
+                                sqlCon.Open();
+                            SqlResult = SqlCmd.ExecuteNonQuery();
+                        }
+                        catch (SqlException e)
+                        {
+                            MessageBox.Show(e.Message, "Failed To Save Ticket", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return_code = false;
+                        }
+                    }
+                }
+                else // Update existing ticket
+                {
+                    query.Append("UPDATE ");
+                    query.Append(tblTickets);
+                    query.Append(" ");
+                    query.Append(tblTicketsUpdate);
+                    query.Append(Ticket_ID.ToString());
+                    SaveCmd = query.ToString();
+                    using (SqlCommand SqlCmd = new SqlCommand(SaveCmd))
+                    {
+                        SqlCmd.Connection = sqlCon;
+                        SqlCmd.Parameters.AddWithValue("@site_id", (long)Site_ID);
+                        SqlCmd.Parameters.AddWithValue("@creator_id", (int)Creator_User_ID);
+                        SqlCmd.Parameters.AddWithValue("@created_on", (DateTime)Created_On);
+                        SqlCmd.Parameters.AddWithValue("@due_on", (DateTime)Due_On);
+                        SqlCmd.Parameters.AddWithValue("@brief_desc", (string)Brief_Desc);
+                        SqlCmd.Parameters.AddWithValue("@desc", (string)Desc);
+                        SqlCmd.Parameters.AddWithValue("@status", (int)Ticket_Status);
+                        SqlCmd.Parameters.AddWithValue("@completed_ts", (DateTime)Completed_TS);
+                        SqlCmd.Parameters.AddWithValue("@notes", (string)Notes);
+                        SqlCmd.Parameters.AddWithValue("@total_tasks", (int)Total_Tasks);
+                        SqlCmd.Parameters.AddWithValue("@completed_tasks", (int)Completed_Tasks);
+                        SqlCmd.Parameters.AddWithValue("@active_tasks", (int)Active_Tasks);
+
+                        try
+                        {
+                            if (sqlCon.State != ConnectionState.Open)
+                                sqlCon.Open();
+                            SqlResult = SqlCmd.ExecuteNonQuery();
+                            if (SqlResult == 0)
+                                return_code = false;
+                        }
+                        catch (SqlException e)
+                        {
+                            MessageBox.Show(e.Message, "Failed To Save Ticket", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return_code = false;
+                        }
+
+                    }
+                }
+            }
+            return return_code;
         }
     }
 }

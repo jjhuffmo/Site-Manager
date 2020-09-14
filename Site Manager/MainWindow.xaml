@@ -49,8 +49,7 @@
               VerticalAlignment="Top"
               Background="LightGray"
               Height="1" IsEnabled="False" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
-            <TabControl x:Name="Sites_Tabs" Grid.Column="1" Width="Auto" SizeChanged="Sites_Tabs_SizeChanged" ScrollViewer.HorizontalScrollBarVisibility="Visible" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" BorderBrush="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}">
-            </TabControl>
+            <TabControl x:Name="Sites_Tabs" Grid.Column="1" Width="Auto" SizeChanged="Sites_Tabs_SizeChanged" ScrollViewer.HorizontalScrollBarVisibility="Visible" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" BorderBrush="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}" OpacityMask="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
         </Grid>
         <Menu FontWeight="Normal" x:Name="MainMenu" VerticalAlignment="Top" Height="18">
             <MenuItem x:Name="mmenu_user" Header="User" FontWeight="Bold" Uid="0">

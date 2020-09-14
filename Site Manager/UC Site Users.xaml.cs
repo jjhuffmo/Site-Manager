@@ -108,6 +108,7 @@ namespace Site_Manager
                 user.Convert_DB_Users(users, i);
                 View_Users.Add(user);
                 View_Users[i].Changed = false;
+                View_Users[i].Mark_Delete = false;
             }
             Changes_Made = false;
         }
@@ -162,7 +163,7 @@ namespace Site_Manager
 
                 for (int i = 0; i < View_Users.Count; i++)
                 {
-                    if (View_Users[i].Changed == true)
+                    if (View_Users[i].Changed == true || View_Users[i].Mark_Delete == true)
                     {
                         changed_users.Site_User_ID.Add(View_Users[i].Site_User_ID);
                         changed_users.Site_ID.Add(csite.site_info.Site_ID);
@@ -173,6 +174,7 @@ namespace Site_Manager
                         changed_users.Del_Resources.Add(View_Users[i].Del_Resources);
                         changed_users.View_Tickets.Add(View_Users[i].View_Tickets);
                         changed_users.Add_Tickets.Add(View_Users[i].Add_Tickets);
+                        changed_users.Mark_Delete.Add(View_Users[i].Mark_Delete);
                     }
                 }
                 if (changed_users.Save_List(1, csite.site_info.Site_ID) == true)
@@ -300,7 +302,7 @@ namespace Site_Manager
                     for (int j = 0; j < View_Users.Count; j++)
                     {
                         if (View_Users[j].User_ID == selected_user.User_ID)
-                            View_Users.RemoveAt(j);
+                            View_Users[j].Mark_Delete = true;
                     }
                 }
                 Changes_Made = true;

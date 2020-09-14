@@ -6,8 +6,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Site_Manager"
              mc:Ignorable="d" 
-             d:DesignHeight="335.25" d:DesignWidth="326.656" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Disabled">
-    <Grid x:Name="Site_Grid" Width="330" Height="335" HorizontalAlignment="Left" VerticalAlignment="Top">
+             d:DesignHeight="335.25" d:DesignWidth="326.656" ScrollViewer.HorizontalScrollBarVisibility="Auto" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}">
+    <Grid x:Name="Site_Grid" Width="Auto" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Top">
         <TextBox x:Name="Short_Name" HorizontalAlignment="Left" Height="20" Margin="15,31,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="142" Text="" TextChanged="Short_Name_Changed" TabIndex="1" />
         <TextBlock HorizontalAlignment="Left" Margin="15,10,0,0" Text="Site Name (15 char max)" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" FontWeight="Bold"/>
         <TextBox x:Name="Full_Name" HorizontalAlignment="Center" Height="20" Margin="0,87,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" TextChanged="Field_Changed" TabIndex="3"/>

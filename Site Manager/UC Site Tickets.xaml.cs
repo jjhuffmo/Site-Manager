@@ -44,7 +44,7 @@ namespace Site_Manager
 
             Update_User_Options();
             //site_tickets_viewall += site_tickets_viewall.AddHandler(IsCh)
-
+            btn_Ticket_Detail.Visibility = Visibility.Hidden;
             Load_Site_Tickets(Site_ID.Site_ID, current_user.User_ID, Site_ID.Short_Name, current_user.User_Name, (bool)site_tickets_viewall.IsChecked);
 
         }
@@ -63,18 +63,17 @@ namespace Site_Manager
         }
 
         //
-        //  Function:   private void btn_Add_Task_Clicked(object sender, RoutedEventArgs e)
+        //  Function:   private void btn_Ticket_Details_Clicked(object sender, RoutedEventArgs e)
         //
         //  Arguments:  object sender = object that called function
         //              RoutedEventArgs e = arguments for the event
         //
-        //  Purpose:    Add a task to a site ticket
+        //  Purpose:    Show the currently selected ticket's details
         //
-        private void btn_Add_Task_Clicked(object sender, RoutedEventArgs e)
+        private void btn_Ticket_Details_Clicked(object sender, RoutedEventArgs e)
         {
-            Add_Ticket();
+            //Add_Ticket();
         }
-
 
         //
         //  Function:   private void Add_Ticket()
@@ -85,10 +84,12 @@ namespace Site_Manager
         {
             Site_Tickets new_ticket = new Site_Tickets();
 
+            new_ticket.Generate_New(site_id.Site_ID, "", cuser.User_ID, cuser.User_Name);
+            new_ticket.Get_Site_Name(site_id.Site_ID);
             site_tickets.Add(new_ticket);
 
-            Task_Detail.Content = new UC_Ticket_Tasks();
-            Task_Detail.Visibility = Visibility.Visible;
+            //Task_Detail.Content = new UC_Ticket_Tasks(new_ticket.Ticket_ID, cuser.User_ID);
+            //Task_Detail.Visibility = Visibility.Visible;
         }
 
         //
@@ -137,12 +138,8 @@ namespace Site_Manager
                 {
                     Site_Tickets site_ticket = new Site_Tickets();
 
-                    //using (reader)
-                    //{
-                    //reader.Read();
-                    //site_ticket.Generate_New(site_id, site_name, user_id, user_name);
-                    current_tick = site_tickets.Count - 1;
                     site_ticket.Site_ID = ((long)reader[0]);
+                    site_ticket.Get_Site_Name(site_ticket.Site_ID);
                     site_ticket.Ticket_ID = ((long)reader[1]);
                     site_ticket.Creator_User_ID = ((long)reader[2]);
                     for (int i = 0; i < users.User_ID.Count; i++)
@@ -171,9 +168,13 @@ namespace Site_Manager
                     if (!DBNull.Value.Equals(reader[11]))
                         site_ticket.Active_Tasks = ((int)reader[11]);
                     site_tickets.Add(site_ticket);
-                    //}
+                    current_tick++;
                 }
             }
+            if (current_tick == 0)
+                Site_Ticket_List.Visibility = Visibility.Hidden;
+            else
+                Site_Ticket_List.Visibility = Visibility.Visible;
         }
 
         public void Update_User_Options()
@@ -212,11 +213,20 @@ namespace Site_Manager
             {
                 Site_Tickets sel_row;
                 // Get the ticket_id from the list
-                sel_row = (Site_Tickets)Site_Ticket_List.SelectedItem;
-                long ticket_id = sel_row.Ticket_ID;
-                Task_Detail.Content = new UC_Task_Detail(ticket_id, cuser.User_ID, false);
-                Task_Detail.Visibility = Visibility.Visible;
+                if (Site_Ticket_List.SelectedItem is null)
+                    btn_Ticket_Detail.Visibility = Visibility.Hidden;
+                else
+                {
+                    sel_row = (Site_Tickets)Site_Ticket_List.SelectedItem;
+                    long ticket_id = sel_row.Ticket_ID;
+                    Ticket_Detail.Content = new UC_Ticket_Details(sel_row);
+                    Task_List.Content = new UC_Ticket_Tasks(ticket_id, cuser.User_ID);
+                    Task_List.Visibility = Visibility.Visible;
+                    btn_Ticket_Detail.Visibility = Visibility.Visible;
+                }
             }
+            else
+                btn_Ticket_Detail.Visibility = Visibility.Hidden;
         }
     }
 }

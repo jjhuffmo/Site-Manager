@@ -322,6 +322,7 @@ namespace Site_Manager
 
                 Site_Name.HorizontalContentAlignment = HorizontalAlignment.Left;
                 Site_Name.VerticalContentAlignment = VerticalAlignment.Top;
+                Site_Name.Background = Brushes.LightGray;
                 New_Site_Page.Content = newsite;
                 New_Site_Page.Title = "Create New Site";
                 Site_Name.DataContext = New_Site_Page;
