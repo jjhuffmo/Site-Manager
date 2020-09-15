@@ -18,13 +18,16 @@ namespace Site_Manager
         private DateTime _Created_On;
         private DateTime _Due_On;
         private string _Brief_Desc = "";
-        private string _Desc = "";
+        private string _Long_Desc = "";
         private string _Notes = "";
         private int _Ticket_Status = 0;
         private int _Total_Tasks = 0;
         private int _Completed_Tasks = 0;
         private int _Active_Tasks = 0;
         private bool _Just_Created = false;
+        private bool _Saved = false;
+        private bool _Canceled = false;
+        private bool _Changed = false;
 
         private DateTime _Completed_TS;
 
@@ -39,6 +42,8 @@ namespace Site_Manager
         protected void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = "")
         {
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+            if ((propertyName != "Saved") && (propertyName != "Canceled") && (Changed == false) && (propertyName != "Changed"))
+                Changed = true;
         }
 
         public long Site_ID
@@ -47,6 +52,7 @@ namespace Site_Manager
             set
             {
                 _Site_ID = value;
+                OnPropertyChanged();
             }
         }
 
@@ -56,6 +62,7 @@ namespace Site_Manager
             set
             {
                 _Ticket_ID = value;
+                OnPropertyChanged();
             }
         }
 
@@ -65,6 +72,7 @@ namespace Site_Manager
             set
             {
                 _Creator_User_ID = value;
+                OnPropertyChanged();
             }
         }
 
@@ -74,6 +82,7 @@ namespace Site_Manager
             set
             {
                 _Created_On = value;
+                OnPropertyChanged();
             }
         }
 
@@ -83,6 +92,7 @@ namespace Site_Manager
             set
             {
                 _Due_On = value;
+                OnPropertyChanged();
             }
         }
 
@@ -93,6 +103,7 @@ namespace Site_Manager
             set
             {
                 _Completed_TS = value;
+                OnPropertyChanged();
             }
         }
 
@@ -102,15 +113,17 @@ namespace Site_Manager
             set
             {
                 _Brief_Desc = value;
+                OnPropertyChanged();
             }
         }
 
-        public string Desc
+        public string Long_Desc
         {
-            get { return _Desc; }
+            get { return _Long_Desc; }
             set
             {
-                _Desc = value;
+                _Long_Desc = value;
+                OnPropertyChanged();
             }
         }
 
@@ -120,6 +133,7 @@ namespace Site_Manager
             set
             {
                 _Notes = value;
+                OnPropertyChanged();
             }
         }
 
@@ -129,6 +143,7 @@ namespace Site_Manager
             set
             {
                 _Site = value;
+                OnPropertyChanged();
             }
         }
 
@@ -138,6 +153,7 @@ namespace Site_Manager
             set
             {
                 _Creator = value;
+                OnPropertyChanged();
             }
         }
 
@@ -147,6 +163,7 @@ namespace Site_Manager
             set
             {
                 _Ticket_Status = value;
+                OnPropertyChanged();
             }
         }
 
@@ -156,6 +173,7 @@ namespace Site_Manager
             set
             {
                 _Total_Tasks = value;
+                OnPropertyChanged();
             }
         }
 
@@ -165,6 +183,7 @@ namespace Site_Manager
             set
             {
                 _Completed_Tasks = value;
+                OnPropertyChanged();
             }
         }
 
@@ -174,6 +193,7 @@ namespace Site_Manager
             set
             {
                 _Active_Tasks = value;
+                OnPropertyChanged();
             }
         }
 
@@ -183,6 +203,36 @@ namespace Site_Manager
             set
             {
                 _Just_Created = value;
+            }
+        }
+        public bool Changed
+        {
+            get { return _Changed; }
+            set
+            {
+                _Changed = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        public bool Saved
+        {
+            get { return _Saved; }
+            set
+            {
+                _Saved = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool Canceled
+        {
+            get { return _Canceled; }
+            set
+            {
+                _Canceled = value;
+                OnPropertyChanged();
             }
         }
 
@@ -201,9 +251,9 @@ namespace Site_Manager
             Created_On = DateTime.Now;
             Due_On = DateTime.Now;
             Brief_Desc = "New Ticket";
-            Desc = "Basic New Ticket For Testing";
+            Long_Desc = "Basic New Ticket For Testing";
             Ticket_Status = 0;
-            Completed_TS = DateTime.Now;
+            Completed_TS = DateTime.Parse("Jan 1, 1980");
             Notes = "";
             Site = site_name;
             Creator = user;
@@ -211,6 +261,7 @@ namespace Site_Manager
             Completed_Tasks = 0;
             Active_Tasks = 0;
             Just_Created = true;
+            Changed = false;
         }
 
         public bool Load_Site_Ticket(long site_id, long user_id, bool all_tickets)
@@ -249,12 +300,13 @@ namespace Site_Manager
                         Created_On = ((DateTime)reader[3]);
                         Due_On = ((DateTime)reader[4]);
                         Brief_Desc = ((string)reader[5]);
-                        Desc = ((string)reader[6]);
+                        Long_Desc = ((string)reader[6]);
                         Ticket_Status = ((int)reader[7]);
                         Notes = ((string)reader[8]);
                         Total_Tasks = ((int)reader[9]);
                         Completed_Tasks = ((int)reader[10]);
                         Active_Tasks = ((int)reader[11]);
+                        Changed = false;
                     }
                     return true;
                 }
@@ -308,7 +360,7 @@ namespace Site_Manager
             {
                 if (New_Ticket)  // New site user
                 {
-                    query.Append("INSERT ");
+                    query.Append("INSERT INTO ");
                     query.Append(tblTickets);
                     query.Append(" ");
                     query.Append(tblTicketsFields);
@@ -323,7 +375,7 @@ namespace Site_Manager
                         SqlCmd.Parameters.AddWithValue("@created_on", (DateTime)Created_On);
                         SqlCmd.Parameters.AddWithValue("@due_on", (DateTime)Due_On);
                         SqlCmd.Parameters.AddWithValue("@brief_desc", (string)Brief_Desc);
-                        SqlCmd.Parameters.AddWithValue("@desc", (string)Desc);
+                        SqlCmd.Parameters.AddWithValue("@long_desc", (string)Long_Desc);
                         SqlCmd.Parameters.AddWithValue("@status", (int)Ticket_Status);
                         SqlCmd.Parameters.AddWithValue("@completed_ts", (DateTime)Completed_TS);
                         SqlCmd.Parameters.AddWithValue("@notes", (string)Notes);
@@ -336,6 +388,8 @@ namespace Site_Manager
                             if (sqlCon.State != ConnectionState.Open)
                                 sqlCon.Open();
                             SqlResult = SqlCmd.ExecuteNonQuery();
+                            Changed = false;
+                            return_code = true;
                         }
                         catch (SqlException e)
                         {
@@ -360,7 +414,7 @@ namespace Site_Manager
                         SqlCmd.Parameters.AddWithValue("@created_on", (DateTime)Created_On);
                         SqlCmd.Parameters.AddWithValue("@due_on", (DateTime)Due_On);
                         SqlCmd.Parameters.AddWithValue("@brief_desc", (string)Brief_Desc);
-                        SqlCmd.Parameters.AddWithValue("@desc", (string)Desc);
+                        SqlCmd.Parameters.AddWithValue("@long_desc", (string)Long_Desc);
                         SqlCmd.Parameters.AddWithValue("@status", (int)Ticket_Status);
                         SqlCmd.Parameters.AddWithValue("@completed_ts", (DateTime)Completed_TS);
                         SqlCmd.Parameters.AddWithValue("@notes", (string)Notes);
@@ -375,6 +429,11 @@ namespace Site_Manager
                             SqlResult = SqlCmd.ExecuteNonQuery();
                             if (SqlResult == 0)
                                 return_code = false;
+                            else
+                            {
+                                return_code = true;
+                                Changed = false;
+                            }
                         }
                         catch (SqlException e)
                         {

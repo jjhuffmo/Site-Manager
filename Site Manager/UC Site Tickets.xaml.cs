@@ -42,11 +42,18 @@ namespace Site_Manager
 
             InitializeComponent();
 
+            Ticket_Detail.Visibility = Visibility.Hidden;
+            this.Site_Ticket_List.SourceUpdated += Site_Ticket_List_SourceUpdated;
             Update_User_Options();
             //site_tickets_viewall += site_tickets_viewall.AddHandler(IsCh)
             btn_Ticket_Detail.Visibility = Visibility.Hidden;
-            Load_Site_Tickets(Site_ID.Site_ID, current_user.User_ID, Site_ID.Short_Name, current_user.User_Name, (bool)site_tickets_viewall.IsChecked);
+            Load_Site_Tickets();
 
+        }
+
+        private void Site_Ticket_List_SourceUpdated(object sender, DataTransferEventArgs e)
+        {
+            Load_Site_Tickets();
         }
 
         //
@@ -87,9 +94,8 @@ namespace Site_Manager
             new_ticket.Generate_New(site_id.Site_ID, "", cuser.User_ID, cuser.User_Name);
             new_ticket.Get_Site_Name(site_id.Site_ID);
             site_tickets.Add(new_ticket);
-
-            //Task_Detail.Content = new UC_Ticket_Tasks(new_ticket.Ticket_ID, cuser.User_ID);
-            //Task_Detail.Visibility = Visibility.Visible;
+            if (Site_Ticket_List.Visibility == Visibility.Hidden)
+                Site_Ticket_List.Visibility = Visibility.Visible;
         }
 
         //
@@ -102,7 +108,7 @@ namespace Site_Manager
             site_tickets.RemoveAt(0);
         }
 
-        public void Load_Site_Tickets(long site_id, long user_id, string site_name, string user_name, bool all_tickets)
+        public void Load_Site_Tickets()
         {
             int current_tick = 0;
             DB_Users users = new DB_Users();
@@ -118,13 +124,13 @@ namespace Site_Manager
             StringBuilder query = new StringBuilder("SELECT * FROM ");
             query.Append(tblTickets);
             query.Append(" WHERE Site_ID = '");
-            query.Append(site_id);
+            query.Append(site_id.Site_ID);
             query.Append("'");
             // If select all is not enabled, only show this users tickets
-            if (all_tickets == false)
+            if ((bool)site_tickets_viewall.IsChecked == false)
             {
                 query.Append(" AND Creator_ID = '");
-                query.Append(user_id);
+                query.Append(cuser.User_ID);
                 query.Append("'");
             }
 
@@ -156,17 +162,20 @@ namespace Site_Manager
                     if (!DBNull.Value.Equals(reader[5]))
                         site_ticket.Brief_Desc = ((string)reader[5]);
                     if (!DBNull.Value.Equals(reader[6]))
-                        site_ticket.Desc = ((string)reader[6]);
+                        site_ticket.Long_Desc = ((string)reader[6]);
                     if (!DBNull.Value.Equals(reader[7]))
                         site_ticket.Ticket_Status = ((int)reader[7]);
                     if (!DBNull.Value.Equals(reader[8]))
-                        site_ticket.Notes = ((string)reader[8]);
+                        site_ticket.Completed_TS = ((DateTime)reader[8]);
                     if (!DBNull.Value.Equals(reader[9]))
-                        site_ticket.Total_Tasks = ((int)reader[9]);
+                        site_ticket.Notes = ((string)reader[9]);
                     if (!DBNull.Value.Equals(reader[10]))
-                        site_ticket.Completed_Tasks = ((int)reader[10]);
+                        site_ticket.Total_Tasks = ((int)reader[10]);
                     if (!DBNull.Value.Equals(reader[11]))
-                        site_ticket.Active_Tasks = ((int)reader[11]);
+                        site_ticket.Completed_Tasks = ((int)reader[11]);
+                    if (!DBNull.Value.Equals(reader[12]))
+                        site_ticket.Active_Tasks = ((int)reader[12]);
+                    site_ticket.Changed = false;
                     site_tickets.Add(site_ticket);
                     current_tick++;
                 }
@@ -199,12 +208,17 @@ namespace Site_Manager
 
         private void site_tickets_viewall_Click(object sender, RoutedEventArgs e)
         {
-            Load_Site_Tickets(site_id.Site_ID, user.User_ID, site_id.Short_Name, user.User_Name, (bool)site_tickets_viewall.IsChecked);
+            Load_Site_Tickets();
         }
 
         public void Open_Site_Changed(object sender, PropertyChangedEventArgs e)
         {
             Update_User_Options();
+        }
+
+        public void Open_Ticket_Changed(object sender, PropertyChangedEventArgs e)
+        {
+            Load_Site_Tickets();
         }
 
         private void Site_Ticket_List_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
@@ -217,9 +231,11 @@ namespace Site_Manager
                     btn_Ticket_Detail.Visibility = Visibility.Hidden;
                 else
                 {
+                    Ticket_Detail.Visibility = Visibility.Visible;
                     sel_row = (Site_Tickets)Site_Ticket_List.SelectedItem;
                     long ticket_id = sel_row.Ticket_ID;
                     Ticket_Detail.Content = new UC_Ticket_Details(sel_row);
+                    sel_row.PropertyChanged += Sel_row_PropertyChanged;
                     Task_List.Content = new UC_Ticket_Tasks(ticket_id, cuser.User_ID);
                     Task_List.Visibility = Visibility.Visible;
                     btn_Ticket_Detail.Visibility = Visibility.Visible;
@@ -227,6 +243,28 @@ namespace Site_Manager
             }
             else
                 btn_Ticket_Detail.Visibility = Visibility.Hidden;
+        }
+
+        private void Sel_row_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            Site_Tickets changed_ticket = (Site_Tickets)sender;
+            if (e.PropertyName == "Saved" && changed_ticket.Saved == true)
+            {
+                Load_Site_Tickets();
+                changed_ticket.Saved = false;
+            }
+            if (e.PropertyName == "Canceled" && changed_ticket.Canceled == true)
+            {
+                Load_Site_Tickets();
+                Ticket_Detail.Visibility = Visibility.Hidden;
+                changed_ticket.Canceled = false;
+                changed_ticket.Changed = false;
+            }
+            Site_Ticket_List.IsEnabled = true;
+            for (int i = 0; i < site_tickets.Count; i++)
+                if (site_tickets[i].Changed)
+                    Site_Ticket_List.IsEnabled = false;
+            Site_Ticket_List.UpdateLayout();
         }
     }
 }

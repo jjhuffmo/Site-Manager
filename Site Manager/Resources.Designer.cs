@@ -208,7 +208,7 @@ namespace Site_Manager {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to VALUES (@site_id, @ticket_id, @ticket_task_id, @creator_id, @created_on, @task_status, @task_id, @priority, @task_overview, @task_details, @assigned_user_id, @progress, @due_on, @started_ts, @completed_ts, @notes, @alarm1, @alarm1_enabled, @alarm1_ack_ts, @alarm2, @alarm2_enabled, @alarm2_ack_ts, @alarm3, @alarm3_enabled, @alarm3_ack_ts, @late_alarm.
+        ///   Looks up a localized string similar to VALUES (@site_id, @ticket_id, @ticket_task_id, @creator_id, @created_on, @task_status, @task_id, @priority, @task_overview, @task_details, @assigned_user_id, @progress, @due_on, @started_ts, @completed_ts, @notes, @alarm1, @alarm1_enabled, @alarm1_ack_ts, @alarm2, @alarm2_enabled, @alarm2_ack_ts, @alarm3, @alarm3_enabled, @alarm3_ack_ts, @late_alarm).
         /// </summary>
         public static string tblTasksInsert {
             get {
@@ -235,7 +235,7 @@ namespace Site_Manager {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to (Site_ID, Ticket_ID, Creator_ID, Created_On, Due_On, Brief_Desc, Desc, Status, Completed_TS, Notes, Total_Tasks, Completed_Tasks, Active_Tasks).
+        ///   Looks up a localized string similar to (Site_ID, Creator_ID, Created_On, Due_On, Brief_Desc, Long_Desc, Status, Completed_TS, Notes, Total_Tasks, Completed_Tasks, Active_Tasks).
         /// </summary>
         public static string tblTicketsFields {
             get {
@@ -244,7 +244,7 @@ namespace Site_Manager {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to VALUES (@site_id, @ticket_id, @creator_id, @created_on, @due_on, @brief_desc, @desc, @status, @completed_on, @notes, @total_tasks, @completed_tasks, @active_tasks.
+        ///   Looks up a localized string similar to VALUES (@site_id, @creator_id, @created_on, @due_on, @brief_desc, @long_desc, @status, @completed_ts, @notes, @total_tasks, @completed_tasks, @active_tasks).
         /// </summary>
         public static string tblTicketsInsert {
             get {
@@ -253,7 +253,7 @@ namespace Site_Manager {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SET Site_ID = @site_id,  Creator_ID = @creator_id, Created_On = @created_on, Due_On = @due_on, Brief_Desc = @brief_desc, Desc = @desc, Status = @status, Completed_TS = @completed_on, Notes = @notes, Total_Tasks = @total_tasks, Completed_Tasks = @completed_tasks, Active_Tasks = @active_tasks WHERE Ticket_ID = .
+        ///   Looks up a localized string similar to SET Site_ID = @site_id,  Creator_ID = @creator_id, Created_On = @created_on, Due_On = @due_on, Brief_Desc = @brief_desc, Long_Desc = @long_desc, Status = @status, Completed_TS = @completed_ts, Notes = @notes, Total_Tasks = @total_tasks, Completed_Tasks = @completed_tasks, Active_Tasks = @active_tasks WHERE Ticket_ID = .
         /// </summary>
         public static string tblTicketsUpdate {
             get {

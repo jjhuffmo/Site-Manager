@@ -17,9 +17,22 @@
             <RowDefinition x:Name="Tasks_Row" Height="23*"></RowDefinition>
         </Grid.RowDefinitions>
         <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Stretch" Visibility="Visible" Grid.RowSpan="2" IsEnabled="True"/>
-        <DataGrid x:Name="Site_Ticket_List" ItemsSource="{Binding Path=site_tickets}" HorizontalAlignment="Left" VerticalScrollBarVisibility="Auto"
-                  VerticalAlignment="Top" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False" SelectionMode="Single" 
+        <DataGrid x:Name="Site_Ticket_List" ItemsSource="{Binding Path=site_tickets, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalScrollBarVisibility="Auto"
+                  VerticalAlignment="Top" CanUserAddRows="False" AutoGenerateColumns="False" SelectionMode="Single" 
                   SelectionUnit="FullRow" SelectedCellsChanged="Site_Ticket_List_SelectedCellsChanged" Margin="10,58,0,0" Height="AUto" Width="Auto">
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <!--<DataTrigger Binding="{Binding Just_Created}" Value="true">
+                            <Setter Property="Background" Value="LightGreen"></Setter>
+                        </DataTrigger> -->
+                        <DataTrigger Binding="{Binding Changed}" Value="true">
+                            <Setter Property="Background" Value="Yellow"></Setter>
+                            <Setter Property="IsSelected" Value="False"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="ID_Col" Header="Ticket ID" Width="Auto" Binding="{Binding Ticket_ID}"/>
                 <DataGridTextColumn x:Name="Creator_Col" Header="Created By" Width="Auto" Binding="{Binding Creator}"/>

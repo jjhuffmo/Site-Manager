@@ -332,7 +332,7 @@ namespace Site_Manager
                                     catch (SqlException e)
                                     {
                                         if (e.Number == 2627)
-                                            MessageBox.Show("A user with this name already exists.  Please select a unique user name and try again.", "Site Exists", MessageBoxButton.OK, MessageBoxImage.Error);
+                                            MessageBox.Show("A user with this name already exists.  Please select a unique user name and try again.", "User Exists", MessageBoxButton.OK, MessageBoxImage.Error);
                                         else
                                             MessageBox.Show(e.Message, "Failed To Save User", MessageBoxButton.OK, MessageBoxImage.Error);
                                         SqlResult = 0;

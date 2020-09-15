@@ -9,7 +9,7 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </UserControl.Resources>
-    
+
     <Grid>
         <TextBlock HorizontalAlignment="Left" Height="18" Margin="10,33,0,0" Text="Site Name:" TextWrapping="Wrap" VerticalAlignment="Top" Width="64"/>
         <TextBlock x:Name="txt_Ticket_No" HorizontalAlignment="Left" Height="18" Margin="10,10,0,0" Text="Ticket Number:" TextWrapping="Wrap" VerticalAlignment="Top" Width="90"/>
@@ -19,26 +19,56 @@
         <TextBlock HorizontalAlignment="Left" Height="18" Margin="10,56,0,0" Text="Brief Description:" TextWrapping="Wrap" VerticalAlignment="Top" Width="135"/>
         <TextBlock HorizontalAlignment="Left" Height="18" Margin="10,79,0,0" Text="Ticket Details:" TextWrapping="Wrap" VerticalAlignment="Top" Width="135"/>
         <TextBlock HorizontalAlignment="Left" Height="18" Margin="320,79,0,0" Text="Ticket Status:" TextWrapping="Wrap" VerticalAlignment="Top" Width="95" TextAlignment="Right"/>
-        <TextBlock HorizontalAlignment="Left" Height="18" Margin="10,281,0,0" Text="Ticket Completion Date:" TextWrapping="Wrap" VerticalAlignment="Top" Width="135"/>
+        <TextBlock HorizontalAlignment="Left" Height="18" Margin="511,79,0,0" Text="Ticket Completion Date:" TextWrapping="Wrap" VerticalAlignment="Top" Width="134" TextAlignment="Right">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Completed_TS}" Value="1/1/1980">
+                            <Setter Property="Visibility" Value="Hidden"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
         <TextBlock HorizontalAlignment="Left" Height="18" Margin="10,182,0,0" Text="Notes:" TextWrapping="Wrap" VerticalAlignment="Top" Width="135"/>
         <TextBlock HorizontalAlignment="Left" Height="18" Margin="580,10,0,0" Text="Total Tasks:" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" TextAlignment="Right"/>
         <TextBlock HorizontalAlignment="Left" Height="18" Margin="547,33,0,0" Text="Completed Tasks:" TextWrapping="Wrap" VerticalAlignment="Top" Width="100" TextAlignment="Right"/>
         <TextBlock HorizontalAlignment="Left" Height="18" Margin="570,56,0,0" Text="Active Tasks:" TextWrapping="Wrap" VerticalAlignment="Top" Width="77" TextAlignment="Right"/>
-        <Button x:Name="btn_Complete_Ticket" Content="Mark Ticket As&#xD;&#xA;   Completed" HorizontalAlignment="Left" Height="40" Margin="299,261,0,0" VerticalAlignment="Top" Width="194" Click="btn_Complete_Ticket_Click" HorizontalContentAlignment="Center"/>
-        <TextBox x:Name="tb_Ticket_ID" HorizontalAlignment="Left" Height="18" Margin="105,10,0,0" Text="{Binding Ticket_ID}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90"/>
-        <TextBox HorizontalAlignment="Left" Height="18" Margin="105,33,0,0" Text="{Binding Site}" TextWrapping="Wrap" VerticalAlignment="Top" Width="172"/>
+        <Button x:Name="btn_Complete_Ticket" Content="Mark Ticket As&#xD;&#xA;   Completed" HorizontalAlignment="Left" Height="40" Margin="280,261,0,0" VerticalAlignment="Top" Width="194" Click="btn_Complete_Ticket_Click" HorizontalContentAlignment="Center"/>
+        <TextBox x:Name="tb_Ticket_ID" HorizontalAlignment="Left" Height="18" Margin="105,10,0,0" Text="{Binding Ticket_ID}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" IsEnabled="False"/>
+        <TextBox HorizontalAlignment="Left" Height="18" Margin="105,33,0,0" Text="{Binding Site}" TextWrapping="Wrap" VerticalAlignment="Top" Width="172" IsEnabled="False"/>
         <TextBox HorizontalAlignment="Left" Height="18" Margin="105,56,0,0" Text="{Binding Brief_Desc}" TextWrapping="Wrap" VerticalAlignment="Top" Width="172"/>
-        <TextBox HorizontalAlignment="Left" Height="75" Margin="10,102,0,0" Text="{Binding Desc}" TextWrapping="Wrap" VerticalAlignment="Top" Width="735" AcceptsReturn="True" AcceptsTab="True" RenderTransformOrigin="0,0.5"/>
+        <TextBox HorizontalAlignment="Left" Height="75" Margin="10,102,0,0" Text="{Binding Long_Desc}" TextWrapping="Wrap" VerticalAlignment="Top" Width="735" AcceptsReturn="True" AcceptsTab="True" RenderTransformOrigin="0,0.5"/>
         <TextBox HorizontalAlignment="Left" Height="49" Margin="10,205,0,0" Text="{Binding Notes}" TextWrapping="Wrap" VerticalAlignment="Top" Width="735"/>
-        <TextBox HorizontalAlignment="Left" Height="18" Margin="419,10,0,0" Text="{Binding Creator}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90"/>
-        <TextBox HorizontalAlignment="Left" Height="18" Margin="419,33,0,0" Text="{Binding Created_On}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90"/>
+        <TextBox HorizontalAlignment="Left" Height="18" Margin="419,10,0,0" Text="{Binding Creator}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" IsEnabled="False"/>
+        <TextBox HorizontalAlignment="Left" Height="18" Margin="419,33,0,0" Text="{Binding Created_On}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" IsEnabled="False"/>
         <TextBox HorizontalAlignment="Left" Height="18" Margin="419,56,0,0" Text="{Binding Due_On}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90"/>
-        <TextBox HorizontalAlignment="Left" Height="18" Margin="419,79,0,0" Text="{Binding Status}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90"/>
-        <TextBox HorizontalAlignment="Left" Height="18" Margin="652,10,0,0" Text="{Binding Ticket_ID}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90"/>
-        <TextBox HorizontalAlignment="Left" Height="18" Margin="652,33,0,0" Text="{Binding Ticket_ID}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90"/>
-        <TextBox HorizontalAlignment="Left" Height="18" Margin="652,56,0,0" Text="{Binding Ticket_ID}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90"/>
-        <TextBox HorizontalAlignment="Left" Height="18" Margin="162,281,0,0" Text="{Binding Completed_On}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90"/>
+        <TextBox HorizontalAlignment="Left" Height="18" Margin="419,79,0,0" Text="{Binding Ticket_Status}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90"/>
+        <TextBox HorizontalAlignment="Left" Height="18" Margin="652,10,0,0" Text="{Binding Total_Tasks}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" IsEnabled="False"/>
+        <TextBox HorizontalAlignment="Left" Height="18" Margin="652,33,0,0" Text="{Binding Completed_Tasks}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" IsEnabled="False"/>
+        <TextBox HorizontalAlignment="Left" Height="18" Margin="652,56,0,0" Text="{Binding Active_Tasks}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" IsEnabled="False"/>
+        <TextBox HorizontalAlignment="Left" Height="18" Margin="650,79,0,0" Text="{Binding Completed_TS}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" IsEnabled="False">
+            <TextBox.Style>
+                <Style TargetType="TextBox">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Completed_TS}" Value="1/1/1980">
+                            <Setter Property="Visibility" Value="Hidden"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
         <Button x:Name="btn_Save_Ticket" Content="Save Ticket" HorizontalAlignment="Left" Height="40" Margin="548,261,0,0" VerticalAlignment="Top" Width="194" Click="btn_Save_Ticket_Click" HorizontalContentAlignment="Center"/>
-
+        <Button x:Name="btn_Cancel_Ticket" Content="Cancel Without Saving" HorizontalAlignment="Left" Height="40" Margin="10,261,0,0" VerticalAlignment="Top" Width="194" Click="btn_Cancel_Ticket_Click" HorizontalContentAlignment="Center">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Changed}" Value="false">
+                            <Setter Property="Visibility" Value="Hidden"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
     </Grid>
 </UserControl>
