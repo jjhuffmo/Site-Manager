@@ -179,12 +179,15 @@
     <value>dbo.Ticket_Tasks</value>
     <comment>Ticket Tasks table</comment>
   </data>
+  <data name="tblTasksFields" xml:space="preserve">
+    <value>(Site_ID, Ticket_ID, Creator_ID, Created_On, Task_Status, Task_ID, Priority, Task_Overview, Task_Details, Assigned_User_ID, Progress, Due_On, Started_TS, Completed_TS, Notes, Alarm1_Enabled, Alarm1, Alarm1_Ack_TS, Alarm2_Enabled, Alarm2, Alarm2_Ack_TS, Alarm3_Enabled, Alarm3, Alarm3_Ack_TS, Late_Alarm)</value>
+  </data>
   <data name="tblTasksInsert" xml:space="preserve">
     <value>VALUES (@site_id, @ticket_id, @ticket_task_id, @creator_id, @created_on, @task_status, @task_id, @priority, @task_overview, @task_details, @assigned_user_id, @progress, @due_on, @started_ts, @completed_ts, @notes, @alarm1, @alarm1_enabled, @alarm1_ack_ts, @alarm2, @alarm2_enabled, @alarm2_ack_ts, @alarm3, @alarm3_enabled, @alarm3_ack_ts, @late_alarm)</value>
     <comment>Command to Insert a new Task</comment>
   </data>
   <data name="tblTasksUpdate" xml:space="preserve">
-    <value>SET Site_ID =  @site_id, Ticket_ID = @ticket_id, Ticket_Task_ID = @ticket_task_id, Creator_ID = @creator_id, Created_On = @created_on, Task_Status = @task_status, Task_ID = @task_id, Priority = @priority, Task_Overview = @task_overview, Task_Details = @task_details, Assigned_User_ID = @assigned_user_id, Progress = @progress, Due_On = @due_on, Started_TS = @started_ts, Completed_TS = @completed_ts, Notes = @notes, Alarm1 = @alarm1, Alarm1_Enabled = @alarm1_enabled, Alarm1_Ack_TS = @alarm1_ack_ts, Alarm2 = @alarm2, Alarm2_Enabled = @alarm2_enabled, Alarm2_Ack_TS = @alarm2_ack_ts, Alarm3 = @alarm3, Alarm3_Enabled = @alarm3_enabled, Alarm3_Ack_TS = @alarm3_ack_ts, @late_alarm</value>
+    <value>SET Site_ID =  @site_id, Ticket_ID = @ticket_id, Ticket_Task_ID = @ticket_task_id, Creator_ID = @creator_id, Created_On = @created_on, Task_Status = @task_status, Task_ID = @task_id, Priority = @priority, Task_Overview = @task_overview, Task_Details = @task_details, Assigned_User_ID = @assigned_user_id, Progress = @progress, Due_On = @due_on, Started_TS = @started_ts, Completed_TS = @completed_ts, Notes = @notes, Alarm1 = @alarm1, Alarm1_Enabled = @alarm1_enabled, Alarm1_Ack_TS = @alarm1_ack_ts, Alarm2 = @alarm2, Alarm2_Enabled = @alarm2_enabled, Alarm2_Ack_TS = @alarm2_ack_ts, Alarm3 = @alarm3, Alarm3_Enabled = @alarm3_enabled, Alarm3_Ack_TS = @alarm3_ack_ts, Late_Alarm = @late_alarm</value>
     <comment>Command to Update a Task</comment>
   </data>
   <data name="tblTickets" xml:space="preserve">

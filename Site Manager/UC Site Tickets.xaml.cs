@@ -228,7 +228,11 @@ namespace Site_Manager
                 Site_Tickets sel_row;
                 // Get the ticket_id from the list
                 if (Site_Ticket_List.SelectedItem is null)
+                {
                     btn_Ticket_Detail.Visibility = Visibility.Hidden;
+                    Task_List.Visibility = Visibility.Hidden;
+                }
+
                 else
                 {
                     Ticket_Detail.Visibility = Visibility.Visible;
@@ -236,15 +240,57 @@ namespace Site_Manager
                     long ticket_id = sel_row.Ticket_ID;
                     Ticket_Detail.Content = new UC_Ticket_Details(sel_row);
                     sel_row.PropertyChanged += Sel_row_PropertyChanged;
-                    Task_List.Content = new UC_Ticket_Tasks(ticket_id, cuser.User_ID);
-                    Task_List.Visibility = Visibility.Visible;
                     btn_Ticket_Detail.Visibility = Visibility.Visible;
+
+                    UC_Ticket_Tasks Active_Ticket_Tasks = new UC_Ticket_Tasks(sel_row, cuser);
+                    Task_List.Content = Active_Ticket_Tasks;
+                    Task_List.Visibility = Visibility.Visible;
+                    
+                    // Monitor the task grid to change the task detail when it is changed
+                    Active_Ticket_Tasks.Task_Grid.SelectedCellsChanged += Task_Grid_SelectedCellsChanged;
                 }
             }
             else
                 btn_Ticket_Detail.Visibility = Visibility.Hidden;
         }
 
+        private void Task_Grid_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
+        {
+            Tickets_Tasks sel_task;
+            DataGrid Tasks_Grid;
+
+            Tasks_Grid = (DataGrid)sender;
+
+            if (Tasks_Grid.SelectedIndex > -1)
+            {
+                if (Tasks_Grid.SelectedItem != null)
+                {
+                    Task_Detail.Visibility = Visibility.Visible;
+                    sel_task = (Tickets_Tasks)Tasks_Grid.SelectedItem;
+                    long task_id = sel_task.Task_ID;
+                    Task_Detail.Content = new UC_Task_Details(sel_task);
+                }
+                else
+                    Task_Detail.Visibility = Visibility.Hidden;
+            }
+        }
+
+        /* private void Task_Grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+         {
+             if (Task_Grid.SelectedIndex > -1)
+             {
+                 Tickets_Tasks sel_row;
+                 // Get the ticket_id from the list
+                 sel_row = (Tickets_Tasks)Task_Grid.SelectedItem;
+                 long task_id = sel_row.Task_ID;
+                 Task_Detail.Content = new UC_Task_Details(task_id);
+                 Task_Detail.Visibility = Visibility.Visible;
+                 btn_Task_Detail.Visibility = Visibility.Visible;
+             }
+             else
+                 btn_Task_Detail.Visibility = Visibility.Hidden;
+         }
+        */
         private void Sel_row_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             Site_Tickets changed_ticket = (Site_Tickets)sender;

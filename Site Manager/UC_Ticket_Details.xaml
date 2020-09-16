@@ -5,12 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Site_Manager"
              mc:Ignorable="d" 
-             d:DesignHeight="308.889" Width="750">
+             d:DesignHeight="308.889" Width="750" ScrollViewer.CanContentScroll="True">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True">
         <TextBlock HorizontalAlignment="Left" Height="18" Margin="10,33,0,0" Text="Site Name:" TextWrapping="Wrap" VerticalAlignment="Top" Width="64"/>
         <TextBlock x:Name="txt_Ticket_No" HorizontalAlignment="Left" Height="18" Margin="10,10,0,0" Text="Ticket Number:" TextWrapping="Wrap" VerticalAlignment="Top" Width="90"/>
         <TextBlock HorizontalAlignment="Left" Height="18" Margin="311,10,0,0" Text="Ticket Created By:" TextWrapping="Wrap" VerticalAlignment="Top" Width="104" TextAlignment="Right"/>
@@ -34,7 +34,7 @@
         <TextBlock HorizontalAlignment="Left" Height="18" Margin="580,10,0,0" Text="Total Tasks:" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" TextAlignment="Right"/>
         <TextBlock HorizontalAlignment="Left" Height="18" Margin="547,33,0,0" Text="Completed Tasks:" TextWrapping="Wrap" VerticalAlignment="Top" Width="100" TextAlignment="Right"/>
         <TextBlock HorizontalAlignment="Left" Height="18" Margin="570,56,0,0" Text="Active Tasks:" TextWrapping="Wrap" VerticalAlignment="Top" Width="77" TextAlignment="Right"/>
-        <Button x:Name="btn_Complete_Ticket" Content="Mark Ticket As&#xD;&#xA;   Completed" HorizontalAlignment="Left" Height="40" Margin="280,261,0,0" VerticalAlignment="Top" Width="194" Click="btn_Complete_Ticket_Click" HorizontalContentAlignment="Center"/>
+        <Button x:Name="btn_Complete_Ticket" Content="Mark Ticket As&#xD;&#xA;   Completed" HorizontalAlignment="Left" Height="40" Margin="551,261,0,0" VerticalAlignment="Top" Width="194" Click="btn_Complete_Ticket_Click" HorizontalContentAlignment="Center"/>
         <TextBox x:Name="tb_Ticket_ID" HorizontalAlignment="Left" Height="18" Margin="105,10,0,0" Text="{Binding Ticket_ID}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" IsEnabled="False"/>
         <TextBox HorizontalAlignment="Left" Height="18" Margin="105,33,0,0" Text="{Binding Site}" TextWrapping="Wrap" VerticalAlignment="Top" Width="172" IsEnabled="False"/>
         <TextBox HorizontalAlignment="Left" Height="18" Margin="105,56,0,0" Text="{Binding Brief_Desc}" TextWrapping="Wrap" VerticalAlignment="Top" Width="172"/>
@@ -42,8 +42,7 @@
         <TextBox HorizontalAlignment="Left" Height="49" Margin="10,205,0,0" Text="{Binding Notes}" TextWrapping="Wrap" VerticalAlignment="Top" Width="735"/>
         <TextBox HorizontalAlignment="Left" Height="18" Margin="419,10,0,0" Text="{Binding Creator}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" IsEnabled="False"/>
         <TextBox HorizontalAlignment="Left" Height="18" Margin="419,33,0,0" Text="{Binding Created_On}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" IsEnabled="False"/>
-        <TextBox HorizontalAlignment="Left" Height="18" Margin="419,56,0,0" Text="{Binding Due_On}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90"/>
-        <TextBox HorizontalAlignment="Left" Height="18" Margin="419,79,0,0" Text="{Binding Ticket_Status}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90"/>
+        <TextBox HorizontalAlignment="Left" Height="18" Margin="420,79,0,0" Text="{Binding Ticket_Status}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90"/>
         <TextBox HorizontalAlignment="Left" Height="18" Margin="652,10,0,0" Text="{Binding Total_Tasks}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" IsEnabled="False"/>
         <TextBox HorizontalAlignment="Left" Height="18" Margin="652,33,0,0" Text="{Binding Completed_Tasks}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" IsEnabled="False"/>
         <TextBox HorizontalAlignment="Left" Height="18" Margin="652,56,0,0" Text="{Binding Active_Tasks}" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" IsEnabled="False"/>
@@ -58,8 +57,8 @@
                 </Style>
             </TextBox.Style>
         </TextBox>
-        <Button x:Name="btn_Save_Ticket" Content="Save Ticket" HorizontalAlignment="Left" Height="40" Margin="548,261,0,0" VerticalAlignment="Top" Width="194" Click="btn_Save_Ticket_Click" HorizontalContentAlignment="Center"/>
-        <Button x:Name="btn_Cancel_Ticket" Content="Cancel Without Saving" HorizontalAlignment="Left" Height="40" Margin="10,261,0,0" VerticalAlignment="Top" Width="194" Click="btn_Cancel_Ticket_Click" HorizontalContentAlignment="Center">
+        <Button x:Name="btn_Save_Ticket" Content="Save Ticket" HorizontalAlignment="Left" Height="40" Margin="10,261,0,0" VerticalAlignment="Top" Width="194" Click="btn_Save_Ticket_Click" HorizontalContentAlignment="Center"/>
+        <Button x:Name="btn_Cancel_Ticket" Content="Cancel Without Saving" HorizontalAlignment="Center" Height="40" Margin="0,261,0,0" VerticalAlignment="Top" Width="194" Click="btn_Cancel_Ticket_Click" HorizontalContentAlignment="Center">
             <Button.Style>
                 <Style TargetType="Button">
                     <Style.Triggers>
@@ -70,5 +69,6 @@
                 </Style>
             </Button.Style>
         </Button>
+        <DatePicker HorizontalAlignment="Left" Margin="420,53,0,0" VerticalAlignment="Top" FontSize="11" SelectedDate="{Binding Due_On}"/>
     </Grid>
 </UserControl>

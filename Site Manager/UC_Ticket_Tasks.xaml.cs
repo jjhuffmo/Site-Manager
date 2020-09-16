@@ -23,24 +23,24 @@ namespace Site_Manager
     public partial class UC_Ticket_Tasks : UserControl
     {
         public ObservableCollection<Tickets_Tasks> active_tasks { get; set; }
-        public long CTicket_ID = 0;
-        public int CUser_ID = 0;
+        public Site_Tickets CTicket = new Site_Tickets();
+        public Users CUser = new Users();
 
-        public UC_Ticket_Tasks(long Ticket_ID, int User_ID)
+        public UC_Ticket_Tasks(Site_Tickets Ticket, Users User)
         {
             this.DataContext = this;
 
             active_tasks = new ObservableCollection<Tickets_Tasks>();
-            CTicket_ID = Ticket_ID;
-            CUser_ID = User_ID;
+            CTicket = Ticket;
+            CUser = User;
 
             InitializeComponent();
 
             btn_Task_Detail.Visibility = Visibility.Hidden;
 
-            Load_Task_Details(CTicket_ID, CUser_ID, (bool)ticket_tasks_viewall.IsChecked);
+            Load_Task_Details(CTicket.Ticket_ID, CUser.User_ID, (bool)ticket_tasks_viewall.IsChecked);
 
-            txt_Ticket_ID.Text = CTicket_ID.ToString();
+            txt_Ticket_ID.Text = CTicket.Ticket_ID.ToString();
         }
 
         public void Load_Task_Details(long Ticket_ID, int User_ID, bool All_Tasks)
@@ -159,7 +159,11 @@ namespace Site_Manager
         //
         private void btn_Add_Task_Clicked(object sender, RoutedEventArgs e)
         {
-            //Add_Ticket();
+            Tickets_Tasks New_Task = new Tickets_Tasks();
+
+            New_Task.Generate_New(CUser, CTicket);
+
+            active_tasks.Add(New_Task);
         }
 
         //
@@ -175,25 +179,9 @@ namespace Site_Manager
             //Add_Ticket();
         }
 
-        private void Task_Grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (Task_Grid.SelectedIndex > -1)
-            {
-                Tickets_Tasks sel_row;
-                // Get the ticket_id from the list
-                sel_row = (Tickets_Tasks)Task_Grid.SelectedItem;
-                long task_id = sel_row.Task_ID;
-                //Task_Detail.Content = new UC_Task_Detail(ticket_id, cuser.User_ID, false);
-                //Task_Detail.Visibility = Visibility.Visible;
-                btn_Task_Detail.Visibility = Visibility.Visible;
-            }
-            else
-                btn_Task_Detail.Visibility = Visibility.Hidden;
-        }
-
         private void ticket_tasks_viewall_Click(object sender, RoutedEventArgs e)
         {
-            Load_Task_Details(CTicket_ID, CUser_ID, (bool)ticket_tasks_viewall.IsChecked);
+            Load_Task_Details(CTicket.Ticket_ID, CUser.User_ID, (bool)ticket_tasks_viewall.IsChecked);
         }
     }
 }

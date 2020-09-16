@@ -437,7 +437,7 @@ namespace Site_Manager
                         }
                         catch (SqlException e)
                         {
-                            MessageBox.Show(e.Message, "Failed To Save Ticket", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show(e.Message, "Failed To Update Ticket", MessageBoxButton.OK, MessageBoxImage.Error);
                             return_code = false;
                         }
 

@@ -4,6 +4,10 @@ using System.Text;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Design;
+using static Site_Manager.Resources;
+using System.Data.SqlClient;
+using System.Data;
+using System.Windows;
 
 namespace Site_Manager
 {
@@ -36,6 +40,10 @@ namespace Site_Manager
         private DateTime _Alarm3;
         private DateTime _Alarm3_Ack_TS;
         private bool _Late_Alarm = false;
+        private bool _Just_Created = false;
+        private bool _Saved = false;
+        private bool _Canceled = false;
+        private bool _Changed = false;
 
         private string _Site = "";
         private string _Assigned_User = "";
@@ -311,6 +319,45 @@ namespace Site_Manager
             }
         }
 
+        public bool Just_Created
+        {
+            get { return _Just_Created; }
+            set
+            {
+                _Just_Created = value;
+            }
+        }
+        public bool Changed
+        {
+            get { return _Changed; }
+            set
+            {
+                _Changed = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        public bool Saved
+        {
+            get { return _Saved; }
+            set
+            {
+                _Saved = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool Canceled
+        {
+            get { return _Canceled; }
+            set
+            {
+                _Canceled = value;
+                OnPropertyChanged();
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         //
@@ -318,24 +365,24 @@ namespace Site_Manager
         //
         //  Purpose:    Create a new ticket with some default values so we don't run into NULL's
         //
-        public void Generate_New(long site_id, string site_name, int user_id, string user)
+        public void Generate_New(Users cuser, Site_Tickets cticket)
         {
-            Site_ID = site_id;
-            Ticket_ID = 0;
+            Site_ID = cticket.Site_ID;
+            Ticket_ID = cticket.Ticket_ID;
             Ticket_Task_ID = 0;
             Creator_ID = 0;
-            Creator = "";
+            Creator = cuser.User_Name;
             Created_On = DateTime.Now;
             Task_Status = 0;
             Task_ID = 0;
             Priority = 0;
             Task_Overview = "New Task";
             Task_Details = "";
-            Assigned_User_ID = user_id;
+            Assigned_User_ID = cuser.User_ID;
             Progress = 0;
             Due_On = DateTime.Now;
-            Started_TS = DateTime.Now;
-            Completed_TS = DateTime.Now;
+            Started_TS = DateTime.Parse("Jan 1, 1980");
+            Completed_TS = DateTime.Parse("Jan 1, 1980");
             Notes = "";
             Alarm1 = DateTime.Now;
             Alarm1_Enabled = false;
@@ -347,8 +394,164 @@ namespace Site_Manager
             Alarm3_Enabled = false;
             Alarm3_Ack_TS = DateTime.Now;
             Late_Alarm = false;
-            Site = site_name;
-            Assigned_User = user;
+            Site = cticket.Site;
+            Assigned_User = cuser.User_Name;
+        }
+
+        public string Get_Site_Name(long Site_No)
+        {
+            Site = "Not Found";
+            string connString = SQLConnString;
+
+            // Query the Site Users Database for the sites for this user
+            StringBuilder query = new StringBuilder("SELECT Short_Name FROM ");
+            query.Append(tblSiteInfo);
+            query.Append(" WHERE Site_ID = '");
+            query.Append(Site_No.ToString());
+            query.Append("'");
+
+            // Read all the sites associated with this user
+            using (SqlConnection sqlCon = new SqlConnection(connString))
+            {
+                sqlCon.Open();
+                SqlCommand SqlCmd = new SqlCommand(query.ToString(), sqlCon);
+                using SqlDataReader reader = SqlCmd.ExecuteReader();
+                if (reader.HasRows == true)
+                {
+                    using (reader)
+                    {
+                        reader.Read();
+                        Site = ((string)reader[0]);
+                    }
+                    return Site;
+                }
+                else
+                    return Site;
+            }
+        }
+
+        public bool Save_Task(bool New_Task)
+        {
+            string connString = SQLConnString;
+            string SaveCmd = "";
+            int SqlResult = 0;
+            bool return_code = false;
+
+            // Query the Site Users Database for the sites for this user
+            StringBuilder query = new StringBuilder("");
+            using (SqlConnection sqlCon = new SqlConnection(connString))
+            {
+                if (New_Task)  // New site user
+                {
+                    query.Append("INSERT INTO ");
+                    query.Append(tblTasks);
+                    query.Append(" ");
+                    query.Append(tblTasksFields);
+                    query.Append(" ");
+                    query.Append(tblTasksInsert);
+                    SaveCmd = query.ToString();
+                    using (SqlCommand SqlCmd = new SqlCommand(SaveCmd))
+                    {
+                        SqlCmd.Connection = sqlCon;
+                        SqlCmd.Parameters.AddWithValue("@site_id", (long)Site_ID);
+                        SqlCmd.Parameters.AddWithValue("@creator_id", (int)Creator_ID);
+                        SqlCmd.Parameters.AddWithValue("@created_on", (DateTime)Created_On);
+                        SqlCmd.Parameters.AddWithValue("@task_status", (int)Task_Status);
+                        SqlCmd.Parameters.AddWithValue("@task_id", (long)Task_ID);
+                        SqlCmd.Parameters.AddWithValue("@priority", (int)Priority);
+                        SqlCmd.Parameters.AddWithValue("@task_overview", (string)Task_Overview);
+                        SqlCmd.Parameters.AddWithValue("@task_details", (string)Task_Details);
+                        SqlCmd.Parameters.AddWithValue("@assigned_user_id", (int)Assigned_User_ID);
+                        SqlCmd.Parameters.AddWithValue("@progress", (int)Progress);
+                        SqlCmd.Parameters.AddWithValue("@due_on", (DateTime)Due_On);
+                        SqlCmd.Parameters.AddWithValue("@started_ts", (DateTime)Started_TS);
+                        SqlCmd.Parameters.AddWithValue("@completed_ts", (DateTime)Completed_TS);
+                        SqlCmd.Parameters.AddWithValue("@notes", (string)Notes);
+                        SqlCmd.Parameters.AddWithValue("@alarm1_enabled", (bool)Alarm1_Enabled);
+                        SqlCmd.Parameters.AddWithValue("@alarm1", (DateTime)Alarm1);
+                        SqlCmd.Parameters.AddWithValue("@alarm1_ack_ts", (DateTime)Alarm1_Ack_TS);
+                        SqlCmd.Parameters.AddWithValue("@alarm2_enabled", (bool)Alarm2_Enabled);
+                        SqlCmd.Parameters.AddWithValue("@alarm2", (DateTime)Alarm2);
+                        SqlCmd.Parameters.AddWithValue("@alarm2_ack_ts", (DateTime)Alarm2_Ack_TS);
+                        SqlCmd.Parameters.AddWithValue("@alarm3_enabled", (bool)Alarm3_Enabled);
+                        SqlCmd.Parameters.AddWithValue("@alarm3", (DateTime)Alarm3);
+                        SqlCmd.Parameters.AddWithValue("@alarm3_ack_ts", (DateTime)Alarm3_Ack_TS);
+                        SqlCmd.Parameters.AddWithValue("@late_alarm", (bool)Late_Alarm);
+
+                        try
+                        {
+                            if (sqlCon.State != ConnectionState.Open)
+                                sqlCon.Open();
+                            SqlResult = SqlCmd.ExecuteNonQuery();
+                            Changed = false;
+                            return_code = true;
+                        }
+                        catch (SqlException e)
+                        {
+                            MessageBox.Show(e.Message, "Failed To Save Task", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return_code = false;
+                        }
+                    }
+                }
+                else // Update existing ticket
+                {
+                    query.Append("UPDATE ");
+                    query.Append(tblTasks);
+                    query.Append(" ");
+                    query.Append(tblTasksUpdate);
+                    query.Append(Ticket_Task_ID.ToString());
+                    SaveCmd = query.ToString();
+                    using (SqlCommand SqlCmd = new SqlCommand(SaveCmd))
+                    {
+                        SqlCmd.Connection = sqlCon;
+                        SqlCmd.Parameters.AddWithValue("@site_id", (long)Site_ID);
+                        SqlCmd.Parameters.AddWithValue("@creator_id", (int)Creator_ID);
+                        SqlCmd.Parameters.AddWithValue("@created_on", (DateTime)Created_On);
+                        SqlCmd.Parameters.AddWithValue("@task_status", (int)Task_Status);
+                        SqlCmd.Parameters.AddWithValue("@task_id", (long)Task_ID);
+                        SqlCmd.Parameters.AddWithValue("@priority", (int)Priority);
+                        SqlCmd.Parameters.AddWithValue("@task_overview", (string)Task_Overview);
+                        SqlCmd.Parameters.AddWithValue("@task_details", (string)Task_Details);
+                        SqlCmd.Parameters.AddWithValue("@assigned_user_id", (int)Assigned_User_ID);
+                        SqlCmd.Parameters.AddWithValue("@progress", (int)Progress);
+                        SqlCmd.Parameters.AddWithValue("@due_on", (DateTime)Due_On);
+                        SqlCmd.Parameters.AddWithValue("@started_ts", (DateTime)Started_TS);
+                        SqlCmd.Parameters.AddWithValue("@completed_ts", (DateTime)Completed_TS);
+                        SqlCmd.Parameters.AddWithValue("@notes", (string)Notes);
+                        SqlCmd.Parameters.AddWithValue("@alarm1_enabled", (bool)Alarm1_Enabled);
+                        SqlCmd.Parameters.AddWithValue("@alarm1", (DateTime)Alarm1);
+                        SqlCmd.Parameters.AddWithValue("@alarm1_ack_ts", (DateTime)Alarm1_Ack_TS);
+                        SqlCmd.Parameters.AddWithValue("@alarm2_enabled", (bool)Alarm2_Enabled);
+                        SqlCmd.Parameters.AddWithValue("@alarm2", (DateTime)Alarm2);
+                        SqlCmd.Parameters.AddWithValue("@alarm2_ack_ts", (DateTime)Alarm2_Ack_TS);
+                        SqlCmd.Parameters.AddWithValue("@alarm3_enabled", (bool)Alarm3_Enabled);
+                        SqlCmd.Parameters.AddWithValue("@alarm3", (DateTime)Alarm3);
+                        SqlCmd.Parameters.AddWithValue("@alarm3_ack_ts", (DateTime)Alarm3_Ack_TS);
+                        SqlCmd.Parameters.AddWithValue("@late_alarm", (bool)Late_Alarm);
+
+                        try
+                        {
+                            if (sqlCon.State != ConnectionState.Open)
+                                sqlCon.Open();
+                            SqlResult = SqlCmd.ExecuteNonQuery();
+                            if (SqlResult == 0)
+                                return_code = false;
+                            else
+                            {
+                                return_code = true;
+                                Changed = false;
+                            }
+                        }
+                        catch (SqlException e)
+                        {
+                            MessageBox.Show(e.Message, "Failed To Update Task", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return_code = false;
+                        }
+
+                    }
+                }
+            }
+            return return_code;
         }
     }
 }

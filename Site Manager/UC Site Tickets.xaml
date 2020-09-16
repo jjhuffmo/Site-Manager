@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Site_Manager"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="1024" ScrollViewer.HorizontalScrollBarVisibility="Auto" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}">
+
     <Grid ScrollViewer.HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Left" Width="Auto" Visibility="Visible">
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="Overview_Column" Width="Auto"/>
@@ -14,12 +15,15 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition x:Name="Tickets_Row" Height="22*"></RowDefinition>
+            <RowDefinition Height="3"/>
             <RowDefinition x:Name="Tasks_Row" Height="23*"></RowDefinition>
         </Grid.RowDefinitions>
-        <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Stretch" Visibility="Visible" Grid.RowSpan="2" IsEnabled="True"/>
-        <DataGrid x:Name="Site_Ticket_List" ItemsSource="{Binding Path=site_tickets, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalScrollBarVisibility="Auto"
-                  VerticalAlignment="Top" CanUserAddRows="False" AutoGenerateColumns="False" SelectionMode="Single" 
-                  SelectionUnit="FullRow" SelectedCellsChanged="Site_Ticket_List_SelectedCellsChanged" Margin="10,58,0,0" Height="AUto" Width="Auto">
+        <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Stretch" Visibility="Visible" Grid.RowSpan="3" IsEnabled="True"/>
+        <GridSplitter Grid.Row="1" Height="3" HorizontalAlignment="Stretch" Visibility="Visible" Grid.ColumnSpan="3" IsEnabled="True"/>
+        <DataGrid x:Name="Site_Ticket_List" ItemsSource="{Binding Path=site_tickets, UpdateSourceTrigger=PropertyChanged}" CellStyle="{StaticResource CenteredDG}" HorizontalAlignment="Left" VerticalScrollBarVisibility="Auto"
+                  VerticalAlignment="Top" CanUserAddRows="False" AutoGenerateColumns="False" SelectionMode="Single" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                  SelectionUnit="FullRow" SelectedCellsChanged="Site_Ticket_List_SelectedCellsChanged" Margin="10,58,0,0" Height="AUto" Width="Auto" ColumnHeaderStyle="{StaticResource CenteredHeader}"
+                  >
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <Style.Triggers>
@@ -34,22 +38,22 @@
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.Columns>
-                <DataGridTextColumn x:Name="ID_Col" Header="Ticket ID" Width="Auto" Binding="{Binding Ticket_ID}"/>
-                <DataGridTextColumn x:Name="Creator_Col" Header="Created By" Width="Auto" Binding="{Binding Creator}"/>
-                <DataGridTextColumn x:Name="Create_Date_Col" Header="Creation Date" Width="Auto" Binding="{Binding Created_On}"/>
-                <DataGridTextColumn x:Name="Due_Date_Col" Header="Due Date" Width="Auto" Binding="{Binding Due_On}"/>
-                <DataGridTextColumn x:Name="Desc_Col" Header="Description" Width="Auto" Binding="{Binding Brief_Desc}"/>
-                <DataGridTextColumn x:Name="Status_Col" Header="Status" Width="Auto" Binding="{Binding Ticket_Status}"/>
-                <DataGridTextColumn x:Name="Total_Tasks_Col" Header="Total Tasks" Width="Auto" Binding="{Binding Total_Tasks}"/>
-                <DataGridTextColumn x:Name="Completed_Tasks_Col" Header="Completed" Width="Auto" Binding="{Binding Completed_Tasks}"/>
-                <DataGridTextColumn x:Name="Active_Tasks_Col" Header="Active" Width="Auto" Binding="{Binding Active_Tasks}"/>
+                <DataGridTextColumn x:Name="ID_Col" Header="Ticket" Width="Auto" Binding="{Binding Ticket_ID}" ElementStyle="{StaticResource CenteredCell}"/>
+                <DataGridTextColumn x:Name="Creator_Col" Header="Created By" Width="Auto" Binding="{Binding Creator}" ElementStyle="{StaticResource CenteredCell}"/>
+                <DataGridTextColumn x:Name="Create_Date_Col" Header="Creation Date" Width="Auto" Binding="{Binding Created_On, StringFormat='MM/dd/yyyy'}" ElementStyle="{StaticResource CenteredCell}"/>
+                <DataGridTextColumn x:Name="Due_Date_Col" Header="Due Date" Width="Auto" Binding="{Binding Due_On, StringFormat='MM/dd/yyyy'}" ElementStyle="{StaticResource CenteredCell}"/>
+                <DataGridTextColumn x:Name="Desc_Col" Header="Description" Width="Auto" Binding="{Binding Brief_Desc}" ElementStyle="{StaticResource CenteredCell}"/>
+                <DataGridTextColumn x:Name="Status_Col" Header="Status" Width="Auto" Binding="{Binding Ticket_Status}" ElementStyle="{StaticResource CenteredCell}"/>
+                <DataGridTextColumn x:Name="Total_Tasks_Col" Header="Total Tasks" Width="Auto" Binding="{Binding Total_Tasks}" ElementStyle="{StaticResource CenteredCell}"/>
+                <DataGridTextColumn x:Name="Completed_Tasks_Col" Header="Completed" Width="Auto" Binding="{Binding Completed_Tasks}" ElementStyle="{StaticResource CenteredCell}"/>
+                <DataGridTextColumn x:Name="Active_Tasks_Col" Header="Active" Width="Auto" Binding="{Binding Active_Tasks}" ElementStyle="{StaticResource CenteredCell}"/>
             </DataGrid.Columns>
         </DataGrid>
         <Button x:Name="btn_Add_Ticket" Content="Add" HorizontalAlignment="Left" Height="43" Margin="10,10,0,0" VerticalAlignment="Top" Width="69" Click="btn_Add_Ticket_Clicked" />
         <CheckBox x:Name="site_tickets_viewall" Content="View All" HorizontalAlignment="Left" Margin="453,25,0,0" VerticalAlignment="Top" Width="114" Click="site_tickets_viewall_Click" Height="14"/>
-        <ContentControl x:Name="Task_List" Content="ContentControl" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden" Height="Auto" Width="Auto" Grid.Row="1"/>
+        <ContentControl x:Name="Task_List" Content="ContentControl" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden" Height="Auto" Width="Auto" Grid.Row="2"/>
         <Button x:Name="btn_Ticket_Detail" Content="Details" HorizontalAlignment="Left" Height="43" Margin="84,10,0,0" VerticalAlignment="Top" Width="69" Click="btn_Ticket_Details_Clicked" Grid.Row="0" />
         <ContentControl Content="ContentControl" x:Name="Ticket_Detail" Grid.Column="2" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
-        <ContentControl Content="ContentControl" x:Name="Task_Detail" Grid.Column="2" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Top"/>
+        <ContentControl Content="ContentControl" x:Name="Task_Detail" Grid.Column="2" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Top"/>
     </Grid>
 </UserControl>

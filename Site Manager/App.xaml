@@ -4,6 +4,16 @@
              xmlns:local="clr-namespace:Site_Manager"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <Style x:Key="CenteredDG" TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            </Style>
+            <Style x:Key="CenteredCell" TargetType="TextBlock">
+                <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+            </Style>
+            <Style x:Key="CenteredHeader" TargetType="DataGridColumnHeader">
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            </Style>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

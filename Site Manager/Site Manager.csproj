@@ -29,6 +29,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Update="UC_Task_Details.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -44,6 +47,12 @@
     <Resource Include="Resources\close_tab_active.bmp" />
     <Resource Include="Resources\Close_Tab.bmp" />
     <Resource Include="Resources\tbUser.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UC_Task_Details.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>

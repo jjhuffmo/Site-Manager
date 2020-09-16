@@ -8,17 +8,17 @@
              d:DesignHeight="450" d:DesignWidth="553.333">
     <Grid>
         <DataGrid x:Name="Task_Grid" ItemsSource="{Binding Path=active_tasks}" Height="Auto" Margin="10,48,0,0" VerticalAlignment="Top" Width="Auto" 
-              SelectionMode="Single" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False" SelectionChanged="Task_Grid_SelectionChanged">
+              SelectionMode="Single" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False" >
             <DataGrid.Columns>
                 <!--  <DataGridTextColumn x:Name="ID_Col" Header="Ticket ID" Width="Auto" Binding="{Binding Ticket_ID}"/>-->
                 <DataGridTextColumn x:Name="Creator_Col" Header="Created By" Width="Auto" Binding="{Binding Creator}"/>
-                <DataGridTextColumn x:Name="Create_Date_Col" Header="Creation Date" Width="Auto" Binding="{Binding Created_On}"/>
+                <DataGridTextColumn x:Name="Create_Date_Col" Header="Creation Date" Width="Auto" Binding="{Binding Created_On, StringFormat='MM/dd/yyyy'}"/>
                 <DataGridTextColumn x:Name="Assigned_Col" Header="Assigned To" Width="Auto" Binding="{Binding Assigned_User}"/>
-                <DataGridTextColumn x:Name="Due_Date_Col" Header="Due Date" Width="Auto" Binding="{Binding Due_On}"/>
+                <DataGridTextColumn x:Name="Due_Date_Col" Header="Due Date" Width="Auto" Binding="{Binding Due_On, StringFormat='MM/dd/yyyy'}"/>
                 <DataGridTextColumn x:Name="Status_Col" Header="Status" Width="Auto" Binding="{Binding Task_Status}"/>
                 <DataGridTextColumn x:Name="Task_Overview_Col" Header="Overview" Width="Auto" Binding="{Binding Task_Overview}"/>
                 <DataGridTextColumn x:Name="Progress_Col" Header="Progress" Width="Auto" Binding="{Binding Progress}"/>
-                <DataGridTextColumn x:Name="Started_Col" Header="Started On Date" Width="Auto" Binding="{Binding Started_TS}"/>
+                <DataGridTextColumn x:Name="Started_Col" Header="Started Date" Width="Auto" Binding="{Binding Started_TS, StringFormat='MM/dd/yyyy'}"/>
             </DataGrid.Columns>
         </DataGrid>
         <Button x:Name="btn_Add_Task" Content="Add" HorizontalAlignment="Left" Height="43" Margin="10,0,0,0" VerticalAlignment="Top" Width="69" Click="btn_Add_Task_Clicked" />

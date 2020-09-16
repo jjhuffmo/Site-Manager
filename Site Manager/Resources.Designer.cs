@@ -208,6 +208,15 @@ namespace Site_Manager {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (Site_ID, Ticket_ID, Creator_ID, Created_On, Task_Status, Task_ID, Priority, Task_Overview, Task_Details, Assigned_User_ID, Progress, Due_On, Started_TS, Completed_TS, Notes, Alarm1_Enabled, Alarm1, Alarm1_Ack_TS, Alarm2_Enabled, Alarm2, Alarm2_Ack_TS, Alarm3_Enabled, Alarm3, Alarm3_Ack_TS, Late_Alarm).
+        /// </summary>
+        public static string tblTasksFields {
+            get {
+                return ResourceManager.GetString("tblTasksFields", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to VALUES (@site_id, @ticket_id, @ticket_task_id, @creator_id, @created_on, @task_status, @task_id, @priority, @task_overview, @task_details, @assigned_user_id, @progress, @due_on, @started_ts, @completed_ts, @notes, @alarm1, @alarm1_enabled, @alarm1_ack_ts, @alarm2, @alarm2_enabled, @alarm2_ack_ts, @alarm3, @alarm3_enabled, @alarm3_ack_ts, @late_alarm).
         /// </summary>
         public static string tblTasksInsert {
